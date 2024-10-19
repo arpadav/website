@@ -1,0 +1,3 @@
+[submodule "prod"]
+	path = deploy/prod
+	url = git@github.com:arpadav/arpadav.github.io.git
