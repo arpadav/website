@@ -6,3 +6,13 @@ publish = false
 
 [dependencies]
 askama = "0.12"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+
+[profile.release]
+# for quick compilation: zero care for opt, zero care for size, zero care for debug
+lto = false
+debug = false
+opt-level = 0
+codegen-units = 1
+incremental = true

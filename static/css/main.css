@@ -1,0 +1,104 @@
+html, body {
+  overflow: hidden;
+
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+}
+
+body {
+  background-color: #ffe2db;
+}
+
+h1, h2 {
+  font-family: "Courier New";
+  color: #000090; /* r:0, g:0, b:144 */
+  font-weight: normal;
+}
+
+h1 {
+  text-align: center;
+}
+
+h1:hover, h2:hover, a:hover {
+  color: #755cab; /* r:117, g:92, b:171 */
+}
+
+a, p, ol, ul {
+  font-family: "Courier New";
+  text-decoration: none;
+  /* font-weight: normal; */
+}
+
+a {
+  color: #000090;
+  display: flex;
+  align-items: center;
+}
+
+li {
+  display: flex;
+  align-items: center;
+}
+
+img {
+  width: auto;
+  height: 100%;
+}
+
+.main {
+  margin: 0 auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.tab {
+  visibility: hidden;
+  pointer-events: auto;
+}
+
+.body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  max-width: 800px;
+}
+
+.card {
+  position: relative;
+  display: inline-block;
+
+  display: flex;
+  align-items: center;
+}
+.card .img_hvr {
+  display: none;
+  position: absolute;
+}
+.card:hover .img_hvr {
+  display: inline;
+}
+
+@keyframes fade_in {
+  0% {opacity: 0;}
+  25% {opacity: 0;}
+  100% {opacity: 1;}
+}
+@keyframes fade_out {
+  0% {opacity: 1;}
+  25% {opacity: 0;}
+  100% {opacity: 0;}
+}
+
+@keyframes name_rotate_vert {}
+@keyframes name_rotate_horz {}
+
+@keyframes tabs_rotate_vert {}
+@keyframes tabs_rotate_horz {}

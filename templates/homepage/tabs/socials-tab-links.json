@@ -1,0 +1,26 @@
+[
+    {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com/in/arpadav",
+        "img_src": "media/images/linkedin.png",
+        "img_hvr_src": "media/images/linkedin_hvr.png"
+    },
+    {
+        "name": "GitHub",
+        "url": "https://github.com/arpadav",
+        "img_src": "media/images/github.png",
+        "img_hvr_src": "media/images/github_hvr.png"
+    },
+    {
+        "name": "Goodreads",
+        "url": "https://www.goodreads.com/user/show/84068476-arpad-voros",
+        "img_src": "media/images/goodreads.png",
+        "img_hvr_src": "media/images/goodreads_hvr.png"
+    },
+    {
+        "name": "Spotify",
+        "url": "https://open.spotify.com/user/arpadav",
+        "img_src": "media/images/spotify.png",
+        "img_hvr_src": "media/images/spotify_hvr.png"
+    }
+]

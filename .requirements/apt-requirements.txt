@@ -1,0 +1,3 @@
+grep
+rsync
+python3

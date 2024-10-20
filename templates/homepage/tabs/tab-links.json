@@ -1,0 +1,20 @@
+[
+    {
+        "id": "cv",
+        "link": "./cv.pdf",
+        "tag": "h2",
+        "title": "curriculum vitae"
+    },
+    {
+        "id": "projects",
+        "link": "./projects",
+        "tag": "h2",
+        "title": "projects"
+    },
+    {
+        "id": "notes",
+        "link": "./notes",
+        "tag": "h2",
+        "title": "notes"
+    }
+]
