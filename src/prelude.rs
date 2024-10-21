@@ -4,8 +4,8 @@
 // normally i would never do this (especially for 
 // data-structures like LazyLock and HashMap)
 // however, these 4 items are so ubiquitously used
-// in this implementation that is is better to include
-// them all here
+// in this implementation that it is more convenient
+// to include them all here
 // --------------------------------------------------
 pub use askama::Template;
 pub use serde::Deserialize;
