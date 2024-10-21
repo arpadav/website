@@ -1,0 +1,86 @@
+<p><i>Overview:</i></p>
+<ol>
+    <li><b>Project 1: Facial Detection using Classical Machine Learning with Various Mixture Models</b></li>
+    <ul style="list-style-type: none;">
+        <li>
+            <img style="max-width: 750px" src="../../../resources/projects/academic/2021f_cvis/proj1_gmm3d.png"
+                class="center" />
+        </li>
+        <li>Mixture models are using some distribution in N-dimensional space and clustering for classification. For
+            example, the figure above shows a data in 2 & 3-D spaces and how they would be classified using a Gaussian
+            mixture model. Note that these classification models can be distinct (where each cluster is a seperate form
+            of classification) or merged (where everything a cluster is something, and everything excluded is not
+            something). For facial detection, a merged model is used in a high dimensional space for classifying whether
+            something is a face or not. The dimensionality is based off the number of pixels in the training images.
+            Below are 20x20 (row 1) and 25x25 (row 2 & 3) Gaussian mixture models with 8 clusters. The means of each
+            cluster are displayed below:</li>
+        <br>
+        <li>
+            <img style="max-width: 600px" src="../../../resources/projects/academic/2021f_cvis/proj1_gmm20.png"
+                class="center" />
+            <img style="max-width: 600px" src="../../../resources/projects/academic/2021f_cvis/proj1_gmm25.png"
+                class="center" />
+        </li>
+        <br>
+        <li>For this project, a t-Distribution, mixture of t-Distribution, as well as factor analysis were completed.
+            More can be read in the report below, see the <i>Literature</i> section.</li>
+    </ul>
+
+    <br>
+    <li><b>Project 2: Facial Detection using Viola-Jones Algorithm: Adaboost + Haar-like Features</b></li>
+    <ul style="list-style-type: none;">
+        <li>Haar-like features can be used in junction with Adaboost to create a lightweight and fast facial detection
+            model. It is colloquially known as the Viola-Jones object detection algorithm, but has been popularized for
+            facial recognition. It is commonly used by digital cameras to detect faces prior to taking photographs. For
+            this project, this was implemented and trained using a face dataset. To achieve the lowest of accuracies,
+            only the first 10-20 features need to be checked, but to achieve the full accuracy of the model, all
+            features must be checked in a cascade fashion. Below is a sample image alongside the 15 strongest features
+            for the face dataset. A total of ~250 features were used in multiple models for this project. More can be
+            read in the report below, see the <i>Literature</i> section.</li>
+        <br>
+        <li>
+            <img style="max-width: 700px" src="../../../resources/projects/academic/2021f_cvis/proj2_feat.png"
+                class="center" />
+        </li>
+    </ul>
+
+    <br>
+    <li><b>Project 3: Facial Detection using Simple Deep Learning</b></li>
+    <ul style="list-style-type: none;">
+        <li>Using a simple 2D CNN implemented using Python (Keras / Tensorflow), a facial detection model was made on
+            the same dataset used in all 3 projects. Both training and validation accuracy were significantly higher
+            than the previous two projects, which shows the power of deep learning, considering the fact that the model
+            architecture is nothing novel, the dataset was not flawless, and the students in the class (including my
+            teammates at the time) were relatively inexperienced with deep learning and its implementation. I would show
+            visuals for this project as I did with the other two above, however all I would show are datapoints with
+            their respective classification. A binary classification metric was used. More can be read in the report
+            below, see the <i>Literature</i> section.</li>
+    </ul>
+</ol>
+
+<hr>
+<p><i>My Contribution:</i></p>
+<p>For Project 3: Group Project — 3 members</p>
+<p>The work for this project was more evenly spread out, as compared to previous projects I have had in graduate school.
+    I did the data pre-processing from the face dataset, trained multiple models multiple datasets, visualized the
+    intermittent layers of our most effective model, and wrote my fair share of the report. In can be noted in the
+    report, that each member of the team had their own unique way of tackling the data pre-processing, so we trained our
+    best selected models on all our datasets and included the results in the report.</p>
+
+<hr>
+<p><i>Literature:</i></p>
+<a
+    href="../../../resources/notes/academic/2021%20-%20ECE%20763/Voros_Arpad_ECE763_Project_1.pdf">Voros_Arpad_ECE763_Project_1.pdf</a><br>
+<a
+    href="../../../resources/notes/academic/2021%20-%20ECE%20763/Voros_Arpad_ECE763_Project_2.pdf">Voros_Arpad_ECE763_Project_2.pdf</a><br>
+<a
+    href="../../../resources/notes/academic/2021%20-%20ECE%20763/Voros_Arpad_ECE763_Project_3.pdf">Voros_Arpad_ECE763_Project_3.pdf</a><br><br>
+<iframe class="center" src="../../../resources/notes/academic/2021%20-%20ECE%20763/Voros_Arpad_ECE763_Project_2.pdf"
+    width=60% height=950></iframe>
+
+
+<hr>
+<p><i>Media Citation(s):</i></p>
+<p>Gaussian Mixture Model visual - <a
+        href="https://stanford.edu/~cpiech/cs221/img/kmeans3d.png">https://stanford.edu/~cpiech/cs221/img/kmeans3d.png</a>
+</p>

@@ -1,0 +1,11 @@
+{
+    "title": "Analysis and Implementation of a Semantic Auto-Encoder for Zero-Short Learning",
+    "collab-type": "Individual Project",
+    "status": "Complete",
+    "desc": "Independent study in few-short learning architecture",
+    "date": "Aug 2021 - Dec 2021",
+    "location": "Raleigh, North Carolina",
+    "repos": [
+        "https://github.com/arpadav/zsl_sae_matlab"
+    ]
+}

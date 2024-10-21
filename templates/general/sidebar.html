@@ -1,0 +1,23 @@
+<div id="sidebar" class="sidebar">
+    <!-- -------------------------------------------------- -->
+    <!-- include the gator -->
+    <!-- -------------------------------------------------- -->
+    <li>
+        <a href="/gator/" target="_parent">
+            <img style="width: 268px;" src="/media/images/alligator.png">
+        </a>
+    </li>
+    <!-- -------------------------------------------------- -->
+    <!-- match the type of sidebar, include that template -->
+    <!-- -------------------------------------------------- -->
+    {% match sidebar %}
+    {% when SidebarType::Project %}
+    <!-- -------------------------------------------------- -->
+    <!-- project links in the sidebar -->
+    <!-- -------------------------------------------------- -->
+    {% include "projects/project-sidebar.html" %}
+    <!-- -------------------------------------------------- -->
+    <!-- add more if needed -->
+    <!-- -------------------------------------------------- -->
+    {% endmatch %}
+</div>

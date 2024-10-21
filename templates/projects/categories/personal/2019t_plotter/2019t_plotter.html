@@ -1,0 +1,60 @@
+<p><i>Overview:</i></p>
+<p>Generative adversarial network (GAN) is a type of deep learning architecture in which there are two networks being
+    trained. The first is called a discriminator, which takes a set of data (usually an image) and determines whether it
+    is among the set of data which is real, or among the set of data which is generated (or 'fake'). The second is a
+    generator, who's job it is to generate fake data from random noise. These two networks train with/against one
+    another, so both the discriminator and the generator get increasingly better at their respective tasks. The end
+    result of the GAN is only the generator network, which is a network capable of generating realistic sets of data
+    purely from Gaussian noise.</p>
+
+<img style="max-width: 500px" src="../../../resources/projects/personal/2019t_plotter/gan.png" class="center" />
+<p class="center_desc">Fig 1: <i>A general diagram of how a GAN functions</i></p>
+
+<p>This sort of generative network has many applications, including the non-technical one being art.</p>
+
+<img style="max-width: 500px" src="../../../resources/projects/personal/2019t_plotter/plot.jpg" class="center" />
+<p class="center_desc">Fig 2: <i>The 2D plotter being used</i></p>
+
+<p>A CNC laser engraver transformed into a 2D plotter (above) is used to plot the edges of some arbitrary GAN's output.
+    The arbitrary GAN is initially trained on landscape portraits. The output (resembling a drawing/painting/photograph
+    of a landscape) will be fed through a series of digital filters and an accompanying MATLAB script to extract edges
+    (of varying degrees) and other features of the image which would seem fit to be plotted. The image is then
+    transformed into a grbl file to be plotted.</p>
+
+<img style="max-width: 900px" src="../../../resources/projects/personal/2019t_plotter/core.jpg" class="center" />
+<p class="center_desc">Fig 3: <i>Example original image. Of course this is not a landscape, but this was the test image
+        used when I worked on the MATLAB script many years ago (independent of this project)</i></p>
+<img style="max-width: 900px" src="../../../resources/projects/personal/2019t_plotter/high.png" class="center" />
+<p class="center_desc">Fig 4: <i>ONLY MATLAB script used: extract <b>many</b> edges</i></p>
+<img style="max-width: 900px" src="../../../resources/projects/personal/2019t_plotter/low.png" class="center" />
+<p class="center_desc">Fig 5: <i>ONLY MATLAB script used: extract <b>fewer</b> edges</i></p>
+<img style="max-width: 900px" src="../../../resources/projects/personal/2019t_plotter/close.png" class="center" />
+<p class="center_desc">Fig 6: <i>Close up of the previous figure</i></p>
+
+<p>Currently, the post-processing of the output is complete, the plotter is assembled, and the I am working on
+    programming, training, and tuning the GAN.</p>
+
+<hr>
+<p><i>Personal Statement:</i></p>
+<p>I have always been fascinated by how deep learning can be applied to art. I gained motivation for this project in
+    2017, when I met <a href="https://twitter.com/VIDEODROME">Robbie Barrat</a> at the Intel ISEF in Los Angeles.
+    Barrat, previously a AI researcher at NVIDIA and Stanford, is now an AI artist and fashion designer. He really
+    piqued my interest in deep learning during my time in LA, which motivated me to pursue statistics, deep learning,
+    and computer vision as some of my electrical engineering concentration topics.</p>
+<p>The project is still in progress, but on hiatus due to focusing on graduate school. But I will be returning to it in
+    the near future.</p>
+
+<hr>
+<p><i>Literature:</i></p>
+<p>There are a lot of problems with standard GAN's, like mode collapse, knowing the 'proper' ratio of training
+    iterations for generator vs. discriminator, etc. One partial solution is the Wasserstein GAN, which uses the
+    Wasserstein metric as the loss function as opposed to the standard KL Divergence (used to derive cross-entropy loss)
+    and Jenson-Shannon Divergence.</p>
+
+<hr>
+<p><i>Media Citation(s):</i></p>
+<p>GAN diagram - <a
+        href="https://medium.com/ml-everything/generating-letters-using-generative-adversarial-networks-gans-161b0be3c229">https://medium.com/ml-everything/generating-letters-using-generative-adversarial-networks-gans-161b0be3c229</a>
+</p>
+<p>Test image (girl) - <a
+        href="http://clipart-library.com/clipart/6Ty5q4Bkc.htm">http://clipart-library.com/clipart/6Ty5q4Bkc.htm</a></p>

@@ -1,0 +1,66 @@
+<p><i>Overview:</i></p>
+<p>Muon-scattering tomography (MST) is an imaging technique utilizing cosmic ray elementary particles called muons. The
+    way it works is the trajectory of a muon is measured before and after it passes through some material. While
+    traversing the material in the middle, the muon undergoes multiple-Coulomb scattering events which changes the
+    particle's trajectory by some angle everytime it interacts with atoms. On average of all atoms within the material,
+    the muon's delta in outgoing trajectory will be proportional to the atomic number of the material traversed. In
+    other words, high-Z material like nuclear waste will result in a large change in the muons trajectory, while
+    something carbon-based like a human will result in little-to-no change. By detecting the incoming and outgoing
+    trajectories of many muons, the material in the middle can therefore be imaged.</p>
+
+<img style="max-width: 350px" src="../../../resources/projects/personal/2017f_mst/mst_example.gif" class="center" />
+<p class="center_desc">Fig 1: <i>An application of MST. You can see the two detectors on top detect the incoming
+        trajectory and the two bottom detectors detect the outgoing trajectory. Scans the truck for any unsafe
+        materials.</i></p>
+
+<p>High maintenance wire chambers and alternative MST methods are proven cost-inefficient, while they are predominantly
+    used by research institutions and universities. Therefore, commercially available MST is unreliable. Rather, the
+    sensing apparatus developed in detecting high-energy muon ionization events would consist of a solid-state
+    volumetric scintillator coupled with a silicon-photomultiplier (SiPM) array. Multiple-Coulomb scattering incidences
+    would be detected by various intensities by the SiPM, thus enabling a trilateration algorithm to determine the
+    position of entry of a muon in each detector. This resulted in a novel MST approach. More information regarding the
+    project can be found in the paper below.</p>
+
+<hr>
+<p><i>Personal Statement:</i></p>
+<p>I worked on this independent research project on novel MST conducting technique with Trevor Daino and Michael
+    Kronovet our senior year of high school. Our original intentions were to simply build a device which can conduct
+    MST, but it proved difficult due to the high cost and high maintenance of traditional materials used. After many
+    design iterations and consulting professors at a local university, we landed on a design that was within our budget.
+    We spent over two-thousand dollars of our own money and months building our prototype in our garages. We frequently
+    visited the optics laboratory at a local university, consulted academics on our methods, and visited many parts
+    distributors. Countless hours and late nights was put into this project, as there was no 'rubric' we were going off
+    because of our low-cost unconventional design. We decided to enter a local science-fair, and ended up going to the
+    2017 Intel International Science and Engineering Fair in Los Angeles. We placed 3rd in the Physics and Astronomy
+    category (see video below). Near the end of the project's life-cycle, we ended up filing for a provisional patent
+    for the idea.</p>
+<p>This project undoubtedly resulted in one of the best times of my life.</p>
+
+<video class="center" width="420" height="360" controls>
+    <source src="../../../resources/projects/personal/2017f_mst/isef.mp4" type="video/mp4">
+</video>
+
+<hr>
+<p><i>My Contribution:</i></p>
+<p>Group Project (3 members)</p>
+<p>Though my friends and I worked on all areas of the project, work was still split up among the three of us.</p>
+<p>Due to my extensive experience with electronics, I was the one in charge of of designing all electrical aspects of
+    the project. This included simple biasing circuits for SiPM set-up, a high-speed analog processing circuit to hold
+    measurements from the SiPM (as muon instances lasted for periods as small as a couple nanoseconds), a simple
+    amplifier, and an ADC for data acquisition. Once the short-timed muon pulse was measured by the ADC, a digital
+    signal would be sent to reset the peak-holding circuit to read the next incoming muon. There would be four of these
+    circuits running in parallel for each quadrant of each SiPM, as the ones we used were 2x2 arrays, for a total of 16.
+    Other than electronics, I worked on LTSpice simulations, the Monte-Carlo simulation, material inquiries, prototype
+    construction, testbench assembly, design, and theory. Non-technical contributions included designing both posters,
+    writing the paper (below), and drafting many figures for the former.</p>
+
+<hr>
+<p><i>Literature:</i></p>
+<a href="../../../resources/projects/personal/2017f_mst/mst_paper_singlewide.pdf">2017 MST Final Report</a><br><br>
+<iframe class="center" src="../../../resources/projects/personal/2017f_mst/mst_paper_singlewide.pdf" width=60%
+    height=950></iframe>
+
+<hr>
+<p><i>Media Citation(s):</i></p>
+<p>MST truck - <a href="https://www.wikipedia.org">https://www.wikipedia.org</a></p>
+<p>ISEF video - <a href="https://www.michaelkronovet.com">https://www.michaelkronovet.com</a></p>

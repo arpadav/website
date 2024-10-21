@@ -1,0 +1,37 @@
+[
+    {
+        "display": "home",
+        "dir": "./",
+        "true_dir": "./index.html"
+    },
+    {
+        "display": "about",
+        "dir": "./#about",
+        "true_dir": "none"
+    },
+    {
+        "display": "contact",
+        "dir": "./#contact",
+        "true_dir": "none"
+    },
+    {
+        "display": "socials",
+        "dir": "./#socials",
+        "true_dir": "none"
+    },
+    {
+        "display": "cv",
+        "dir": "./cv.pdf",
+        "true_dir": "none"
+    },
+    {
+        "display": "projects",
+        "dir": "./projects/",
+        "true_dir": "./views/pages/projects.html"
+    },
+    {
+        "display": "notes",
+        "dir": "./notes/",
+        "true_dir": "./views/pages/notes.html"
+    }
+]

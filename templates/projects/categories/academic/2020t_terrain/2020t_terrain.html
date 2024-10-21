@@ -1,0 +1,35 @@
+<p><i>Overview:</i></p>
+<p>Prosthetic limbs are required to perform a variety of functions depending on how they are being used. For example,
+    prosthetic legs can be used for walking, running, climbing, traversing difficult terrain, stairs, and more. In order
+    to adjust to different terrain to perform these disparate functions, the terrain must be identified by some means.
+    In this project, accelerometer data from an individual walking on a flat surface, walking on grass, and going
+    up/down stairs is used as a timeseries training data for a deep learning model to identify the terrain being
+    traversed. This was a project for ECE 542.</p>
+
+<hr>
+<p><i>My Contribution:</i></p>
+<p>I worked with the same group as I did in <a href="../../../projects/2020t_crop">Semantic Segmentation of Crop
+        Damage</a>.</p>
+<p>Using Keras and the Google Colab environment, I ran 16 different neural network architectures in parallel to find the
+    best performing model in identifying the terrain an impaired individual with a prosthetic limb was overcoming.
+    Afterward, a simple gridsearch was performed for hyperparameter tuning. I used MATLAB for all the data
+    pre-processing and post-processing. As seen in the report, a multi-layered convolutional network for the timeseries
+    data was preferred as it was able to extract features from the data not normally seen. Afterward, a recurring
+    network was used in a small window to evaluate said features and label the terrain accordingly. The data was
+    overwhelmingly skewed torward the 'walking on flat surface' terrain, which is why in the report it's seen some
+    predictions oscillate between other terrains and the previously stated. a SMOTE could be incorporated to improve
+    this discrepency, however, its proven more difficult to incorporate such concepts due to my (current) lack of
+    experience with SMOTE + timeseries data.</p>
+<p>Despite this, one of my models obtained an F1 score of 83.8%, which is 3rd in the class (of 28 teams).</p>
+<p>My teammates only decided to help me last second before the deadline, so they only helped with writing the report...
+</p>
+<p>Similar to <a href="../../../projects/2020t_crop">Semantic Segmentation of Crop Damage</a>, I unfortunately did a
+    disproportionate amount of the work. I completed the entire project by myself, but I fortunately had a little bit of
+    help on the report.</p>
+
+<hr>
+<p><i>Literature:</i></p>
+<a
+    href="../../../resources/notes/academic/2020%20-%20ECE%20542/Voros_Arpad_ECE542_Proj1.pdf">Voros_Arpad_ECE542_Proj1.pdf</a><br><br>
+<iframe class="center" src="../../../resources/notes/academic/2020%20-%20ECE%20542/Voros_Arpad_ECE542_Proj1.pdf"
+    width=60% height=950></iframe>

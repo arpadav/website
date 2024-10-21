@@ -1,0 +1,12 @@
+{
+    "title": "Google Hangouts Chat-bot and iOS 'Alert' Application",
+    "collab-type": "Individual Project",
+    "status": "Complete",
+    "desc": "A joke project I made for my friends, consisting of a a chat-bot in our group message which utilizes a custom made server",
+    "date": "May 2018 - Aug 2018",
+    "location": "Durham, North Carolina",
+    "repos": [
+        "https://github.com/arpadav/mra-server-python",
+        "https://github.com/arpadav/mra-swift"
+    ]
+}

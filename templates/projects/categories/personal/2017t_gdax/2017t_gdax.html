@@ -1,0 +1,38 @@
+<p><i>Overview:</i></p>
+<p>GDAX was a cryptocurrency trading platform which offered 0% <u>maker fees</u> and slight <u>taker fees</u>.</p>
+<li><u>Taker fees</u> are fees made to the platform, GDAX, for ever trade made when you are the <b>price taker</b>,
+    meaning you trade instantely at whatever the current price is.</li>
+<li><u>Maker fees</u> are fees made to the platform for ever trade made when you are the <b>price maker</b>, meaning you
+    set a price to sell/buy at, and the platform will make the trade when the asset reaches your set price.</li>
+<p>Given that it was free to trade when being a price maker, I had constructed a simple trading bot using the GDAX
+    Python API to trade at a relatively high frequency. I did not use any well-known algorithms, but rather had fun with
+    it and made my own. I used a discrete-time analysis of various cryptocurrency prices (primarily Bitcoin and
+    Ethereum), calculated predicted prices using a simple second derivative of the past N datapoints, etc. This resulted
+    in setting trades above and below the current price at a specified threshold to approximately "buy low" and "sell
+    high". The algorithm, after many iterations, was a success. See Personal Statement for results.</p>
+<p>However, due to a bug with the GDAX API (or perhaps with large latency between my computer and GDAX servers), a
+    certain percent of my price maker trades were being interpretted as price taker trades. Meaning, I would be losing
+    money due to the high frequency amount of trades, thus a high frequency amount of fees.</p>
+
+<hr>
+<p><i>Personal Statement:</i></p>
+<p>Summer/Fall of 2017, there was a large boom in cryptocurrency interest, use, and trading. This was right before the
+    time Bitcoin had reached a peak value of roughly 20,000 USD in late December 2017. Being interested, but never
+    having worked with cryptocurrency, I research some platforms to conduct trading with little-to-no trading fees.
+    That's when I found GDAX (now called Coinbase Pro), which offered a 0% maker fee and a slight taker fee (explained
+    in Overview).</p>
+<p>I decided to derive an algorithm to buy low and sell high for certain cryptocurrencies by being a price maker. The
+    algorithm itself was extremely successful. When I ran the bot without making trades, but rather displaying when I
+    would theoretically buy/sell, I was profiting off of unusual peaks when when the price, on average, was decreasing.
+</p>
+<p>I put in a small 100 USD to start trading. Incredibly, I made a 20% return for a total of 120 USD. But, as I outlined
+    above, there was some unreliability of the GDAX API which caused my trades to be interpretted as price taking, hence
+    a &lt;1% fee was slapped onto a large chunk of my transactions. I had made more than 20 USD, but once I started to
+    notice the gradual decrease, I stopped the bot and called the project at 120 USD, as 20% return is still impressive,
+    and I made the easiest 20 dollars of my life.</p>
+<p>I had originally intended to pull my 100 USD back from GDAX, and keep the bot running for the hell of it with
+    whatever initial profit I had made, but decided not to for the following reasons:</p>
+<ol>
+    <li>GDAX API unreliability with setting price maker trades was highly unappealing</li>
+    <li>Bitcoin bubble was about to burst, and I did not want my money in when it did</li>
+</ol>
