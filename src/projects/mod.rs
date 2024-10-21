@@ -37,7 +37,7 @@ use crate::prelude::*;
 /// * Each project is expected to have both a `.json` and `.html`
 /// file. If either file is missing, a warning is printed and the 
 /// project is then skipped.
-pub static ALL_PROJECTS: LazyLock<HashMap<String, Vec<Project>>> = LazyLock::new(|| {
+pub static ALL_PROJECTS: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = LazyLock::new(|| {
     // --------------------------------------------------
     // loop through project categories
     // --------------------------------------------------
@@ -94,7 +94,7 @@ pub static ALL_PROJECTS: LazyLock<HashMap<String, Vec<Project>>> = LazyLock::new
             // --------------------------------------------------
             Some((
                 category_name,
-                Project {
+                ProjectTemplate {
                     name: project_name.to_string(),
                     // --------------------------------------------------
                     // <<STYLE+TAG>>
@@ -102,7 +102,7 @@ pub static ALL_PROJECTS: LazyLock<HashMap<String, Vec<Project>>> = LazyLock::new
                     url: format!("/projects/{}/", project_name),
                     header: crate::json_template!(json_path),
                     content,
-                    sidebar: SidebarType::Project,
+                    sidebar: SidebarType::Projects,
                 },
             ))
         })
@@ -128,31 +128,15 @@ pub static ALL_PROJECTS: LazyLock<HashMap<String, Vec<Project>>> = LazyLock::new
     result
 });
 
-// #[derive(Template)]
-// #[template(path = "projects/project-template.html")]
-// /// Template for projects page on my website!
-// pub struct ProjectPageTemplate {
-//     pub projects: Vec<i32>,
-// }
-// /// [`ProjectPageTemplate`] implmentation of [`Create`]
-// impl Create for ProjectPageTemplate {
-//     fn create() -> Self {
-//         Self {
-//             projects: vec![1, 2, 3],
-//         }
-//     }
-// }
-
 #[derive(Debug, Template)]
 #[template(path = "projects/project-template.html")]
-pub struct Project {
+pub struct ProjectTemplate {
     pub name: String,
     pub url: String,
     pub content: String,
     pub header: ProjectHeader,
     pub sidebar: SidebarType,
 }
-// <!-- {% include "general/sidebar.html" %} -->
 
 #[derive(Debug, Deserialize)]
 /// A JSON file describing a project, used at the top of 
