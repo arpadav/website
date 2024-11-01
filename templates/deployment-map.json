@@ -1,4 +1,4 @@
 {
     "homepage/index.html": "index.html",
-    "projects/categories/*/<folder>/+.html": "<folder>/index.html"
+    "projects/categories/*/<folder>/<folder>.html": "projects/<folder>/index.html"
 }

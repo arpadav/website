@@ -41,10 +41,9 @@ bash $ROOT_DIR/.requirements/getreqs.sh
 rsync -av --delete $STATIC_DIR $FOLDER
 
 # --------------------------------------------------
-# cargo
-# !!!this will change later!!!
+# cargo with deployment folder flag
 # --------------------------------------------------
-cargo run --release > $FOLDER/index.html
+cargo run --release -- --deploy $FOLDER
 
 # --------------------------------------------------
 # minify all .html files. pass in all HTML_FILES in
