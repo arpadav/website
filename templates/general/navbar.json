@@ -1,37 +1,30 @@
 [
     {
-        "display": "home",
-        "dir": "./",
-        "true_dir": "./index.html"
+        "disp": "home",
+        "link": "/#"
     },
     {
-        "display": "about",
-        "dir": "./#about",
-        "true_dir": "none"
+        "disp": "about",
+        "link": "/#about"
     },
     {
-        "display": "contact",
-        "dir": "./#contact",
-        "true_dir": "none"
+        "disp": "contact",
+        "link": "/#contact"
     },
     {
-        "display": "socials",
-        "dir": "./#socials",
-        "true_dir": "none"
+        "disp": "socials",
+        "link": "/#socials"
     },
     {
-        "display": "cv",
-        "dir": "./cv.pdf",
-        "true_dir": "none"
+        "disp": "cv",
+        "link": "/media/files/cv.pdf"
     },
     {
-        "display": "projects",
-        "dir": "./projects/",
-        "true_dir": "./views/pages/projects.html"
+        "disp": "projects",
+        "link": "/projects"
     },
     {
-        "display": "notes",
-        "dir": "./notes/",
-        "true_dir": "./views/pages/notes.html"
+        "disp": "notes",
+        "link": "/notes"
     }
 ]

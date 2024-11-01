@@ -2,6 +2,7 @@
 // mods
 // --------------------------------------------------
 mod macros;
+mod navbar;
 mod general;
 mod homepage;
 mod projects;
@@ -13,7 +14,7 @@ pub(crate) mod prelude;
 // --------------------------------------------------
 pub static DEPLOY_DIR: OnceLock<PathBuf> = OnceLock::new();
 pub const TEMPLATES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates" );
-pub const DEPLOYMENT_MAP: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates/deployment-map.json" );
+pub const DEPLOYMENT_MAP_JSON: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates/deployment-map.json" );
 pub const PROJECT_CATEGORIES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates/projects/categories" );
 
 // --------------------------------------------------
@@ -24,7 +25,10 @@ pub use prelude::*;
 // --------------------------------------------------
 // external
 // --------------------------------------------------
-use std::{path::PathBuf, sync::OnceLock};
+use std::{
+    path::PathBuf,
+    sync::OnceLock,
+};
 
 fn main() {
     // --------------------------------------------------
@@ -32,23 +36,61 @@ fn main() {
     // --------------------------------------------------
     parse_cli();
 
+    // --------------------------------------------------
+    // print deployment map
+    // --------------------------------------------------
+    for mapping in pathpattern::DEPLOYMENT_MAP.r().iter() {
+        println!("{} -> {}", mapping.src.display(), mapping.dst.display());
+    }
 
-    // for (n, ps) in projects::ALL_PROJECTS.iter() {
-    //     println!("{:?}\n", n);   
-    //     for p in ps {
-    //         println!("{:?}\n\n", p);   
-    //     }
-    // }
+    // --------------------------------------------------
+    // * get homepage. verify existance in deployment map
+    // --------------------------------------------------
+    let homepage = homepage::HomePageTemplate::to_page();
+    assert!(pathpattern::DEPLOYMENT_MAP.r().exists(pathpattern::DeploymentFileType::Source(&homepage.0)), "homepage not found in deployment map");
+    // --------------------------------------------------
+    // * get projects homepage. verify existance in deployment map
+    // --------------------------------------------------
+    let phomepage = projects::ProjectHomePageTemplate::to_page();
+    assert!(pathpattern::DEPLOYMENT_MAP.r().exists(pathpattern::DeploymentFileType::Source(&phomepage.0)), "projects homepage not found in deployment map");
+    // --------------------------------------------------
+    // * get project pages. verify existance in deployment map
+    // --------------------------------------------------
+    let projects = projects::ALL_PROJECTS.iter().map(|(path, (_, proj))| (path.clone(), proj.clone())).collect::<Vec<_>>();
+    projects
+        .iter()
+        .for_each(|(ppath, _)| match pathpattern::DEPLOYMENT_MAP.r().exists(pathpattern::DeploymentFileType::Source(&ppath)) {
+            true => (),
+            false => panic!("{} not found in deployment map", ppath.display()),
+        });
 
-    // let personal_projects = projects::ALL_PROJECTS.get("personal").unwrap();
-    // let first_project = personal_projects.get(0).unwrap();
-    // let ctx = first_project.render().unwrap();
-    // println!("{}", ctx);
-
-    println!("mapping: \n{:?}", *pathpattern::DEPLOYMENT_MAP);
-
-    let ctx = homepage::HomePageTemplate::create();
-    // println!("{}", ctx.render().unwrap());
+    // --------------------------------------------------
+    // * render + deploy homepage
+    // --------------------------------------------------
+    deploy!(homepage, "homepage");
+    // --------------------------------------------------
+    // * render + deploy projects homepage
+    // --------------------------------------------------
+    deploy!(phomepage, "projects homepage");
+    // --------------------------------------------------
+    // * render + deploy project pages
+    // --------------------------------------------------
+    projects
+        .into_iter()
+        .for_each(|projectpage| {
+            let name = projectpage.1.name.clone();
+            deploy!(projectpage, &name);
+        });
+    // --------------------------------------------------
+    // * render + deploy everything else
+    // --------------------------------------------------
+    pathpattern::DEPLOYMENT_MAP
+        .w()
+        .not_deployed()
+        .for_each(|file| match file.copy() {
+            Ok(_) => (),
+            Err(e) => panic!("Failed to copy {} to {}: {}", file.src.display(), file.dst.display(), e),
+        });
 }
 
 /// Quick CLI: only input is required `--deploy <folder>`

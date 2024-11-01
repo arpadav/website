@@ -22,3 +22,9 @@ impl Create for HomePageTemplate {
         }
     }
 }
+/// [`HomePageTemplate`] implmentation of [`SourcePath`]
+impl SourcePath<HomePageTemplate> for HomePageTemplate {
+    fn src_path() -> std::path::PathBuf {
+        [ crate::TEMPLATES_DIR, "/homepage/index.html" ].concat().into()
+    }
+}

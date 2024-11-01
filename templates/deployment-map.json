@@ -1,4 +1,12 @@
 {
-    "homepage/index.html": "index.html",
-    "projects/categories/*/<folder>/<folder>.html": "projects/<folder>/index.html"
+    "include": {
+        "homepage/index.html": "index.html",
+        "projects/projects-homepage.html": "projects/index.html",
+        "projects/categories/*/<folder>/<folder>.html": "projects/<folder>/index.html",
+        "projects/categories/*/<folder>/<file>": "projects/<folder>/<file>"
+    },
+    "exclude": {
+        "projects/categories/*/<folder>/<folder>.html": "projects/<folder>/<folder>.html",
+        "projects/categories/*/<folder>/<folder>.json": "projects/<folder>/<folder>.json"
+    }
 }

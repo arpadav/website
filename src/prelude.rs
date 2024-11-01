@@ -44,3 +44,17 @@ pub trait Render {
 pub trait Create {
     fn create() -> Self;
 }
+/// [`SourcePath`] trait, for setting the path of any type
+pub trait SourcePath<T> {
+    fn src_path() -> std::path::PathBuf;
+}
+/// [`ToPage`] trait, for creating a [`Page`] from any type
+pub trait ToPage<T> where T: Create + SourcePath<T> {
+    fn to_page() -> Page<T> {
+        (
+            T::src_path(),
+            T::create(),
+        )
+    }
+}
+impl<T> ToPage<T> for T where T: Create + SourcePath<T> {}

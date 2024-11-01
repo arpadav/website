@@ -1,0 +1,12 @@
+<div id="navbar" class="navbar">
+    <ul>
+        <!-- -------------------------------------------------- -->
+        <!-- loop through each link -->
+        <!-- -------------------------------------------------- -->
+        {% for nb in crate::navbar::NAVBAR.iter() %}
+        <li>
+            <a href="{{ nb.link }}" target="_parent">{{ nb.disp }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

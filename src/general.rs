@@ -2,6 +2,7 @@
 /// The type of sidebar, and the contents to display
 pub enum SidebarType {
     Projects,
+    GatorOnly,
 }
 
 /// A page type, which every single one of my pages will be stored

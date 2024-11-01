@@ -37,7 +37,7 @@ li > h3 {
   width: calc(100% - 290px - 2px);
 }
 
-.header ul {
+.navbar ul {
   list-style-type: none;
   overflow: hidden;
 
@@ -46,18 +46,18 @@ li > h3 {
   margin-left: -10px;
 }
 
-.header li {
+.navbar li {
   float: left;
 }
 
-.header li a {
+.navbar li a {
   display: block;
   text-align: center;
   padding: 10px 20px;
   text-decoration: none;
 }
 
-.header a:hover:not(.active) {
+.navbar a:hover:not(.active) {
   /* color: #755cab; */
   text-decoration: underline;
 }

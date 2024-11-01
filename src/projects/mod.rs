@@ -1,12 +1,13 @@
 // --------------------------------------------------
-// external
+// mods
 // --------------------------------------------------
-use serde::Deserialize;
+mod page;
 
 // --------------------------------------------------
 // local
 // --------------------------------------------------
 use crate::prelude::*;
+use page::ProjectTemplate;
 
 // --------------------------------------------------
 // statics
@@ -73,8 +74,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<Page<(String, ProjectTemplate)>>> = LazyLo
             // --------------------------------------------------
             // get the name, header (.json) and template (.html)
             // --------------------------------------------------
-            let pp = project_path.clone();
-            let project_name = pp.file_name()?.to_string_lossy();
+            let project_name = project_path.file_name()?.to_string_lossy();
             let json_path = project_path.join(format!("{}.json", project_name));
             let html_path = project_path.join(format!("{}.html", project_name));
             // --------------------------------------------------
@@ -94,7 +94,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<Page<(String, ProjectTemplate)>>> = LazyLo
             // return
             // --------------------------------------------------
             Some((
-                project_path,
+                html_path,
                 category_name,
                 ProjectTemplate {
                     name: project_name.to_string(),
@@ -134,6 +134,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<Page<(String, ProjectTemplate)>>> = LazyLo
     // --------------------------------------------------
     pages
 });
+/// All projects, grouped by category. This is used for displaying
 pub static ALL_PROJECTS_HM: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = LazyLock::new(|| ALL_PROJECTS
     .iter()
     .fold(HashMap::new(), |mut hm, (_, (category, project))| {
@@ -146,38 +147,17 @@ pub static ALL_PROJECTS_HM: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = La
 );
 
 #[derive(Debug, Clone, Template)]
-#[template(path = "projects/project-template.html", print = "all")]
-pub struct ProjectTemplate {
-    pub name: String,
-    pub url: String,
-    pub content: String,
-    pub header: ProjectHeader,
+#[template(path = "projects/projects-homepage.html")]
+pub struct ProjectHomePageTemplate {
     pub sidebar: SidebarType,
 }
-
-#[derive(Debug, Clone, Deserialize)]
-/// A JSON file describing a project, used at the top of 
-/// every project page
-pub struct ProjectHeader {
-    pub title: String,
-    #[serde(rename = "collab-type")]
-    pub collab_type: String,
-    pub status: String,
-    #[serde(deserialize_with = "empty_as_none")]
-    pub desc: Option<String>,
-    #[serde(deserialize_with = "empty_as_none")]
-    pub date: Option<String>,
-    #[serde(deserialize_with = "empty_as_none")]
-    pub location: Option<String>,
-    #[serde(default)]
-    pub repos: Vec<String>,
+impl Create for ProjectHomePageTemplate {
+    fn create() -> Self {
+        Self { sidebar: SidebarType::GatorOnly }
+    }
 }
-
-/// Deserializes an empty string into [`None`]
-fn empty_as_none<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    let opt = Option::<String>::deserialize(deserializer)?;
-    Ok(opt.filter(|s| !s.is_empty()))
+impl SourcePath<ProjectHomePageTemplate> for ProjectHomePageTemplate {
+    fn src_path() -> std::path::PathBuf {
+        [ crate::TEMPLATES_DIR, "/projects/projects-homepage.html" ].concat().into()
+    }
 }
