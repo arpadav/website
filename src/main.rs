@@ -33,12 +33,12 @@ fn main() {
     parse_cli();
 
 
-    for (n, ps) in projects::ALL_PROJECTS.iter() {
-        println!("{:?}\n", n);   
-        for p in ps {
-            println!("{:?}\n\n", p);   
-        }
-    }
+    // for (n, ps) in projects::ALL_PROJECTS.iter() {
+    //     println!("{:?}\n", n);   
+    //     for p in ps {
+    //         println!("{:?}\n\n", p);   
+    //     }
+    // }
 
     // let personal_projects = projects::ALL_PROJECTS.get("personal").unwrap();
     // let first_project = personal_projects.get(0).unwrap();

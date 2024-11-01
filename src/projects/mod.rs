@@ -37,11 +37,11 @@ use crate::prelude::*;
 /// * Each project is expected to have both a `.json` and `.html`
 /// file. If either file is missing, a warning is printed and the 
 /// project is then skipped.
-pub static ALL_PROJECTS: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = LazyLock::new(|| {
+pub static ALL_PROJECTS: LazyLock<Vec<Page<(String, ProjectTemplate)>>> = LazyLock::new(|| {
     // --------------------------------------------------
     // loop through project categories
     // --------------------------------------------------
-    let mut result = std::fs::read_dir(crate::PROJECT_CATEGORIES_DIR)
+    let mut pages: Vec<Page<(String, ProjectTemplate)>> = std::fs::read_dir(crate::PROJECT_CATEGORIES_DIR)
         .ok()
         .into_iter()
         // --------------------------------------------------
@@ -73,7 +73,8 @@ pub static ALL_PROJECTS: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = LazyL
             // --------------------------------------------------
             // get the name, header (.json) and template (.html)
             // --------------------------------------------------
-            let project_name = project_path.file_name()?.to_string_lossy();
+            let pp = project_path.clone();
+            let project_name = pp.file_name()?.to_string_lossy();
             let json_path = project_path.join(format!("{}.json", project_name));
             let html_path = project_path.join(format!("{}.html", project_name));
             // --------------------------------------------------
@@ -93,6 +94,7 @@ pub static ALL_PROJECTS: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = LazyL
             // return
             // --------------------------------------------------
             Some((
+                project_path,
                 category_name,
                 ProjectTemplate {
                     name: project_name.to_string(),
@@ -109,27 +111,42 @@ pub static ALL_PROJECTS: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = LazyL
         // --------------------------------------------------
         // put into hashmap
         // --------------------------------------------------
-        .fold(HashMap::new(), |mut map, (category, project)| {
-            map.entry(category)
-                .or_insert_with(Vec::new)
-                .push(project);
+        .fold(Vec::new(), |mut map, (ppath, category, project)| {
+            let page: Page<(String, ProjectTemplate)> = (ppath.clone(), (category.clone(), project));
+            map.push(page);
             map
         });
     // --------------------------------------------------
-    // for each category, sort the projects based off 
-    // the name
+    // sort projects based off category, then name
     // --------------------------------------------------
-    result
-        .values_mut()
-        .for_each(|projects| projects.sort_by(|a, b| a.name.cmp(&b.name)));
+    pages.sort_by(|a, b| {
+        let category_order = a.0.cmp(&b.0);
+        // --------------------------------------------------
+        // if categories are equal, compare project names
+        // --------------------------------------------------
+        match category_order {
+            std::cmp::Ordering::Equal => a.1.0.cmp(&b.1.0),
+            _ => category_order
+        }
+    });
     // --------------------------------------------------
     // return
     // --------------------------------------------------
-    result
+    pages
 });
+pub static ALL_PROJECTS_HM: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = LazyLock::new(|| ALL_PROJECTS
+    .iter()
+    .fold(HashMap::new(), |mut hm, (_, (category, project))| {
+        match hm.contains_key(category) {
+            true => hm.get_mut(category).unwrap().push(project.clone()),
+            false => { let _ = hm.insert(category.clone(), vec![project.clone()]); },
+        };
+        hm
+    })
+);
 
-#[derive(Debug, Template)]
-#[template(path = "projects/project-template.html")]
+#[derive(Debug, Clone, Template)]
+#[template(path = "projects/project-template.html", print = "all")]
 pub struct ProjectTemplate {
     pub name: String,
     pub url: String,
@@ -138,7 +155,7 @@ pub struct ProjectTemplate {
     pub sidebar: SidebarType,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 /// A JSON file describing a project, used at the top of 
 /// every project page
 pub struct ProjectHeader {

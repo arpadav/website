@@ -31,6 +31,7 @@ pub use std::collections::HashMap;
 // we dont have to forget to import it in every template
 // to enable enum short-syntax in templates
 // --------------------------------------------------
+pub use crate::general::Page;
 pub use crate::general::SidebarType;
 pub use crate::homepage::tabs::TabBodyType;
 
