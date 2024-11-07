@@ -1,6 +1,16 @@
 #[macro_export]
-/// Macro to deploy a page [`crate::primitives::Page`]
+/// Macro to constructing a page [`crate::primitives::Page`] and then deploying
 macro_rules! deploy {
+    ($page:ident, $constructor:path) => {
+        let $page = <$constructor>::to_page();
+        assert!(deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&$page.src)), concat!( stringify!($page), " not found in deployment map" ));
+        $crate::page_deploy!($page, stringify!($page));
+    };
+}
+
+#[macro_export]
+/// Macro to deploy a page [`crate::primitives::Page`]
+macro_rules! page_deploy {
     ($page:expr, $desc:expr) => {
         let template_path = PathBuf::from(&$page.src);
         let binding = $crate::deployutil::DEPLOYMENT_MAP.r();
@@ -8,6 +18,34 @@ macro_rules! deploy {
         drop(binding);
         $crate::deployutil::DEPLOYMENT_MAP.w().mark(deployment_path.clone());
         let _ = $crate::deployutil::deploy_fn(&deployment_path, &$page.page, $desc).expect(&format!("Failed to deploy {}", $desc));
+    };
+}
+
+#[macro_export]
+macro_rules! blank_page {
+    ($template_path:expr, $struct_name:ident) => {
+        #[derive(askama::Template)]
+        #[template(path = $template_path)]
+        #[doc = concat!("Template for ", $template_path)]
+        pub struct $struct_name {
+            sidebar: $crate::primitives::SidebarType
+        }
+
+        #[doc = concat!("[`", stringify!($struct_name), "`] implementation of [`Create`]")]
+        impl $crate::prelude::Create for $struct_name {
+            fn create() -> Self {
+                Self {
+                    sidebar: $crate::primitives::SidebarType::GatorOnly
+                }
+            }
+        }
+
+        #[doc = concat!("[`", stringify!($struct_name), "`] implementation of [`SourcePath`]")]
+        impl $crate::prelude::SourcePath<$struct_name> for $struct_name {
+            fn src_path() -> std::path::PathBuf {
+                [crate::TEMPLATES_DIR, "/", $template_path].concat().into()
+            }
+        }
     };
 }
 

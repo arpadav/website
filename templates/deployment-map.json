@@ -1,6 +1,7 @@
 {
     "include": {
         "homepage/index.html": "index.html",
+        "<page>.html": "<page>/index.html",
         "projects/projects-homepage.html": "projects/index.html",
         "projects/categories/*/<folder>/<folder>.html": "projects/<folder>/index.html",
         "projects/categories/*/<folder>/<file>": "projects/<folder>/<file>"

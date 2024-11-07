@@ -1,12 +1,14 @@
 // --------------------------------------------------
 // mods
 // --------------------------------------------------
+mod notes;
 mod macros;
 mod navbar;
-mod primitives;
 mod homepage;
 mod projects;
+mod miscpages;
 mod deployutil;
+mod primitives;
 pub(crate) mod prelude;
 
 // --------------------------------------------------
@@ -30,6 +32,12 @@ use std::{
     sync::OnceLock,
 };
 
+macro_rules! my_macro {
+    ($var:ident) => {
+        let $var = "some value";
+    };
+}
+
 fn main() {
     // --------------------------------------------------
     // parse cli
@@ -44,34 +52,31 @@ fn main() {
     }
 
     // --------------------------------------------------
-    // * get homepage. verify existance in deployment map
+    // 1. get the following individual pages.
+    // 2. then, verify existence in deployment map
+    // 3. then, render and deploy
     // --------------------------------------------------
-    let homepage = homepage::HomePageTemplate::to_page();
-    assert!(deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&homepage.src)), "homepage not found in deployment map");
+    // * main homepage / landing page
+    // * projects homepage
+    // * notes homepage
+    // * gator
     // --------------------------------------------------
-    // * get projects homepage. verify existance in deployment map
-    // --------------------------------------------------
-    let phomepage = projects::ProjectHomePageTemplate::to_page();
-    assert!(deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&phomepage.src)), "projects homepage not found in deployment map");
+    deploy!(landing_page, homepage::LandingPage);
+    deploy!(projects_homepage, projects::ProjectsHomepage);
+    deploy!(notes, notes::NotesHomepage);
+    deploy!(gator, miscpages::Alligator);
+    deploy!(language, miscpages::Language);
+
     // --------------------------------------------------
     // * get project pages. verify existance in deployment map
     // --------------------------------------------------
-    let projects = projects::ALL_PROJECTS.iter().map(|(_, proj)| proj).collect::<Vec<_>>();
+    let projects = projects::ALL_PROJECTS.iter().map(|(_, proj)| proj).flatten().collect::<Vec<_>>();
     projects
         .iter()
         .for_each(|proj| match deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&proj.src)) {
             true => (),
             false => panic!("{} not found in deployment map", proj.src.display()),
         });
-
-    // --------------------------------------------------
-    // * render + deploy homepage
-    // --------------------------------------------------
-    deploy!(homepage, "homepage");
-    // --------------------------------------------------
-    // * render + deploy projects homepage
-    // --------------------------------------------------
-    deploy!(phomepage, "projects homepage");
     // --------------------------------------------------
     // * render + deploy project pages
     // --------------------------------------------------
@@ -79,8 +84,9 @@ fn main() {
         .into_iter()
         .for_each(|proj| {
             let name = proj.page.name.clone();
-            deploy!(proj, &name);
+            page_deploy!(proj, &name);
         });
+    
     // --------------------------------------------------
     // * render + deploy everything else
     // --------------------------------------------------

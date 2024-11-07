@@ -1,8 +1,10 @@
 <!-- -------------------------------------------------- -->
 <!-- child of: `general/sidebar.html` -->
+<!-- note that crate::projects::ALL_PROJECTS is already sorted
+    by category and chronologically -->
 <!-- -------------------------------------------------- -->
-{% for (category, projects) in crate::projects::ALL_PROJECTS_HM.iter() %}
-<li></li>
+{% for (category, projects) in crate::projects::ALL_PROJECTS.iter() %}
+<li>
     <!-- -------------------------------------------------- -->
     <!-- type/category of project -->
     <!-- -------------------------------------------------- -->
@@ -15,8 +17,8 @@
     <!-- add the project link -->
     <!-- -------------------------------------------------- -->
     <li>
-        <a href="{{ project.url }}" target="_parent">
-            <i>{{ project.header.title }}</i>
+        <a href="{{ project.page.url }}" target="_parent">
+            <i>{{ project.page.header.title }}</i>
         </a>
     </li>
     <!-- -------------------------------------------------- -->

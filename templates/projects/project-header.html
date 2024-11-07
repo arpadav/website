@@ -3,29 +3,31 @@
 <!-- -------------------------------------------------- -->
 <h3>{{ header.title }}</h3>
 <!-- -------------------------------------------------- -->
-<!-- collab type (e.g. individual, group, etc) -->
-<!-- -------------------------------------------------- -->
-<h4>{{ header.collab_type }}</h4>
-<!-- -------------------------------------------------- -->
-<!-- project status -->
-<!-- -------------------------------------------------- -->
-<h4>
-    <span style="font-weight:normal">Status:</span> {{ header.status }}
-</h4>
-<!-- -------------------------------------------------- -->
 <!-- optional brief project description -->
 <!-- -------------------------------------------------- -->
 {% match header.desc %}
 {% when Some with (desc) %}
-<p>{{ desc }}</p>
+<i><p>&emsp;&emsp;{{ desc }}</p></i>
 {% when None %}
 {% endmatch %}
+<!-- -------------------------------------------------- -->
+<!-- optional horizontal line, if data OR location OR repos
+    are present -->
+<!-- -------------------------------------------------- -->
+{% if header.date.is_some() || header.location.is_some() || header.repos.len() > 0 %}
+<hr>
+{% endif %}
+<!-- -------------------------------------------------- -->
+<!-- collab type (e.g. individual, group, etc) -->
+<!-- and project status -->
+<!-- -------------------------------------------------- -->
+<h4>&emsp;&emsp;{{ header.collab_type }} — <i><span style="font-weight:normal">Status:</span> {{ header.status }}</i></h4>
 <!-- -------------------------------------------------- -->
 <!-- optional date / date range -->
 <!-- -------------------------------------------------- -->
 {% match header.date %}
 {% when Some with (date) %}
-<b><p>{{ date }}</p></b>
+<p>&emsp;&emsp;<b>{{ date }}</b> 
 {% when None %}
 {% endmatch %}
 <!-- -------------------------------------------------- -->
@@ -33,18 +35,19 @@
 <!-- -------------------------------------------------- -->
 {% match header.location %}
 {% when Some with (location) %}
-<i><p>{{ location }}</p></i>
+— <i>{{ location }}</i></p>
 {% when None %}
+</p>
 {% endmatch %}
 <!-- -------------------------------------------------- -->
 <!-- repos -->
 <!-- -------------------------------------------------- -->
 {% for repo in header.repos %}
 {% if loop.first %} <p>Repositories</p> {% endif %}
-<br>
-— <a href="{{ repo }}">{{ crate::url_last!(repo) }}</a>
+{% if !loop.first %} <br> {% endif %}
+&emsp;&emsp; — <a href="{{ repo }}">{{ crate::url_last!(repo) }}</a>
 {% endfor %}
 <!-- -------------------------------------------------- -->
-<!-- horizontal line separator -->
+<!-- horizontal line separator with body -->
 <!-- -------------------------------------------------- -->
 <hr>

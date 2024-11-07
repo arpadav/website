@@ -44,6 +44,9 @@ rsync -av --delete $STATIC_DIR $FOLDER
 # cargo with deployment folder flag
 # --------------------------------------------------
 cargo run --release -- --deploy $FOLDER
+if [ $? -ne 0 ]; then
+    exit
+fi
 
 # --------------------------------------------------
 # minify all .html files. pass in all HTML_FILES in
