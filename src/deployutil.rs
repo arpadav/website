@@ -345,7 +345,7 @@ pub enum DeploymentFileType<'a> {
 /// Deploys a page
 /// 
 /// To be used by [`crate::deploy!`] macro only
-pub(crate) fn deploy_fn(path: &PathBuf, page_to_render: impl askama::Template, desc: &str) -> std::io::Result<()> {
+pub(crate) fn deploy_fn(path: &PathBuf, page_to_render: &impl askama::Template, desc: &str) -> std::io::Result<()> {
     if let Some(parent) = path.parent() { std::fs::create_dir_all(parent)?; }
     let mut file = std::fs::OpenOptions::new()
         .write(true)

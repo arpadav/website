@@ -38,11 +38,11 @@ use page::ProjectTemplate;
 /// * Each project is expected to have both a `.json` and `.html`
 /// file. If either file is missing, a warning is printed and the 
 /// project is then skipped.
-pub static ALL_PROJECTS: LazyLock<Vec<Page<(String, ProjectTemplate)>>> = LazyLock::new(|| {
+pub static ALL_PROJECTS: LazyLock<Vec<(String, Page<ProjectTemplate>)>> = LazyLock::new(|| {
     // --------------------------------------------------
     // loop through project categories
     // --------------------------------------------------
-    let mut pages: Vec<Page<(String, ProjectTemplate)>> = std::fs::read_dir(crate::PROJECT_CATEGORIES_DIR)
+    let mut pages: Vec<(String, Page<ProjectTemplate>)> = std::fs::read_dir(crate::PROJECT_CATEGORIES_DIR)
         .ok()
         .into_iter()
         // --------------------------------------------------
@@ -94,8 +94,8 @@ pub static ALL_PROJECTS: LazyLock<Vec<Page<(String, ProjectTemplate)>>> = LazyLo
             // return
             // --------------------------------------------------
             Some((
-                html_path,
                 category_name,
+                html_path,
                 ProjectTemplate {
                     name: project_name.to_string(),
                     // --------------------------------------------------
@@ -111,8 +111,8 @@ pub static ALL_PROJECTS: LazyLock<Vec<Page<(String, ProjectTemplate)>>> = LazyLo
         // --------------------------------------------------
         // put into hashmap
         // --------------------------------------------------
-        .fold(Vec::new(), |mut map, (ppath, category, project)| {
-            let page: Page<(String, ProjectTemplate)> = (ppath.clone(), (category.clone(), project));
+        .fold(Vec::new(), |mut map, (category, project_path, project_page)| {
+            let page: (String, Page<ProjectTemplate>) = (category.clone(), Page { src: project_path.clone(), page: project_page });
             map.push(page);
             map
         });
@@ -122,10 +122,10 @@ pub static ALL_PROJECTS: LazyLock<Vec<Page<(String, ProjectTemplate)>>> = LazyLo
     pages.sort_by(|a, b| {
         let category_order = a.0.cmp(&b.0);
         // --------------------------------------------------
-        // if categories are equal, compare project names
+        // if categories are equal, compare project paths
         // --------------------------------------------------
         match category_order {
-            std::cmp::Ordering::Equal => a.1.0.cmp(&b.1.0),
+            std::cmp::Ordering::Equal => a.1.src.cmp(&b.1.src),
             _ => category_order
         }
     });
@@ -134,10 +134,11 @@ pub static ALL_PROJECTS: LazyLock<Vec<Page<(String, ProjectTemplate)>>> = LazyLo
     // --------------------------------------------------
     pages
 });
-/// All projects, grouped by category. This is used for displaying
+/// All projects, grouped by category. This is used for displaying sidebar, and main projects page
 pub static ALL_PROJECTS_HM: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = LazyLock::new(|| ALL_PROJECTS
     .iter()
-    .fold(HashMap::new(), |mut hm, (_, (category, project))| {
+    .rev()
+    .fold(HashMap::new(), |mut hm, (category, Page { src: _, page: project })| {
         match hm.contains_key(category) {
             true => hm.get_mut(category).unwrap().push(project.clone()),
             false => { let _ = hm.insert(category.clone(), vec![project.clone()]); },
@@ -148,14 +149,17 @@ pub static ALL_PROJECTS_HM: LazyLock<HashMap<String, Vec<ProjectTemplate>>> = La
 
 #[derive(Debug, Clone, Template)]
 #[template(path = "projects/projects-homepage.html")]
+/// Homepage which shows all projects
 pub struct ProjectHomePageTemplate {
     pub sidebar: SidebarType,
 }
+/// [`ProjectHomePageTemplate`] implementation of [`Create`]
 impl Create for ProjectHomePageTemplate {
     fn create() -> Self {
         Self { sidebar: SidebarType::GatorOnly }
     }
 }
+/// [`ProjectHomePageTemplate`] implementation of [`SourcePath`]
 impl SourcePath<ProjectHomePageTemplate> for ProjectHomePageTemplate {
     fn src_path() -> std::path::PathBuf {
         [ crate::TEMPLATES_DIR, "/projects/projects-homepage.html" ].concat().into()

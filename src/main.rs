@@ -3,10 +3,10 @@
 // --------------------------------------------------
 mod macros;
 mod navbar;
-mod general;
+mod primitives;
 mod homepage;
 mod projects;
-mod pathpattern;
+mod deployutil;
 pub(crate) mod prelude;
 
 // --------------------------------------------------
@@ -39,7 +39,7 @@ fn main() {
     // --------------------------------------------------
     // print deployment map
     // --------------------------------------------------
-    for mapping in pathpattern::DEPLOYMENT_MAP.r().iter() {
+    for mapping in deployutil::DEPLOYMENT_MAP.r().iter() {
         println!("{} -> {}", mapping.src.display(), mapping.dst.display());
     }
 
@@ -47,21 +47,21 @@ fn main() {
     // * get homepage. verify existance in deployment map
     // --------------------------------------------------
     let homepage = homepage::HomePageTemplate::to_page();
-    assert!(pathpattern::DEPLOYMENT_MAP.r().exists(pathpattern::DeploymentFileType::Source(&homepage.0)), "homepage not found in deployment map");
+    assert!(deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&homepage.src)), "homepage not found in deployment map");
     // --------------------------------------------------
     // * get projects homepage. verify existance in deployment map
     // --------------------------------------------------
     let phomepage = projects::ProjectHomePageTemplate::to_page();
-    assert!(pathpattern::DEPLOYMENT_MAP.r().exists(pathpattern::DeploymentFileType::Source(&phomepage.0)), "projects homepage not found in deployment map");
+    assert!(deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&phomepage.src)), "projects homepage not found in deployment map");
     // --------------------------------------------------
     // * get project pages. verify existance in deployment map
     // --------------------------------------------------
-    let projects = projects::ALL_PROJECTS.iter().map(|(path, (_, proj))| (path.clone(), proj.clone())).collect::<Vec<_>>();
+    let projects = projects::ALL_PROJECTS.iter().map(|(_, proj)| proj).collect::<Vec<_>>();
     projects
         .iter()
-        .for_each(|(ppath, _)| match pathpattern::DEPLOYMENT_MAP.r().exists(pathpattern::DeploymentFileType::Source(&ppath)) {
+        .for_each(|proj| match deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&proj.src)) {
             true => (),
-            false => panic!("{} not found in deployment map", ppath.display()),
+            false => panic!("{} not found in deployment map", proj.src.display()),
         });
 
     // --------------------------------------------------
@@ -77,14 +77,14 @@ fn main() {
     // --------------------------------------------------
     projects
         .into_iter()
-        .for_each(|projectpage| {
-            let name = projectpage.1.name.clone();
-            deploy!(projectpage, &name);
+        .for_each(|proj| {
+            let name = proj.page.name.clone();
+            deploy!(proj, &name);
         });
     // --------------------------------------------------
     // * render + deploy everything else
     // --------------------------------------------------
-    pathpattern::DEPLOYMENT_MAP
+    deployutil::DEPLOYMENT_MAP
         .w()
         .not_deployed()
         .for_each(|file| match file.copy() {

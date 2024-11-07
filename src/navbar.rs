@@ -19,15 +19,17 @@ pub static NAVBAR: LazyLock<Navbar> = LazyLock::new(|| {
     Navbar::new(navbar)
 });
 
-
+/// A list of links in the navigation bar
 pub struct Navbar {
     pub links: Vec<NavbarLink>,
 }
+/// [`Navbar`] implementation
 impl Navbar {
     pub fn new(links: Vec<NavbarLink>) -> Self {
         Self { links }
     }
 }
+/// [`Navbar`] implementation of [`std::ops::Deref`]
 impl std::ops::Deref for Navbar {
     type Target = Vec<NavbarLink>;
     fn deref(&self) -> &Self::Target {
@@ -36,7 +38,10 @@ impl std::ops::Deref for Navbar {
 }
 
 #[derive(Deserialize)]
+/// A link in the navigation bar
 pub struct NavbarLink {
+    /// The name of the link being displayed
     pub disp: String,
+    /// The URL of the link
     pub link: String,
 }

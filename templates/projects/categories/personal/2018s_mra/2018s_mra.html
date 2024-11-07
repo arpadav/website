@@ -1,56 +1,62 @@
 <p><i>Overview:</i></p>
 <p>A joke iOS application to send alerts to a group message</p>
 <ol>
-  <li>Send a message using text</li>
-  <li>Send an audio message</li>
-  <li>Send a message using Morse code</li>
+    <li>Send a message using text</li>
+    <li>Send an audio message</li>
+    <li>Send a message using Morse code</li>
 </ol>
 <p>Each message would then be accompanied by a timestamp as well as coordinates of the individual sending them. The
-  message would be parsed outputted properly in a message format. Audio files would be uploaded to Google Drive, and a
-  shareable link is generated. Morse code messages were in the form of text, where client-side Morse code audio 'beeps'
-  are concatenated and uploaded to Google Drive, again with shareable links generated.</p>
+    message would be parsed outputted properly in a message format. Audio files would be uploaded to Google Drive, and a
+    shareable link is generated. Morse code messages were in the form of text, where client-side Morse code audio
+    'beeps'
+    are concatenated and uploaded to Google Drive, again with shareable links generated.</p>
 <div class="card">
-  <img style="max-width: 400px" src="/projects/2018s_mra/ios_ex1.jpg" class="center" />
-  <img style="max-width: 400px" src="/projects/2018s_mra/ios_ex2.jpg" class="center" />
+    <img style="max-width: 400px" src="/projects/2018s_mra/ios_ex1.jpg" class="center" />
+    <img style="max-width: 400px" src="/projects/2018s_mra/ios_ex2.jpg" class="center" />
 </div>
 <div class="card">
-  <p class="center_desc">Fig 1: <i>Message with text, where Neil is tired</i></p>
-  <p class="center_desc">Fig 2: <i>Audio message, where I sent something with Morse code</i></p>
+    <p class="center_desc">Fig 1: <i>Message with text, where Neil is tired</i></p>
+    <p class="center_desc">Fig 2: <i>Audio message, where I sent something with Morse code</i></p>
 </div>
 <p>All of the messages would be sent in a specified format to an email for server to pick up push to the group message.
-  Each email would contain the message information as well as coordinate information. The message information was
-  compiled the following way:</p>
+    Each email would contain the message information as well as coordinate information. The message information was
+    compiled the following way:</p>
 <ol>
-  <li>Text: The message with text was compiled in a certain format, and sent to the specified email for parsing</li>
-  <li>Audio: First the audio is recorded, stored in RAM of the iOS device, saved on the iOS device, attached to an email
-    for further processing, then deleted from the iOS device</li>
-  <li>Morse: The message is inserted as text, then pre-downloaded Morse code audio files are concatenated, saved on the
-    iOS device, attached to an email for further processing, then deleted from the iOS device</li>
+    <li>Text: The message with text was compiled in a certain format, and sent to the specified email for parsing</li>
+    <li>Audio: First the audio is recorded, stored in RAM of the iOS device, saved on the iOS device, attached to an
+        email
+        for further processing, then deleted from the iOS device</li>
+    <li>Morse: The message is inserted as text, then pre-downloaded Morse code audio files are concatenated, saved on
+        the
+        iOS device, attached to an email for further processing, then deleted from the iOS device</li>
 </ol>
 <p>The server which was used to intercept these messages was a Raspberry Pi running a script, where on push
-  notifications on incoming emails. Unfortunately it was extremely complex to purely use 3rd party Python libraries to
-  work with the audio files, so I used Google's Gmail and Spreadsheet API's to parse the email upon reception, download
-  the audio file in a specific folder and proper name, get the shareable link, append the message information as well as
-  the Google Drive link in the spreadsheet, read the spreadsheet from the Raspberry Pi, and THEN send it to the group
-  message. It was quite convoluted, but it worked with little latency.</p>
+    notifications on incoming emails. Unfortunately it was extremely complex to purely use 3rd party Python libraries to
+    work with the audio files, so I used Google's Gmail and Spreadsheet API's to parse the email upon reception,
+    download
+    the audio file in a specific folder and proper name, get the shareable link, append the message information as well
+    as
+    the Google Drive link in the spreadsheet, read the spreadsheet from the Raspberry Pi, and THEN send it to the group
+    message. It was quite convoluted, but it worked with little latency.</p>
 <p>The chat bot aspect came into play later on, when I was messing around with ways to interact with Google Hangouts.
-  There is no Google Hangouts API available, so I had to use a very well made 3rd party Python library where Google
-  Hangouts was essentially reverse engineered (see my GitHub the citation). I then realised that I was able to not only
-  send messages, but read them. I can read a users name, email, timestamp, message, etc., and with this information, I
-  decided to make a chat bot which parses a message, and if it sees a message command (we used exclamation point, e.g.
-  !command) then it would parse the command and respond appropriately. Here are some examples of what it was able to
-  accomplish:</p>
+    There is no Google Hangouts API available, so I had to use a very well made 3rd party Python library where Google
+    Hangouts was essentially reverse engineered (see my GitHub the citation). I then realised that I was able to not
+    only
+    send messages, but read them. I can read a users name, email, timestamp, message, etc., and with this information, I
+    decided to make a chat bot which parses a message, and if it sees a message command (we used exclamation point, e.g.
+    !command) then it would parse the command and respond appropriately. Here are some examples of what it was able to
+    accomplish:</p>
 <div class="card">
-  <img style="max-width: 400px" src="/projects/2018s_mra/cmd_help.jpg" class="center" />
-  <p class="center_desc">Fig 3: <i>!help lists all available commands (at the time)</i></p>
-  <img style="max-width: 400px" src="/projects/2018s_mra/cmd_hello.jpg" class="center" />
-  <p class="center_desc">Fig 4: <i>!hello says hello to the user</i></p>
+    <img style="max-width: 400px" src="/projects/2018s_mra/cmd_help.jpg" class="center" />
+    <p class="center_desc">Fig 3: <i>!help lists all available commands (at the time)</i></p>
+    <img style="max-width: 400px" src="/projects/2018s_mra/cmd_hello.jpg" class="center" />
+    <p class="center_desc">Fig 4: <i>!hello says hello to the user</i></p>
 </div>
 <div class="card">
-  <img style="max-width: 400px" src="/projects/2018s_mra/cmd_8.jpg" class="center" />
-  <p class="center_desc">Fig 5: <i>!8ball, a very popular command</i></p>
-  <img style="max-width: 400px" src="/projects/2018s_mra/cmd_def.jpg" class="center" />
-  <p class="center_desc">Fig 6: <i>!define defines a word, and !uptime showed the server uptime</i></p>
+    <img style="max-width: 400px" src="/projects/2018s_mra/cmd_8.jpg" class="center" />
+    <p class="center_desc">Fig 5: <i>!8ball, a very popular command</i></p>
+    <img style="max-width: 400px" src="/projects/2018s_mra/cmd_def.jpg" class="center" />
+    <p class="center_desc">Fig 6: <i>!define defines a word, and !uptime showed the server uptime</i></p>
 </div>
 
 <!-- <div class="card">
@@ -69,16 +75,21 @@
 <hr>
 <p><i>Personal Statement:</i></p>
 <p>This project was purely intended for joking purposes, but it ended up being a quite complex project so I decided to
-  include it. One of my friends, studying archeology, had an excavation in Peru the summer of 2018. Never having been
-  abroad, I decided to construct an iOS application for his phone where he can send 'alerts' to our group message if he
-  is ever in 'trouble' in the ways outlined in Overview. Of course, any one of my friends could download it and have fun
-  with it. Unfotunately, Apple was extremely stringnent on having this app available publically on the AppStore (for
-  obvious reasons). I could still install the app onto any iOS device via my computer, but it would only function for a
-  period of (if I remember correctly) 2 weeks. So my buddy was able to use it for a while before Apple prevented the app
-  from launching again.</p>
+    include it. One of my friends, studying archeology, had an excavation in Peru the summer of 2018. Never having been
+    abroad, I decided to construct an iOS application for his phone where he can send 'alerts' to our group message if
+    he
+    is ever in 'trouble' in the ways outlined in Overview. Of course, any one of my friends could download it and have
+    fun
+    with it. Unfotunately, Apple was extremely stringnent on having this app available publically on the AppStore (for
+    obvious reasons). I could still install the app onto any iOS device via my computer, but it would only function for
+    a
+    period of (if I remember correctly) 2 weeks. So my buddy was able to use it for a while before Apple prevented the
+    app
+    from launching again.</p>
 <p>To get the iOS side of things working, I still required a server to run to intercept these messages. In addition, you
-  can tell from Overview that I was experimenting with scripting for Google Hangouts, so the project morphed into
-  including a chat bot as well. The server would pick up on push notifications from a certain group message, and respond
-  a certain way depending on the different commands sent.</p>
+    can tell from Overview that I was experimenting with scripting for Google Hangouts, so the project morphed into
+    including a chat bot as well. The server would pick up on push notifications from a certain group message, and
+    respond
+    a certain way depending on the different commands sent.</p>
 <p>The iOS application icon ended up looking like this:</p>
 <img style="max-width: 200px" src="/projects/2018s_mra/ios_icon.jpg" class="center" />

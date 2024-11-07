@@ -1,12 +1,13 @@
 #[macro_export]
+/// Macro to deploy a page [`crate::primitives::Page`]
 macro_rules! deploy {
     ($page:expr, $desc:expr) => {
-        let template_path = PathBuf::from(($page).0);
-        let binding = $crate::pathpattern::DEPLOYMENT_MAP.r();
-        let deployment_path = binding.pop($crate::pathpattern::DeploymentFileType::Source(&template_path)).unwrap_or_else(|| panic!("Failed to find {} in deployment map", template_path.display())).clone();
+        let template_path = PathBuf::from(&$page.src);
+        let binding = $crate::deployutil::DEPLOYMENT_MAP.r();
+        let deployment_path = binding.pop($crate::deployutil::DeploymentFileType::Source(&template_path)).unwrap_or_else(|| panic!("Failed to find {} in deployment map", template_path.display())).clone();
         drop(binding);
-        $crate::pathpattern::DEPLOYMENT_MAP.w().mark(deployment_path.clone());
-        let _ = $crate::pathpattern::deploy_fn(&deployment_path, ($page).1, $desc).expect(&format!("Failed to deploy {}", $desc));
+        $crate::deployutil::DEPLOYMENT_MAP.w().mark(deployment_path.clone());
+        let _ = $crate::deployutil::deploy_fn(&deployment_path, &$page.page, $desc).expect(&format!("Failed to deploy {}", $desc));
     };
 }
 

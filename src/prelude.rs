@@ -31,8 +31,8 @@ pub use std::collections::HashMap;
 // we dont have to forget to import it in every template
 // to enable enum short-syntax in templates
 // --------------------------------------------------
-pub use crate::general::Page;
-pub use crate::general::SidebarType;
+pub use crate::primitives::Page;
+pub use crate::primitives::SidebarType;
 pub use crate::homepage::tabs::TabBodyType;
 
 /// [`Render`] trait, for rendering custom HTML (safe) from elements
@@ -44,17 +44,19 @@ pub trait Render {
 pub trait Create {
     fn create() -> Self;
 }
+
 /// [`SourcePath`] trait, for setting the path of any type
 pub trait SourcePath<T> {
     fn src_path() -> std::path::PathBuf;
 }
+
 /// [`ToPage`] trait, for creating a [`Page`] from any type
-pub trait ToPage<T> where T: Create + SourcePath<T> {
+pub trait ToPage<T> where T: Create + SourcePath<T> + askama::Template {
     fn to_page() -> Page<T> {
-        (
-            T::src_path(),
-            T::create(),
-        )
+        Page {
+            src: T::src_path(),
+            page: T::create(),
+        }
     }
 }
-impl<T> ToPage<T> for T where T: Create + SourcePath<T> {}
+impl<T> ToPage<T> for T where T: Create + SourcePath<T> + askama::Template {}

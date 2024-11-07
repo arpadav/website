@@ -3,76 +3,81 @@
 <!-- -------------------------------------------------- -->
 <!-- include header -->
 <!-- -------------------------------------------------- -->
+
 <head>{% include "general/header.html" %}</head>
+
 <body>
-  <!-- -------------------------------------------------- -->
-  <!-- stylesheet for homepage -->
-  <!-- -------------------------------------------------- -->
-  <link rel="stylesheet" href="css/main.css">
-  <!-- -------------------------------------------------- -->
-  <!-- main tab, do not remove -->
-  <!-- -------------------------------------------------- -->
-  <div class="main" id="home">
-    <div id="name">
-      <h1>Arpad Voros</h1>
-    </div>
-  </div>
-  <!-- -------------------------------------------------- -->
-  <!-- each individual tab -->
-  <!-- -------------------------------------------------- -->
-  <!-- these are under `/templates/homepage/tabs` -->
-  <!-- -------------------------------------------------- -->
-  {% for tab in tabs %}
-  <div id="{{ tab.head.id }}" class="tab">
-    <div class="head">
-      {{ tab.head.render()|safe }}
+    <!-- -------------------------------------------------- -->
+    <!-- stylesheet for homepage -->
+    <!-- -------------------------------------------------- -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- -------------------------------------------------- -->
+    <!-- main tab, do not remove -->
+    <!-- -------------------------------------------------- -->
+    <div class="main" id="home">
+        <div id="name">
+            <h1>Arpad Voros</h1>
+        </div>
     </div>
     <!-- -------------------------------------------------- -->
-    <!-- if the body exists, display it -->
+    <!-- each individual tab -->
     <!-- -------------------------------------------------- -->
-    {% match tab.body %}
-    {% when Some with (body) %}
-      <div class="body">
-        {% match body %}
-        {% when TabBodyType::AboutMe %}
-          <!-- -------------------------------------------------- -->
-          <!-- AboutMe -->
-          <!-- -------------------------------------------------- -->
-          {% include "homepage/tabs/about-me-body.html" %}
-          <!-- -------------------------------------------------- -->
-        {% when TabBodyType::Contact %}
-          <!-- -------------------------------------------------- -->
-          <!-- Contact -->
-          <!-- -------------------------------------------------- -->
-          <p>feel free to reach me via my personal email</p>
-          <p>arpadav [ at ] gmail.com</p>
-          <!-- -------------------------------------------------- -->
-        {% when TabBodyType::Socials with (links) %}
-          <!-- -------------------------------------------------- -->
-          <!-- Socials -->
-          <!-- -------------------------------------------------- -->
-          {% for link in links %}
-          <li>
-            <a href="{{ link.url }}">
-              <div class="card">
-                <img style="max-height: 30px" src="{{ link.img_src }}" alt="{{ link.name.to_ascii_lowercase() }}">
-                <img style="max-height: 30px" src="{{ link.img_hvr_src }}" class="img_hvr" alt="{{ link.name.to_ascii_lowercase() }}_hvr">
-                <p style="margin-left: 20px">{{ link.name }}</p>
-              </div>
-            </a>
-          </li>
-          <!-- -------------------------------------------------- -->
-          {% endfor %}
+    <!-- these are under `/templates/homepage/tabs` -->
+    <!-- -------------------------------------------------- -->
+    {% for tab in tabs %}
+    <div id="{{ tab.head.id }}" class="tab">
+        <div class="head">
+            {{ tab.head.render()|safe }}
+        </div>
+        <!-- -------------------------------------------------- -->
+        <!-- if the body exists, display it -->
+        <!-- -------------------------------------------------- -->
+        {% match tab.body %}
+        {% when Some with (body) %}
+        <div class="body">
+            {% match body %}
+            {% when TabBodyType::AboutMe %}
+            <!-- -------------------------------------------------- -->
+            <!-- AboutMe -->
+            <!-- -------------------------------------------------- -->
+            {% include "homepage/tabs/about-me-body.html" %}
+            <!-- -------------------------------------------------- -->
+            {% when TabBodyType::Contact %}
+            <!-- -------------------------------------------------- -->
+            <!-- Contact -->
+            <!-- -------------------------------------------------- -->
+            <p>feel free to reach me via my personal email</p>
+            <p>arpadav [ at ] gmail.com</p>
+            <!-- -------------------------------------------------- -->
+            {% when TabBodyType::Socials with (links) %}
+            <!-- -------------------------------------------------- -->
+            <!-- Socials -->
+            <!-- -------------------------------------------------- -->
+            {% for link in links %}
+            <li>
+                <a href="{{ link.url }}">
+                    <div class="card">
+                        <img style="max-height: 30px" src="{{ link.img_src }}"
+                            alt="{{ link.name.to_ascii_lowercase() }}">
+                        <img style="max-height: 30px" src="{{ link.img_hvr_src }}" class="img_hvr"
+                            alt="{{ link.name.to_ascii_lowercase() }}_hvr">
+                        <p style="margin-left: 20px">{{ link.name }}</p>
+                    </div>
+                </a>
+            </li>
+            <!-- -------------------------------------------------- -->
+            {% endfor %}
+            {% endmatch %}
+        </div>
+        {% when None %}
         {% endmatch %}
-      </div>
-    {% when None %}
-    {% endmatch %}
-  </div>
-  {% endfor %}
-  </div>
+    </div>
+    {% endfor %}
+    </div>
 </body>
 <!-- -------------------------------------------------- -->
 <!-- include homepage animations -->
 <!-- -------------------------------------------------- -->
-<script src="/js/index.ts"></script>
+<script src="/js/index.js"></script>
+
 </html>
