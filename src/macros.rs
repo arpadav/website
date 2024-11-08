@@ -22,6 +22,7 @@ macro_rules! page_deploy {
 }
 
 #[macro_export]
+/// Creates a blank page with no fields, other than a [`crate::primitives::SidebarType::GatorOnly`] sidebar
 macro_rules! blank_page {
     ($template_path:expr, $struct_name:ident) => {
         #[derive(askama::Template)]
@@ -31,16 +32,16 @@ macro_rules! blank_page {
             sidebar: $crate::primitives::SidebarType
         }
 
-        #[doc = concat!("[`", stringify!($struct_name), "`] implementation of [`Create`]")]
+        #[doc = concat!(" [`", stringify!($struct_name), "`] implementation of [`crate::prelude::Create`]")]
         impl $crate::prelude::Create for $struct_name {
             fn create() -> Self {
                 Self {
-                    sidebar: $crate::primitives::SidebarType::GatorOnly
+                    sidebar: Default::default()
                 }
             }
         }
 
-        #[doc = concat!("[`", stringify!($struct_name), "`] implementation of [`SourcePath`]")]
+        #[doc = concat!(" [`", stringify!($struct_name), "`] implementation of [`crate::prelude::SourcePath`]")]
         impl $crate::prelude::SourcePath<$struct_name> for $struct_name {
             fn src_path() -> std::path::PathBuf {
                 [crate::TEMPLATES_DIR, "/", $template_path].concat().into()
@@ -116,3 +117,16 @@ macro_rules! url_last {
         url_split[url_split.len() - 1]
     }};
 }
+
+#[macro_export]
+/// To get the items after "static" from CARGO_MANIFEST_DIR
+/// 
+/// Used in templates
+macro_rules! url_relative_static {
+    ($url:expr) => {{
+        let url_absolute = std::path::Path::new($url).canonicalize().unwrap();
+        let url_absolute = url_absolute.to_str().unwrap();
+        url_absolute.replace(concat!( env!("CARGO_MANIFEST_DIR"), "/static" ), "").to_string()
+    }};
+}
+

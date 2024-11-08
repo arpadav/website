@@ -33,7 +33,7 @@ pub struct PathPattern {
 }
 /// [`PathPattern`] implementation
 impl PathPattern {
-    fn new(input: impl Into<String>) -> Result<Self, anyhow::Error> {
+    fn new(input: impl Into<String>) -> Result<Self, fancy_regex::Error> {
         // --------------------------------------------------
         // get regex pattern, return if error
         // --------------------------------------------------
@@ -41,7 +41,7 @@ impl PathPattern {
         let (capnames, re) = PathPattern::init_regex(&strinput);
         let re = match Regex::new(&re) {
             Ok(re) => re,
-            Err(e) => return Err(anyhow::anyhow!(e)),
+            Err(e) => return Err(e),
         };
         // --------------------------------------------------
         // glob all
@@ -192,16 +192,16 @@ impl DeploymentMapInner {
     }
 
     /// Reads in deployment map json, stores into static variable
-    fn from_static() -> Result<DeploymentMapInner, anyhow::Error> {
+    fn from_static() -> Result<DeploymentMapInner, std::io::Error> {
         // --------------------------------------------------
         // open deployment map json
         // --------------------------------------------------
         let contents = match std::fs::read_to_string(std::path::PathBuf::from(crate::DEPLOYMENT_MAP_JSON)) {
             Ok(contents) => match serde_json::from_str::<HashMap<String, HashMap<String, String>>>(&contents) {
                 Ok(mappings) => mappings,
-                Err(e) => return Err(anyhow::anyhow!(e)),
+                Err(e) => return Err(e.into()),
             },
-            Err(e) => return Err(anyhow::anyhow!(e)),
+            Err(e) => return Err(e),
         };
         // --------------------------------------------------
         // get include and exclude files

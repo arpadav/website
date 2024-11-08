@@ -1,7 +1,7 @@
 [
     {
         "id": "cv",
-        "link": "/media/files/cv.pdf",
+        "link": "/files/cv.pdf",
         "tag": "h2",
         "title": "curriculum vitae"
     },

@@ -18,6 +18,7 @@ pub static DEPLOY_DIR: OnceLock<PathBuf> = OnceLock::new();
 pub const TEMPLATES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates" );
 pub const DEPLOYMENT_MAP_JSON: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates/deployment-map.json" );
 pub const PROJECT_CATEGORIES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates/projects/categories" );
+pub const NOTES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/static/files/notes" );
 
 // --------------------------------------------------
 // prelude
@@ -31,12 +32,6 @@ use std::{
     path::PathBuf,
     sync::OnceLock,
 };
-
-macro_rules! my_macro {
-    ($var:ident) => {
-        let $var = "some value";
-    };
-}
 
 fn main() {
     // --------------------------------------------------
@@ -56,13 +51,8 @@ fn main() {
     // 2. then, verify existence in deployment map
     // 3. then, render and deploy
     // --------------------------------------------------
-    // * main homepage / landing page
-    // * projects homepage
-    // * notes homepage
-    // * gator
-    // --------------------------------------------------
     deploy!(landing_page, homepage::LandingPage);
-    deploy!(projects_homepage, projects::ProjectsHomepage);
+    deploy!(projects, projects::ProjectsHomepage);
     deploy!(notes, notes::NotesHomepage);
     deploy!(gator, miscpages::Alligator);
     deploy!(language, miscpages::Language);

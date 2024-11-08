@@ -1,3 +1,4 @@
 grep
 rsync
 python3
+node-typescript

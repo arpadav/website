@@ -35,6 +35,13 @@ fi
 bash $ROOT_DIR/.requirements/getreqs.sh
 
 # --------------------------------------------------
+# "compile" ts -> js
+# --------------------------------------------------
+# maybe in the future, the current `index.js`` has some magic in it
+# --------------------------------------------------
+# tsc ts/index.ts --target ES2016 --lib ES2016,DOM --outDir /deploy/$FOLDER/static/js
+
+# --------------------------------------------------
 # rsync with replacement on folder to deliver static
 # site to
 # --------------------------------------------------
@@ -53,14 +60,14 @@ fi
 # one command for parallel processing
 # --------------------------------------------------
 HTML_FILES=$(find $FOLDER -name "*.html")
-NUM_FILES=$(echo $HTML_FILES | wc -w)
+NUM_FILES=$(wc -w <<< "$HTML_FILES")
 if [ $NUM_FILES -gt 1 ]; then
-    minhtml --do-not-minify-doctype $HTML_FILES
+    minhtml --do-not-minify-doctype $HTML_FILES > /dev/null 2>&1
 elif [ $NUM_FILES -eq 1 ]; then
     # --------------------------------------------------
     # have to specify output on 1 input, weird
     # --------------------------------------------------
-    minhtml --do-not-minify-doctype $HTML_FILES -o $HTML_FILES
+    minhtml --do-not-minify-doctype $HTML_FILES -o $HTML_FILES > /dev/null 2>&1
 fi
 
 # --------------------------------------------------

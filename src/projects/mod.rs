@@ -43,12 +43,9 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
     // loop through project categories
     // --------------------------------------------------
     let mut pages: Vec<(String, Vec<Page<ProjectTemplate>>)> = std::fs::read_dir(crate::PROJECT_CATEGORIES_DIR)
-        .ok()
+        .expect("Failed to read project categories directory")
         .into_iter()
-        // --------------------------------------------------
-        // handle invalid items pt 1
-        // --------------------------------------------------
-        .flat_map(|entries| entries.filter_map(Result::ok))
+        .filter_map(Result::ok)
         // --------------------------------------------------
         // get the category name, pass it down
         // --------------------------------------------------
@@ -59,7 +56,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             category_path.is_dir().then(|| (category_name, category_projects))
         })
         // --------------------------------------------------
-        // handle invalid items pt 2
+        // handle invalid items
         // --------------------------------------------------
         .flat_map(|(category_name, projects)| projects
             .filter_map(Result::ok)

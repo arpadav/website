@@ -31,8 +31,7 @@ pub use std::collections::HashMap;
 // we dont have to forget to import it in every template
 // to enable enum short-syntax in templates
 // --------------------------------------------------
-pub use crate::primitives::Page;
-pub use crate::primitives::SidebarType;
+pub use crate::primitives::*;
 pub use crate::homepage::tabs::TabBodyType;
 
 /// [`Render`] trait, for rendering custom HTML (safe) from elements

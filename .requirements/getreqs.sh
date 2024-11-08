@@ -9,6 +9,18 @@ REQUIREMENTS_DIR="$(dirname "$(realpath "$0")")"
 mapfile -t requirements < "$REQUIREMENTS_DIR/apt-requirements.txt"
 missing=()
 for pkg in "${requirements[@]}"; do
+    # --------------------------------------------------
+    # edge cases
+    # --------------------------------------------------
+    if [ "$pkg" == "node-typescript" ]; then
+        if ! type "tsc" >/dev/null 2>&1; then
+            missing+=("$pkg")
+        fi
+        continue
+    fi
+    # --------------------------------------------------
+    # check if package exists
+    # --------------------------------------------------
     if ! type "$pkg" &> /dev/null; then
         missing+=("$pkg")
     fi
