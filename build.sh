@@ -45,7 +45,7 @@ bash $ROOT_DIR/.requirements/getreqs.sh
 # rsync with replacement on folder to deliver static
 # site to
 # --------------------------------------------------
-rsync -av --delete $STATIC_DIR $FOLDER
+rsync -aq --delete --exclude '.git' $STATIC_DIR $FOLDER
 
 # --------------------------------------------------
 # cargo with deployment folder flag
