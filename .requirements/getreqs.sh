@@ -38,10 +38,11 @@ if ! type cargo >/dev/null 2>&1; then
     CMD="curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
     if wget -qO- https://www.rust-lang.org/tools/install | grep -q "$CMD"; then
         eval "$CMD"
+        echo "\nAdd `cargo` to path given the instructions above and re-run this script to continue."
     else
         echo "Failed to install Rust. Please install Rust: \`https://www.rust-lang.org/tools/install\`"
-        exit
     fi
+    exit
 fi
 
 # --------------------------------------------------

@@ -6,58 +6,11 @@ use crate::prelude::*;
 // --------------------------------------------------
 // statics
 // --------------------------------------------------
-pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
-    NOTES_LINKS_RAW
-        .iter()
-        .map(|(_, x)| {
-            x.iter().map(|(_, x)| {
-                x.iter()
-                    .filter(|x| std::path::Path::new(&x.url).extension().is_none())
-                    .map(|x| x.clone())
-                    .map(|x| {
-                        let index_html = std::path::Path::new(&x.url).join("index.html");
-                        let index_md = std::path::Path::new(&x.url).join("index.md");
-                        let (src, content) = match index_html.exists() {
-                            true => (
-                                index_html.clone(),
-                                std::fs::read_to_string(&index_html).expect(format!("Failed to open index.html for note `{}`", x.name).as_str())
-                            ),
-                            false => match index_md.exists() {
-                                true => (
-                                    index_md.clone(),
-                                    String::from_utf8_lossy(&std::process::Command::new("pandoc")
-                                        .arg(&index_md)
-                                        .arg("--to")
-                                        .arg("html")
-                                        .arg("-s")
-                                        .arg("--css")
-                                        .arg(concat!(env!("CARGO_MANIFEST_DIR"), "static/css/std.css"))
-                                        .output()
-                                        .expect(format!("Failed to run `pandoc` for note `{}`", x.name).as_str())
-                                        .stdout
-                                    ).to_string()),
-                                false => panic!("Failed to find index.html or index.md for note `{}`", x.name),
-                            }       
-                        };
-                        let content = content.replace("’", "'");
-                        let content = content.replace("“", "\"");
-                        let content = content.replace("”", "\"");
-                        Page {
-                            src,
-                            page: NotesTemplate {
-                                content,
-                                ..Default::default()
-                            }
-                        }
-                    })
-                    .collect::<Vec<_>>()
-            })
-            .flatten()
-            .collect::<Vec<_>>()
-        })
-        .flatten()
-        .collect()  
-});
+/// Iterates through notes directory, depth of 2. All
+/// files auto-become links, and all folders auto-become
+/// links at this depth. Folders must have an `index.md`
+/// or an `index.html` file in order for the link to 
+/// actually work 
 pub static NOTES_LINKS_RAW: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = LazyLock::new(|| {
     // --------------------------------------------------
     // read two deep. one for each category, one for each note topic
@@ -114,6 +67,65 @@ pub static NOTES_LINKS_RAW: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = 
     })
     .collect::<Vec<_>>()
 });
+/// Markdown -> HTML, or HTML contents to be displayed
+/// on a notes page
+pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
+    NOTES_LINKS_RAW
+        .iter()
+        .map(|(_, x)| {
+            x.iter().map(|(_, x)| {
+                x.iter()
+                    .filter(|x| std::path::Path::new(&x.url).extension().is_none())
+                    .map(|x| x.clone())
+                    .map(|x| {
+                        let index_html = std::path::Path::new(&x.url).join("index.html");
+                        let index_md = std::path::Path::new(&x.url).join("index.md");
+                        let (src, content) = match index_html.exists() {
+                            true => (
+                                index_html.clone(),
+                                std::fs::read_to_string(&index_html).expect(format!("Failed to open index.html for note `{}`", x.name).as_str())
+                            ),
+                            false => match index_md.exists() {
+                                true => (
+                                    index_md.clone(),
+                                    String::from_utf8_lossy(&std::process::Command::new("pandoc")
+                                        .arg(&index_md)
+                                        .arg("--to")
+                                        .arg("html")
+                                        .arg("-s")
+                                        // ----------------------------------------------------
+                                        // <<STYLE+TAG>>
+                                        // ----------------------------------------------------
+                                        .arg("--css")
+                                        .arg(concat!(env!("CARGO_MANIFEST_DIR"), "static/css/std.css"))
+                                        .arg("--highlight-style=zenburn")
+                                        .output()
+                                        .expect(format!("Failed to run `pandoc` for note `{}`", x.name).as_str())
+                                        .stdout
+                                    ).to_string()),
+                                false => panic!("Failed to find index.html or index.md for note `{}`", x.name),
+                            }       
+                        };
+                        let content = content.replace("’", "'");
+                        let content = content.replace("“", "\"");
+                        let content = content.replace("”", "\"");
+                        Page {
+                            src,
+                            page: NotesTemplate {
+                                content,
+                                ..Default::default()
+                            }
+                        }
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .flatten()
+            .collect::<Vec<_>>()
+        })
+        .flatten()
+        .collect()  
+});
+/// Links to notes on the deployment end. Just a massive filter
 pub static NOTES_LINKS: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = LazyLock::new(|| {
     NOTES_LINKS_RAW.iter().map(|(category, topics)| {(
         category.clone(),
