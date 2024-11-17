@@ -71,11 +71,11 @@ Download all dependencies and create the OS image to flash.
 
 Ensure to select "Manual" mode for first time. Otherwise, "Automatic" mode works fine if the device is powered on and plugged in.
 
-![flashing](sdks3.png)
+![ ](sdks3.png)
 
 Can plug in monitor while being flashed for sanity. The NVIDIA logo with white background should appear upon completion. This screen will also show up:
 
-![sdk-components](components.png)
+![ ](components.png)
 
 Hold off on installing until the configs on the Jetson are installed and it is rebooted (this is when you select `Pre-config` and you can verify the automatic config if plugged into monitor).
 
@@ -83,7 +83,7 @@ Once the Jetson reboots and it is in the login screen, the device has been flash
 
 It will prompt to install the SDK components. Try SSH'ing into it on another terminal. The IP, Username, and Pwd were all set within the SDK manager. Only after ssh works and confirmed, press `Install`. Given the `distrobox` deps which were installed in the `distrobox` provisioning part, this should yield no error and:
 
-![sdk-components-install](components-install.png)
+![ ](components-install.png)
 
 This will just repeatadly ssh into the Jetson Nano and install essentials like CUDA, OpenCV, some DL stuff, etc. This step can be skipped, but not recommended.
 
@@ -91,7 +91,7 @@ This will just repeatadly ssh into the Jetson Nano and install essentials like C
 
 Note that if you run into any errors, please see the terminal output for an easy way to debug what is actually going on:
 
-![sdkmanager-terminal](dbg.png)
+![ ](dbg.png)
 
 In the image above, you see it can't find `nc` which can be installed using `sudo apt install netcat` on my `distrobox` instance. It could have just directly ssh'ed, but it said it failed because of a missing dependency.
 

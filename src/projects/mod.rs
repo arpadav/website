@@ -161,13 +161,3 @@ impl SourcePath<ProjectsHomepage> for ProjectsHomepage {
         [ crate::TEMPLATES_DIR, "/projects/projects-homepage.html" ].concat().into()
     }
 }
-
-#[test]
-fn bruh () {
-    let foo = "bar".to_string();
-    let NUM_SPACE = 100;
-    let length = foo.len();
-    let title = foo.clone();
-    let title = format!("{}{}", title, "&nbsp;".repeat(NUM_SPACE - length));
-    println!("{}", title);
-}

@@ -6,7 +6,56 @@ use crate::prelude::*;
 // --------------------------------------------------
 // statics
 // --------------------------------------------------
-pub static NOTES: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = LazyLock::new(|| {
+pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
+    NOTES_LINKS_RAW
+        .iter()
+        .map(|(_, x)| {
+            x.iter().map(|(_, x)| {
+                x.iter()
+                    .filter(|x| std::path::Path::new(&x.url).extension().is_none())
+                    .map(|x| x.clone())
+                    .map(|x| {
+                        let index_html = std::path::Path::new(&x.url).join("index.html");
+                        let index_md = std::path::Path::new(&x.url).join("index.md");
+                        let (src, content) = match index_html.exists() {
+                            true => (
+                                index_html.clone(),
+                                std::fs::read_to_string(&index_html).expect(format!("Failed to open index.html for note `{}`", x.name).as_str())
+                            ),
+                            false => match index_md.exists() {
+                                true => (
+                                    index_md.clone(),
+                                    String::from_utf8_lossy(&std::process::Command::new("pandoc")
+                                        .arg(&index_md)
+                                        .arg("--to")
+                                        .arg("html")
+                                        .output()
+                                        .expect(format!("Failed to run `pandoc` for note `{}`", x.name).as_str())
+                                        .stdout
+                                    ).to_string()),
+                                false => panic!("Failed to find index.html or index.md for note `{}`", x.name),
+                            }       
+                        };
+                        let content = content.replace("’", "'");
+                        let content = content.replace("“", "\"");
+                        let content = content.replace("”", "\"");
+                        Page {
+                            src,
+                            page: NotesTemplate {
+                                content,
+                                ..Default::default()
+                            }
+                        }
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .flatten()
+            .collect::<Vec<_>>()
+        })
+        .flatten()
+        .collect()  
+});
+pub static NOTES_LINKS_RAW: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = LazyLock::new(|| {
     // --------------------------------------------------
     // read two deep. one for each category, one for each note topic
     // use fs dir
@@ -33,10 +82,9 @@ pub static NOTES: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = LazyLock::
                             .filter_map(Result::ok)
                             .filter_map(|entry| {
                                 let note_name = entry.file_name().into_string().ok()?;
-                                let path = entry.path();
-                                path.is_file().then(|| Link {
+                                Some(Link {
                                     name: note_name.clone(),
-                                    url: format!("{}/{}/{}/{}", crate::url_relative_static!(crate::NOTES_DIR), category, topic, note_name),
+                                    url: format!("{}/{}/{}/{}", crate::NOTES_DIR, category, topic, note_name),
                                 })
                             })
                             .collect::<Vec<_>>();
@@ -63,6 +111,21 @@ pub static NOTES: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = LazyLock::
     })
     .collect::<Vec<_>>()
 });
+pub static NOTES_LINKS: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = LazyLock::new(|| {
+    NOTES_LINKS_RAW.iter().map(|(category, topics)| {(
+        category.clone(),
+        topics.iter().map(|(topic, notes)| {(
+            topic.clone(),
+            notes.iter().map(|x| Link {
+                name: x.name.clone(),
+                url: crate::url_relative_content!(&x.url),
+            })
+            .collect::<Vec<_>>(),
+        )})
+        .collect::<Vec<_>>(),
+    )})
+    .collect::<Vec<_>>()
+});
 
 #[derive(Template, Default)]
 #[template(path = "notes.html")]
@@ -75,7 +138,7 @@ pub struct NotesHomepage {
 impl Create for NotesHomepage {
     fn create() -> Self {
         Self {
-            notes: (*NOTES).clone(),
+            notes: (*NOTES_LINKS).clone(),
             ..Default::default()
         }
     }
@@ -86,3 +149,26 @@ impl SourcePath<NotesHomepage> for NotesHomepage {
         [ crate::TEMPLATES_DIR, "/notes.html" ].concat().into()
     }
 }
+
+#[derive(Template, Default)]
+#[template(path = "general/markdown.html")]
+/// Template for notes pages
+pub struct NotesTemplate {
+    pub sidebar: SidebarType,
+    pub content: String,
+}
+// /// [`NotesPage`] implmentation of [`Create`]
+// impl Create for NotesPage {
+//     fn create() -> Self {
+//         Self {
+//             notes: (*NOTES_LINKS).clone(),
+//             ..Default::default()
+//         }
+//     }
+// }
+// /// [`NotesPage`] implmentation of [`SourcePath`]
+// impl SourcePath<NotesPage> for NotesPage {
+//     fn src_path() -> std::path::PathBuf {
+//         [ crate::TEMPLATES_DIR, "/notes.html" ].concat().into()
+//     }
+// }

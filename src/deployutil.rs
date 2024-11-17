@@ -255,7 +255,7 @@ impl From<&HashMap<String, String>> for DeploymentMapInner {
         input
             .iter()
             .map(|(src, dst)| -> Option<Vec<(PathBuf, PathBuf)>> {
-                let src = std::path::PathBuf::from(crate::TEMPLATES_DIR).join(src);
+                let src = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(src);
                 let dst = std::path::PathBuf::from(crate::DEPLOY_DIR.get().expect("`DEPLOY_DIR` is not initialized")).join(dst);
                 match PathPattern::new(src.display().to_string()) {
                     Ok(pattern) => Some(pattern.map(dst.display().to_string())),
@@ -327,15 +327,39 @@ impl DeploymentFile {
         }
     }
 
-    /// Copies a file from `src` to `dst`
+    /// Copies a file OR directory from `src` to `dst`
     pub fn copy(&mut self) -> std::io::Result<()> {
         if let Some(parent) = self.dst.parent() { std::fs::create_dir_all(parent)?; }
-        if !self.dst.exists() { std::fs::File::create(&self.dst)?.write_all(&[])?; }
-        std::fs::copy(&self.src, &self.dst)?;
+        
+        match self.dst.extension() {
+            None => {
+                if !self.dst.exists() { std::fs::create_dir(&self.dst)?; }
+                copy_dir(&self.src, &self.dst)?;
+            },
+            Some(_) => {
+                std::fs::File::create(&self.dst)?.write_all(&[])?;
+                std::fs::copy(&self.src, &self.dst)?;
+            },
+        }
         self.deployed = true;
         Ok(())
     }
 }
+
+/// Recursively copies a directory from `src` to `dst`
+fn copy_dir(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    std::fs::create_dir_all(dst)?;
+    for entry in std::fs::read_dir(src)? {
+        let entry = entry?.path();
+        let target = dst.join(entry.file_name().unwrap());
+        match entry.is_dir() {
+            true => copy_dir(&entry, &target)?,
+            false => { let _ = std::fs::copy(entry, target)?; },
+        };
+    }
+    Ok(())
+}
+
 /// For querying deployment map
 pub enum DeploymentFileType<'a> {
     Source(&'a PathBuf),

@@ -17,8 +17,8 @@ pub(crate) mod prelude;
 pub static DEPLOY_DIR: OnceLock<PathBuf> = OnceLock::new();
 pub const TEMPLATES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates" );
 pub const DEPLOYMENT_MAP_JSON: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates/deployment-map.json" );
-pub const PROJECT_CATEGORIES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/templates/projects/categories" );
-pub const NOTES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/static/files/notes" );
+pub const PROJECT_CATEGORIES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/content/projects/" );
+pub const NOTES_DIR: &'static str = concat!( env!("CARGO_MANIFEST_DIR"), "/content/notes" );
 
 // --------------------------------------------------
 // prelude
@@ -75,6 +75,26 @@ fn main() {
         .for_each(|proj| {
             let name = proj.page.name.clone();
             page_deploy!(proj, &name);
+        });
+    
+    
+    // // --------------------------------------------------
+    // // * get notes pages. verify existance in deployment map
+    // // --------------------------------------------------
+    // notes::NOTES
+    //     .iter()
+    //     .for_each(|note| match deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&note.src)) {
+    //         true => (),
+    //         false => panic!("{} not found in deployment map", note.src.display()),
+    //     });
+    // --------------------------------------------------
+    // * render + deploy project pages
+    // --------------------------------------------------
+    notes::NOTES
+        .iter()
+        .for_each(|note| {
+            let name = note.src.display().to_string();
+            page_deploy!(note, &name);
         });
     
     // --------------------------------------------------

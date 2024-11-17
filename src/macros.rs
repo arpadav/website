@@ -119,14 +119,25 @@ macro_rules! url_last {
 }
 
 #[macro_export]
-/// To get the items after "static" from CARGO_MANIFEST_DIR
+/// To get the items after "content" from CARGO_MANIFEST_DIR
 /// 
 /// Used in templates
-macro_rules! url_relative_static {
+macro_rules! url_relative_content {
     ($url:expr) => {{
         let url_absolute = std::path::Path::new($url).canonicalize().unwrap();
         let url_absolute = url_absolute.to_str().unwrap();
-        url_absolute.replace(concat!( env!("CARGO_MANIFEST_DIR"), "/static" ), "").to_string()
+        url_absolute.replace(concat!( env!("CARGO_MANIFEST_DIR"), "/content" ), "").to_string()
     }};
 }
 
+#[macro_export]
+/// To get the items after CARGO_MANIFEST_DIR
+/// 
+/// Used in templates
+macro_rules! url_relative_manifest {
+    ($url:expr) => {{
+        let url_absolute = std::path::Path::new($url).canonicalize().unwrap();
+        let url_absolute = url_absolute.to_str().unwrap();
+        url_absolute.replace(env!("CARGO_MANIFEST_DIR"), "").to_string()
+    }};
+}
