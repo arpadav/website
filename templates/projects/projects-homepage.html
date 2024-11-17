@@ -41,10 +41,11 @@
             <div class="card" style="cursor: pointer;">
                 <img style="width: 7px; height: 7px" src="/images/tri.png">
                 <h3 style="margin-left: 7px">
-                    {% let num_space = 95 %}
+                    {% let num_space = 54 %}
+                    {% let offset = 40 %}
                     {% let length = project.page.header.title.len() %}
                     {% if length < num_space %}
-                        {% let long_title = format!("{} {} ", project.page.header.title, "&nbsp;".repeat(num_space - length)) %}
+                        {% let long_title = format!("{} {} ", project.page.header.title, "&nbsp;".repeat(num_space - length + offset)) %}
                         <i>{{ long_title|safe }}</i>
                     {% else %}
                         <i>{{ project.page.header.title }}</i>

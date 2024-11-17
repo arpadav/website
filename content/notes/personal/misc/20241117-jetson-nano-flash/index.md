@@ -2,7 +2,7 @@
 
 This is meant as a tutorial, mainly for myself. In case I forget.
 
-I was struggling with flashing my old NVIDIA Jetson Nano Development Kit after moving from a slow microSD card (which made it difficult to perform tasks) to a newer / faster one. However, since the old one was traditionally flashed out-of-the-box using the microSD card ([following the official NVIDIA tutorial](https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit), I could apparently not simply re-flash the microSD card and repeat the process.)
+I was struggling with flashing my old NVIDIA Jetson Nano Development Kit after swapping out microSD cards for a faster one. The previous one was flashed out-of-the-box ([following the official NVIDIA tutorial](https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit)) and apparently it was not as simple as swapping out microSD cards. As a result, I had resort to flashing the Jetson via the micro USB port. 
 
 I have to put the Jetson Nano into recovery mode and connect to a Linux machine to reflash. There are two options:
 
@@ -23,7 +23,7 @@ A physical pin needs to be bridged to ground to enter, what is known in the embe
 
 On the Jetson Nano Development Kit, this is found on the Button Header [J50]. The silkscreen on the bottom of the board should show pins 3/4 which need to be jumped. Different versions of the carrier board and different Jetsons have this pin in different locations, so please check other pin-out diagrams online.
 
-![jetson-nano-dev-kit-pinout](pinout.png)
+![ ](pinout.png)
 
 ## Other Jetson Nano Peripherals
 
@@ -79,7 +79,7 @@ Can plug in monitor while being flashed for sanity. The NVIDIA logo with white b
 
 Hold off on installing until the configs on the Jetson are installed and it is rebooted (this is when you select `Pre-config` and you can verify the automatic config if plugged into monitor).
 
-Once the Jetson reboots and it is in the login screen, the device has been flashed! ***Remember to remove the recovery mode jumper pin prior to flashing***
+Once the Jetson reboots and it is in the login screen, the device has been flashed! ***Remember to remove the recovery mode jumper pin once done!***
 
 It will prompt to install the SDK components. Try SSH'ing into it on another terminal. The IP, Username, and Pwd were all set within the SDK manager. Only after ssh works and confirmed, press `Install`. Given the `distrobox` deps which were installed in the `distrobox` provisioning part, this should yield no error and:
 

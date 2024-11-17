@@ -37,7 +37,7 @@ bash $ROOT_DIR/.requirements/getreqs.sh
 # --------------------------------------------------
 # "compile" ts -> js
 # --------------------------------------------------
-# maybe in the future, the current `index.js`` has some magic in it
+# maybe in the future, the current `index.js` has some magic in it
 # --------------------------------------------------
 # tsc ts/index.ts --target ES2016 --lib ES2016,DOM --outDir /deploy/$FOLDER/static/js
 

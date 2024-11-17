@@ -29,6 +29,9 @@ pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
                                         .arg(&index_md)
                                         .arg("--to")
                                         .arg("html")
+                                        .arg("-s")
+                                        .arg("--css")
+                                        .arg(concat!(env!("CARGO_MANIFEST_DIR"), "static/css/std.css"))
                                         .output()
                                         .expect(format!("Failed to run `pandoc` for note `{}`", x.name).as_str())
                                         .stdout
@@ -91,7 +94,7 @@ pub static NOTES_LINKS_RAW: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = 
                         // ----------------------------------------------------
                         // <<STYLE+TAG>>
                         // ----------------------------------------------------
-                        sorted_notes.sort_by(|a, b| a.name.cmp(&b.name));
+                        sorted_notes.sort_by(|a, b| b.name.cmp(&a.name));
                         (
                             topic.clone(),
                             sorted_notes,
