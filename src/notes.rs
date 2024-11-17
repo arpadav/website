@@ -160,18 +160,3 @@ pub struct NotesTemplate {
     pub sidebar: SidebarType,
     pub content: String,
 }
-// /// [`NotesPage`] implmentation of [`Create`]
-// impl Create for NotesPage {
-//     fn create() -> Self {
-//         Self {
-//             notes: (*NOTES_LINKS).clone(),
-//             ..Default::default()
-//         }
-//     }
-// }
-// /// [`NotesPage`] implmentation of [`SourcePath`]
-// impl SourcePath<NotesPage> for NotesPage {
-//     fn src_path() -> std::path::PathBuf {
-//         [ crate::TEMPLATES_DIR, "/notes.html" ].concat().into()
-//     }
-// }

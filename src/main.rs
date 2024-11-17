@@ -60,6 +60,9 @@ fn main() {
     // --------------------------------------------------
     // * get project pages. verify existance in deployment map
     // --------------------------------------------------
+    // this is a pre-requisite for deploying. need to know 
+    // WHERE to deploy. the source is indicated by a `Page::src`
+    // --------------------------------------------------
     let projects = projects::ALL_PROJECTS.iter().map(|(_, proj)| proj).flatten().collect::<Vec<_>>();
     projects
         .iter()
@@ -78,15 +81,18 @@ fn main() {
         });
     
     
-    // // --------------------------------------------------
-    // // * get notes pages. verify existance in deployment map
-    // // --------------------------------------------------
-    // notes::NOTES
-    //     .iter()
-    //     .for_each(|note| match deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&note.src)) {
-    //         true => (),
-    //         false => panic!("{} not found in deployment map", note.src.display()),
-    //     });
+    // --------------------------------------------------
+    // * get notes pages. verify existance in deployment map
+    // --------------------------------------------------
+    // this is a pre-requisite for deploying. need to know 
+    // WHERE to deploy. the source is indicated by a `Page::src`
+    // --------------------------------------------------
+    notes::NOTES
+        .iter()
+        .for_each(|note| match deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&note.src)) {
+            true => (),
+            false => panic!("{} not found in deployment map", note.src.display()),
+        });
     // --------------------------------------------------
     // * render + deploy project pages
     // --------------------------------------------------
