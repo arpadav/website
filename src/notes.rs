@@ -96,8 +96,8 @@ pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
                                         // ----------------------------------------------------
                                         // <<STYLE+TAG>>
                                         // ----------------------------------------------------
-                                        .arg("--css")
-                                        .arg(concat!(env!("CARGO_MANIFEST_DIR"), "static/css/std.css"))
+                                        // .arg("--css")
+                                        // .arg(concat!(env!("CARGO_MANIFEST_DIR"), "/static/css/std.css"))
                                         .arg("--highlight-style=zenburn")
                                         .output()
                                         .expect(format!("Failed to run `pandoc` for note `{}`", x.name).as_str())
