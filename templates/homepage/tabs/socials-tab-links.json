@@ -1,26 +1,32 @@
 [
     {
-        "name": "LinkedIn",
-        "url": "https://www.linkedin.com/in/arpadav",
-        "img_src": "/images/linkedin.png",
-        "img_hvr_src": "/images/linkedin_hvr.png"
-    },
-    {
         "name": "GitHub",
         "url": "https://github.com/arpadav",
         "img_src": "/images/github.png",
-        "img_hvr_src": "/images/github_hvr.png"
+        "img_hvr_src": "/images/github-hvr.png"
     },
     {
         "name": "Goodreads",
         "url": "https://www.goodreads.com/user/show/84068476-arpad-voros",
         "img_src": "/images/goodreads.png",
-        "img_hvr_src": "/images/goodreads_hvr.png"
+        "img_hvr_src": "/images/goodreads-hvr.png"
+    },
+    {
+        "name": "Letterboxd",
+        "url": "https://letterboxd.com/arpadav",
+        "img_src": "/images/letterboxd.png",
+        "img_hvr_src": "/images/letterboxd-hvr.png"
+    },
+    {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com/in/arpadav",
+        "img_src": "/images/linkedin.png",
+        "img_hvr_src": "/images/linkedin-hvr.png"
     },
     {
         "name": "Spotify",
         "url": "https://open.spotify.com/user/arpadav",
         "img_src": "/images/spotify.png",
-        "img_hvr_src": "/images/spotify_hvr.png"
+        "img_hvr_src": "/images/spotify-hvr.png"
     }
 ]
