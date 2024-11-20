@@ -3,10 +3,10 @@
         "templates/homepage/index.html": "index.html",
         "templates/<page>.html": "<page>/index.html",
         
-        "content/notes/<cat>/<typ>/<file>.pdf": "notes/<cat>/<typ>/<file>.pdf",
+        "content/notes/<cat>/<typ>/<title>.<ext>": "notes/<cat>/<typ>/<title>.<ext>",
+        "content/notes/<cat>/<typ>/<title>.md": "notes/<cat>/<typ>/<title>.md/index.html",
         "content/notes/<cat>/<typ>/<title>/<file>": "notes/<cat>/<typ>/<title>/<file>",
         "content/notes/<cat>/<typ>/<title>/index.md": "notes/<cat>/<typ>/<title>/index.html",
-        "content/notes/<cat>/<typ>/<title>/index.html": "notes/<cat>/<typ>/<title>/index.html",
 
         "templates/projects/projects-homepage.html": "projects/index.html",
         "content/projects/*/<folder>/<folder>.html": "projects/<folder>/index.html",

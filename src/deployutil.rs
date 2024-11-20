@@ -83,6 +83,7 @@ impl PathPattern {
     /// Gets `regex` string from input path
     fn init_regex(text: &str) -> (HashSet<String>, String) {
         let unique_items = PathPattern::get_uniq_bracketized(text);
+        let text = text.replace(".", r"\.");
         // --------------------------------------------------
         // map for capture groups with group reference numbers
         // --------------------------------------------------
@@ -105,7 +106,7 @@ impl PathPattern {
             }
         }
         // --------------------------------------------------
-        // match all `<...>` that arent `(?P<...>.+?)`, replace
+        // match all `<...>` that arent `(?P<...>.*)`, replace
         // with short hand ref numbers
         // --------------------------------------------------
         for (item, shorthand) in &replacements {
@@ -122,7 +123,7 @@ impl PathPattern {
     /// Map sources to destination
     fn map(&self, destination: impl Into<String>) -> Vec<(PathBuf, PathBuf)> {
         let destination = destination.into();
-        // let debug_print = destination.contains("<file>");
+        // let debug_print = destination.contains("<ext>");
         // let debug_print = true;
         let unique_items = PathPattern::get_uniq_bracketized(&destination);
         let res = self.captures
@@ -133,7 +134,7 @@ impl PathPattern {
                     .iter()
                     .filter(|ci| captures.contains_key(*ci))
                     // .for_each(|ci| match debug_print {
-                    //     true => dst = debugme(dst.clone(), ci, captures),
+                    //     true => panic!("{:?}", captures),
                     //     false => dst = dst.replace(&format!("<{}>", ci), captures.get(ci).unwrap()),
                     // });
                     .for_each(|ci| { dst = dst.replace(&format!("<{}>", ci), captures.get(ci).unwrap()); });
@@ -196,9 +197,16 @@ impl DeploymentMapInner {
         // --------------------------------------------------
         // open deployment map json
         // --------------------------------------------------
-        let contents = match std::fs::read_to_string(std::path::PathBuf::from(crate::DEPLOYMENT_MAP_JSON)) {
-            Ok(contents) => match serde_json::from_str::<HashMap<String, HashMap<String, String>>>(&contents) {
-                Ok(mappings) => mappings,
+        let contents: HashMap<String, Vec<(String, String)>> = match std::fs::read_to_string(std::path::PathBuf::from(crate::DEPLOYMENT_MAP_JSON)) {
+            Ok(contents) => match serde_json::from_str::<HashMap<String, serde_json::Value>>(&contents) {
+                Ok(mappings) => mappings
+                    .iter()
+                    .map(|(k, v)| {
+                        let ordered: Vec<(&String, &serde_json::Value)> = v.as_object().unwrap().into_iter().collect();
+                        let ordered: Vec<(String, String)> = ordered.into_iter().map(|(k, v)| (k.clone(), v.as_str().unwrap().to_string())).collect();
+                        (k.clone(), ordered)
+                    })
+                    .collect(),
                 Err(e) => return Err(e.into()),
             },
             Err(e) => return Err(e),
@@ -249,10 +257,10 @@ impl DeploymentMapInner {
             .filter(|x| !x.deployed)
     }
 }
-/// [`DeploymentMapInner`] implementation of [`From`] for [`HashMap<String, String>`]
-impl From<&HashMap<String, String>> for DeploymentMapInner {
-    fn from(input: &HashMap<String, String>) -> Self {
-        input
+/// [`DeploymentMapInner`] implementation of [`From`] for [`Vec<(String, String)>`]
+impl From<&Vec<(String, String)>> for DeploymentMapInner {
+    fn from(input: &Vec<(String, String)>) -> Self {
+        let output = input
             .iter()
             .map(|(src, dst)| -> Option<Vec<(PathBuf, PathBuf)>> {
                 let src = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(src);
@@ -265,10 +273,32 @@ impl From<&HashMap<String, String>> for DeploymentMapInner {
                     },
                 }
             })
-            .filter(|x| x.is_some())
-            .map(|x| x.unwrap())
+            .filter_map(|x| x)
             .flatten()
             .collect::<Vec<(PathBuf, PathBuf)>>()
+            .iter()
+            .rev()
+            // .for_each(|x| println!("{} -> {}", x.0.display(), x.1.display()))
+            .scan(HashSet::new(), |seen, (src, dst)| {
+                // println!("{}", src.display());
+                // println!("{:?}", seen);
+                if seen.insert(src) {
+                    // println!("NOT FOUND!! INSERTING");
+                    // println!("\n\n");
+                    Some(Some((src.clone(), dst.clone())))
+                } else { 
+                    // println!("\n\n");
+                    Some(None)
+                }
+            })
+            .filter_map(|x| x)
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev()
+            .collect::<Vec<_>>()
+            ;
+        // panic!("{:?}", output);
+        output
             .into()
     }
 }
@@ -330,7 +360,6 @@ impl DeploymentFile {
     /// Copies a file OR directory from `src` to `dst`
     pub fn copy(&mut self) -> std::io::Result<()> {
         if let Some(parent) = self.dst.parent() { std::fs::create_dir_all(parent)?; }
-        
         match self.dst.extension() {
             None => {
                 if !self.dst.exists() { std::fs::create_dir(&self.dst)?; }
@@ -382,7 +411,7 @@ pub(crate) fn deploy_fn(path: &PathBuf, page_to_render: &impl askama::Template, 
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, format!("Failed to render {}: {}", desc, e)))?;
     std::io::Write::write_all(&mut file, output.as_bytes())?;
     Ok(())
- }
+}
 
 #[cfg(test)]
 mod tests {
@@ -392,5 +421,19 @@ mod tests {
     fn from_main() -> () {
         let _ = crate::DEPLOY_DIR.set(std::path::PathBuf::from("/home/arpadav/repos/website/deploy/dev"));
         assert!(DeploymentMapInner::from_static().is_ok());
+    }
+
+    #[test]
+    fn match_escape_period() -> () {
+        let regex_str = r"/home/arpadav/repos/website/content/notes/(?P<cat>.*)/(?P<typ>.*)/(?P<title>.*)\.(?P<ext>.*)";
+        let regex_st2 = r"/home/arpadav/repos/website/content/notes/(?P<cat>.[^/]+)/(?P<typ>.[^/]+)/(?P<title>.[^/]+)\.(?P<ext>.[^/]+)";
+        let path = "/home/arpadav/repos/website/content/notes/academic/2021 - ECE 558/Voros_Arpad_ECE558_proj3.pdf";
+        let regex = fancy_regex::Regex::new(regex_str).unwrap();
+        let captures = regex.captures(path).unwrap().unwrap();
+        println!("{:?}:", captures.name("cat").unwrap().as_str());
+        println!("{:?}:", captures.name("typ").unwrap().as_str());
+        println!("{:?}:", captures.name("title").unwrap().as_str());
+        println!("{:?}:", captures.name("ext").unwrap().as_str());
+        // println!("{:?}", captures);
     }
 }

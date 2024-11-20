@@ -75,51 +75,66 @@ pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
         .map(|(_, x)| {
             x.iter().map(|(_, x)| {
                 x.iter()
-                    .filter(|x| std::path::Path::new(&x.url).extension().is_none())
-                    .map(|x| x.clone())
+                    .filter(|x| !x.url.ends_with(".pdf"))
                     .map(|x| {
-                        let index_html = std::path::Path::new(&x.url).join("index.html");
-                        let index_md = std::path::Path::new(&x.url).join("index.md");
-                        let (src, content) = match index_html.exists() {
-                            true => (
-                                index_html.clone(),
-                                std::fs::read_to_string(&index_html).expect(format!("Failed to open index.html for note `{}`", x.name).as_str())
-                            ),
-                            false => match index_md.exists() {
-                                true => {
-                                    let md2html = String::from_utf8_lossy(&std::process::Command::new("pandoc")
-                                        .arg(&index_md)
-                                        .arg("--to")
-                                        .arg("html")
-                                        .arg("-s")
-                                        .arg("--strip-comments")
-                                        // ----------------------------------------------------
-                                        // <<STYLE+TAG>>
-                                        // ----------------------------------------------------
-                                        // This is included here and not in `templates/markdown.html`
-                                        // ----------------------------------------------------
-                                        .arg("--css")
-                                        .arg("/css/std.css")
-                                        .arg("--highlight-style=zenburn")
-                                        .output()
-                                        .expect(format!("Failed to run `pandoc` for note `{}`", x.name).as_str())
-                                        .stdout
-                                    ).to_string();
-                                    // ----------------------------------------------------
-                                    // * remove everything up until `<style>` (this include `<!DOCTYPE html>` and `<head>` and `<meta>`)
-                                    // * then, add back `<head>`
-                                    // * then, remove the trailing `</html>`
-                                    // ----------------------------------------------------
-                                    // this is to ensure that the formatting is consistent
-                                    // across all notes
+                        let src = match std::path::Path::new(&x.url).extension() {
+                            // ----------------------------------------------------
+                            // if folder, find the `index`
+                            // ----------------------------------------------------
+                            // <<STYLE+TAG>>
+                            // ----------------------------------------------------
+                            None => {
+                                let index_html = std::path::Path::new(&x.url).join("index.html");
+                                let index_md = std::path::Path::new(&x.url).join("index.md");
+                                match index_html.exists() {
+                                    true => index_html.clone(),
+                                    false => match index_md.exists() {
+                                        true => index_md.clone(),
+                                        false => panic!("Failed to find index.html or index.md for note `{}`", x.name),
+                                    }       
+                                }
+                            },
+                            // ----------------------------------------------------
+                            // otherwise, just file
+                            // ----------------------------------------------------
+                            Some(_) => std::path::Path::new(&x.url).into(),
+                        };
+                        let content = match src.extension().and_then(|x| x.to_str()) {
+                            Some("html") => std::fs::read_to_string(&src)
+                                .expect(format!("Failed to open {}.html for note `{}`", src.file_name().unwrap().to_string_lossy(), x.name).as_str()),
+                            Some("md") => {
+                                let md2html = String::from_utf8_lossy(&std::process::Command::new("pandoc")
+                                    .arg(&src)
+                                    .arg("--to")
+                                    .arg("html")
+                                    .arg("--mathjax")
+                                    .arg("-s")
+                                    .arg("--strip-comments")
                                     // ----------------------------------------------------
                                     // <<STYLE+TAG>>
                                     // ----------------------------------------------------
-                                    let md2html = format!("<head>{}", md2html[md2html.find("<style>").unwrap_or(0)..].trim_end_matches("</html>"));
-                                    (index_md.clone(), md2html)
-                                },
-                                false => panic!("Failed to find index.html or index.md for note `{}`", x.name),
-                            }       
+                                    // This is included here and not in `templates/markdown.html`
+                                    // ----------------------------------------------------
+                                    .arg("--css")
+                                    .arg("/css/std.css")
+                                    .arg("--highlight-style=zenburn")
+                                    .output()
+                                    .expect(format!("Failed to run `pandoc` for note `{}`", x.name).as_str())
+                                    .stdout
+                                ).to_string();
+                                // ----------------------------------------------------
+                                // * remove everything up until `<style>` (this include `<!DOCTYPE html>` and `<head>` and `<meta>`)
+                                // * then, add back `<head>`
+                                // * then, remove the trailing `</html>`
+                                // ----------------------------------------------------
+                                // this is to ensure that the formatting is consistent
+                                // across all notes
+                                // ----------------------------------------------------
+                                // <<STYLE+TAG>>
+                                // ----------------------------------------------------
+                                format!("<head>{}", md2html[md2html.find("<style>").unwrap_or(0)..].trim_end_matches("</html>"))
+                            },
+                            _ => unimplemented!("Unsupported file type for note `{}`, please implement how to convert it to HTML for display.\n\nIf link is sufficient to view stand-alone (like a `.pdf`) please skip it in the `filter` call above.", x.name),
                         };
                         let content = content.replace("’", "'");
                         let content = content.replace("“", "\"");

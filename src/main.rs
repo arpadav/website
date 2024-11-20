@@ -122,10 +122,10 @@ fn parse_cli() {
         Some(pos) => pos,
         None => match args.iter().position(|arg| arg == "-d") {
             Some(pos) => pos,
-            None => panic!("Missing `-d / --deploy` argument"),
+            None => panic!("Missing `-d / --deploy` argument. Usage: `-d / --deploy <folder>`"),
         },
     };
-    if deploy_folder_arg + 1 >= args.len() { panic!("Missing `-d / --deploy` argument") }
+    if deploy_folder_arg + 1 >= args.len() { panic!("Missing `-d / --deploy` argument. Usage: `-d / --deploy <folder>`") }
     let deploymen_dir = PathBuf::from(&args[deploy_folder_arg + 1]);
     // --------------------------------------------------
     // set statics

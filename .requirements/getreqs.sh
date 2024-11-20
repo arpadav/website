@@ -10,7 +10,7 @@ mapfile -t requirements < "$REQUIREMENTS_DIR/apt-requirements.txt"
 missing=()
 for pkg in "${requirements[@]}"; do
     # --------------------------------------------------
-    # edge cases
+    # edge cases: apt install name != binary name
     # --------------------------------------------------
     if [ "$pkg" == "node-typescript" ]; then
         if ! type "tsc" >/dev/null 2>&1; then
@@ -22,6 +22,18 @@ for pkg in "${requirements[@]}"; do
     # check if package exists
     # --------------------------------------------------
     if ! type "$pkg" &> /dev/null; then
+        # --------------------------------------------------
+        # edge cases: sudo apt install isnt sufficient
+        # --------------------------------------------------
+        if [ "$pkg" == "pandoc" ]; then
+            wget "https://github.com/jgm/pandoc/releases/download/3.5/pandoc-3.5-1-arm64.deb"
+            sudo dpkg -i "pandoc-3.5-1-arm64.deb"
+            rm "pandoc-3.5-1-arm64.deb"
+            continue
+        fi
+        # --------------------------------------------------
+        # otherwise, add as missing
+        # --------------------------------------------------
         missing+=("$pkg")
     fi
 done
