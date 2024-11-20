@@ -26,9 +26,15 @@ for pkg in "${requirements[@]}"; do
         # edge cases: sudo apt install isnt sufficient
         # --------------------------------------------------
         if [ "$pkg" == "pandoc" ]; then
-            wget "https://github.com/jgm/pandoc/releases/download/3.5/pandoc-3.5-1-arm64.deb"
-            sudo dpkg -i "pandoc-3.5-1-arm64.deb"
-            rm "pandoc-3.5-1-arm64.deb"
+            arch=$(uname -m)
+            if [ "$arch" == "x86_64" ]; then
+                pkgname="pandoc-3.5-1-amd64.deb"
+            else
+                pkgname="pandoc-3.5-1-arm64.deb"
+            fi 
+            wget "https://github.com/jgm/pandoc/releases/download/3.5/$pkgname"
+            sudo dpkg -i "$pkgname"
+            rm "$pkgname"
             continue
         fi
         # --------------------------------------------------
