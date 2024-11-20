@@ -260,7 +260,7 @@ impl DeploymentMapInner {
 /// [`DeploymentMapInner`] implementation of [`From`] for [`Vec<(String, String)>`]
 impl From<&Vec<(String, String)>> for DeploymentMapInner {
     fn from(input: &Vec<(String, String)>) -> Self {
-        let output = input
+        input
             .iter()
             .map(|(src, dst)| -> Option<Vec<(PathBuf, PathBuf)>> {
                 let src = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(src);
@@ -277,28 +277,23 @@ impl From<&Vec<(String, String)>> for DeploymentMapInner {
             .flatten()
             .collect::<Vec<(PathBuf, PathBuf)>>()
             .iter()
+            // --------------------------------------------------
+            // reverse and remove all duplicates from the beginning
+            // therefore in `deployment-map.json`, you can think about
+            // it like general cases come first, and specific cases 
+            // overwrite them afterwards
+            // --------------------------------------------------
+            // <<STYLE+TAG>>
+            // --------------------------------------------------
             .rev()
-            // .for_each(|x| println!("{} -> {}", x.0.display(), x.1.display()))
             .scan(HashSet::new(), |seen, (src, dst)| {
-                // println!("{}", src.display());
-                // println!("{:?}", seen);
-                if seen.insert(src) {
-                    // println!("NOT FOUND!! INSERTING");
-                    // println!("\n\n");
-                    Some(Some((src.clone(), dst.clone())))
-                } else { 
-                    // println!("\n\n");
-                    Some(None)
-                }
+                if seen.insert(src) { Some(Some((src.clone(), dst.clone()))) } else {  Some(None) }
             })
             .filter_map(|x| x)
             .collect::<Vec<_>>()
             .into_iter()
             .rev()
             .collect::<Vec<_>>()
-            ;
-        // panic!("{:?}", output);
-        output
             .into()
     }
 }
@@ -426,7 +421,7 @@ mod tests {
     #[test]
     fn match_escape_period() -> () {
         let regex_str = r"/home/arpadav/repos/website/content/notes/(?P<cat>.*)/(?P<typ>.*)/(?P<title>.*)\.(?P<ext>.*)";
-        let regex_st2 = r"/home/arpadav/repos/website/content/notes/(?P<cat>.[^/]+)/(?P<typ>.[^/]+)/(?P<title>.[^/]+)\.(?P<ext>.[^/]+)";
+        // let regex_st2 = r"/home/arpadav/repos/website/content/notes/(?P<cat>.[^/]+)/(?P<typ>.[^/]+)/(?P<title>.[^/]+)\.(?P<ext>.[^/]+)";
         let path = "/home/arpadav/repos/website/content/notes/academic/2021 - ECE 558/Voros_Arpad_ECE558_proj3.pdf";
         let regex = fancy_regex::Regex::new(regex_str).unwrap();
         let captures = regex.captures(path).unwrap().unwrap();
