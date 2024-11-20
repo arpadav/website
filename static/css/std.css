@@ -1,3 +1,13 @@
+/* 
+color for text / socials images
+rgb(0, 0, 144)
+aka #000090
+
+color for hovered text / socials images
+rgb(119, 92, 171)
+aka #775cab
+*/
+
 h1,
 h2,
 h3,
@@ -129,8 +139,3 @@ li>h3 {
 .no-underline {
     text-decoration: none;
 }
-
-/* #MobileMenuDivWrapper { // trying to fix scroll on mobile
-    height: 100%;
-    width: 100%;
-} */
