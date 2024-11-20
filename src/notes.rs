@@ -86,23 +86,38 @@ pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
                                 std::fs::read_to_string(&index_html).expect(format!("Failed to open index.html for note `{}`", x.name).as_str())
                             ),
                             false => match index_md.exists() {
-                                true => (
-                                    index_md.clone(),
-                                    String::from_utf8_lossy(&std::process::Command::new("pandoc")
+                                true => {
+                                    let md2html = String::from_utf8_lossy(&std::process::Command::new("pandoc")
                                         .arg(&index_md)
                                         .arg("--to")
                                         .arg("html")
                                         .arg("-s")
+                                        .arg("--strip-comments")
                                         // ----------------------------------------------------
                                         // <<STYLE+TAG>>
                                         // ----------------------------------------------------
-                                        // .arg("--css")
-                                        // .arg(concat!(env!("CARGO_MANIFEST_DIR"), "/static/css/std.css"))
+                                        // This is included here and not in `templates/markdown.html`
+                                        // ----------------------------------------------------
+                                        .arg("--css")
+                                        .arg("/css/std.css")
                                         .arg("--highlight-style=zenburn")
                                         .output()
                                         .expect(format!("Failed to run `pandoc` for note `{}`", x.name).as_str())
                                         .stdout
-                                    ).to_string()),
+                                    ).to_string();
+                                    // ----------------------------------------------------
+                                    // * remove everything up until `<style>` (this include `<!DOCTYPE html>` and `<head>` and `<meta>`)
+                                    // * then, add back `<head>`
+                                    // * then, remove the trailing `</html>`
+                                    // ----------------------------------------------------
+                                    // this is to ensure that the formatting is consistent
+                                    // across all notes
+                                    // ----------------------------------------------------
+                                    // <<STYLE+TAG>>
+                                    // ----------------------------------------------------
+                                    let md2html = format!("<head>{}", md2html[md2html.find("<style>").unwrap_or(0)..].trim_end_matches("</html>"));
+                                    (index_md.clone(), md2html)
+                                },
                                 false => panic!("Failed to find index.html or index.md for note `{}`", x.name),
                             }       
                         };
