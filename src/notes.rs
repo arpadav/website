@@ -16,7 +16,7 @@ pub static NOTES_LINKS_RAW: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = 
     // read two deep. one for each category, one for each note topic
     // use fs dir
     // --------------------------------------------------
-    std::fs::read_dir(crate::NOTES_DIR)
+    let mut sorted_topics = std::fs::read_dir(crate::NOTES_DIR)
     .expect("Failed to read notes directory for categories (e.g. academic, personal)")
     .into_iter()
     .filter_map(Result::ok)
@@ -65,7 +65,12 @@ pub static NOTES_LINKS_RAW: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = 
             )
         })
     })
-    .collect::<Vec<_>>()
+    .collect::<Vec<_>>();
+    // ----------------------------------------------------
+    // <<STYLE+TAG>>
+    // ----------------------------------------------------
+    sorted_topics.sort_by(|a, b| b.0.cmp(&a.0));
+    sorted_topics
 });
 /// Markdown -> HTML, or HTML contents to be displayed
 /// on a notes page
