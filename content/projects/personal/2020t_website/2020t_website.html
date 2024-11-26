@@ -1,24 +1,35 @@
 <p><i><b>(Nov 7, 2024)</b> Overview:</i></p>
 
-<p>When I initially worked on this project, I wanted to do everything purely through HTML, CSS, and JS, without using any developer tools. This worked GREAT as an undergrad learning experience, but as one
-becomes an experienced developer, I started to see many issues everytime I wanted to update my website:</p>
+<p>When I initially worked on this project, I wanted to do everything purely through HTML, CSS, and JS, without using
+    any developer tools. This worked GREAT as an undergrad learning experience, but as one
+    becomes an experienced developer, I started to see many issues everytime I wanted to update my website:</p>
 
 <ul>
     <li>All scripts for page index generation were batch files (now I just use Linux / WSL)</li>
     <li>Injecting hard-coded HTML using JS dynamically on the client side</li>
     <li>The dynamic nature of client-side rendering caused unnecessary loading times and compute</li>
-    <li>I had utilized iframes to embed HTML files into specific positions because I wanted it to be "modular" and not re-write my sidebar, navbar, etc., every time. However, this also caused latency issues as well as scrolling issues on-load on mobile</li>
-    <li>I also hate JS, so staying outside of that was for the better. Right now, the only JS file I have is for the animation on the home page</li>
+    <li>I had utilized iframes to embed HTML files into specific positions because I wanted it to be "modular" and not
+        re-write my sidebar, navbar, etc., every time. However, this also caused latency issues as well as scrolling
+        issues on-load on mobile</li>
+    <li>I also hate JS, so staying outside of that was for the better. Right now, the only JS file I have is for the
+        animation on the home page</li>
 </ul>
 
 <p>
-Since then, I quickly learned about static-site generation tools and realized it would be so much easier to not only manage a website this way during a dynamic "templating" development lifecycle of the website,
-but I can also solve the dynamic generation and hard-coding HTML injection within the JS files. Since I am very intimately familiar with Rust, I decided to use <a href="https://crates.io/crates/askama">askama</a> to generate the HTML.
+    Since then, I quickly learned about static-site generation tools and realized it would be so much easier to not only
+    manage a website this way during a dynamic "templating" development lifecycle of the website,
+    but I can also solve the dynamic generation and hard-coding HTML injection within the JS files. Since I am very
+    intimately familiar with Rust, I decided to use <a href="https://crates.io/crates/askama">askama</a> to generate the
+    HTML.
 
-This solved my issues, I did the classic "re-write in Rust", and now I can work on my website much more efficiently. Github thankfully allows for a solid amount of hosting, so I have a new repo for the website development with all my templates,
-and then I simply deploy to a submodule `prod`, which I proceed to push to <a href="https://github.com/arpadav/arpadav.github.io/">arpadav.github.io</a> on GitHub.
+    This solved my issues, I did the classic "re-write in Rust", and now I can work on my website much more efficiently.
+    Github thankfully allows for a solid amount of hosting, so I have a new repo for the website development with all my
+    templates,
+    and then I simply deploy to a submodule `prod`, which I proceed to push to <a
+        href="https://github.com/arpadav/arpadav.github.io/">arpadav.github.io</a> on GitHub.
 
-I have tagged the old version for memory/historic purposes, mainly for myself: <a href="https://github.com/arpadav/arpadav.github.io/releases/tag/v1.0">https://github.com/arpadav/arpadav.github.io/releases/tag/v1.0</a>
+    I have tagged the old version for memory/historic purposes, mainly for myself: <a
+        href="https://github.com/arpadav/arpadav.github.io/releases/tag/v1.0">https://github.com/arpadav/arpadav.github.io/releases/tag/v1.0</a>
 </p>
 
 <hr>
