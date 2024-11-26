@@ -1,0 +1,116 @@
+<p><i><b>(Nov 26, 2024)</b> Overview:</i></p>
+
+<p>I am adding this to my website now: previously I didn't add it to my website because it was in an incomplete/shoddy
+    state. Meaning, the drawing functionality was lacking, it wasn't as fast as it could have been, and more. Around ~2
+    days of development time in my free time, I revisited this to make improvements.</p>
+
+<p>The main improvements are:</p>
+<ul>
+    <li>Rayon for parallelization</li>
+    <li>Other speed improvements (WASM optimization flags, general algorithm changes, different way to render images on
+        screen, etc.)</li>
+    <li>Aesthetic improvements (user can select colors, select options, etc.)</li>
+    <li>Ability to import/export states (because why not, its fun)</li>
+</ul>
+
+<hr>
+
+<p><i><b>(Nov 6, 2023)</b> Overview:</i></p>
+<p>I am writing this in 2024, so I can't relay my exact 2023 thoughts. However, I was trying to learn web-assembly so
+    what
+    better way to do that than to implement Conways Game of Life! The implementation is simple, but lacking in features.
+    Took me about 1 day to implement this and get it working.</p>
+
+
+<hr>
+
+<h3>Conways Game of Life</h3>
+
+<ul>
+    <li>Click to draw + erase (toggle cells)</li>
+    <li>Is resizable!</li>
+    <li><b><i>Resizing and changing cell size will result in a new board/game/map, randomly filled!!</i></b></li>
+    <li>Can import/export. Can not import same file twice in a row, since the event is triggered on a change. This is an
+        easy fix, but barely worth the effort</li>
+    <li>Is very fast! Try reducing the cell size + increasing the window size</li>
+</ul>
+
+<head>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+
+        .resizable {
+            resize: both;
+            overflow: auto;
+            border: 1px solid #000000;
+            display: inline-block;
+        }
+    </style>
+</head>
+<div>
+    <div id="canvas-container" class="resizable">
+        <canvas id="game-of-life-canvas" class="resizable"></canvas>
+    </div>
+
+    <br>
+    <button id="play-pause">Play</button>
+    <button id="step">Step</button>
+    <button id="clear">Clear</button>
+    <label for="wrap">Wrap</label>
+    <input type="checkbox" id="wrap" checked>
+
+    <br>
+    <button id="export-button">Export</button>
+    <label for="import-button">Import</label>
+    <input id="import-button" type="file" accept=".bin">
+
+    <br>
+    <label for="alive-color-picker">Alive Cell Color:</label>
+    <input type="color" id="alive-color-picker">
+    <label for="alive-opacity">Alive Cell Opacity:</label>
+    <input id="alive-opacity" type="range" onchange="updateAlpha(this.value, 'alive');" min="0" max="1" step="0.01"
+        value="1">
+
+    <br>
+    <label for="dead-color-picker">Dead Cell Color:</label>
+    <input type="color" id="dead-color-picker">
+    <label for="dead-opacity">Dead Cell Opacity:</label>
+    <input id="dead-opacity" type="range" onchange="updateAlpha(this.value, 'dead');" min="0" max="1" step="0.01"
+        value="1">
+
+    <br>
+    <label for="grid-enabled">Grid</label>
+    <input type="checkbox" id="grid-enabled" checked>
+    <label for="grid-color-picker">Grid Color:</label>
+    <input type="color" id="grid-color-picker">
+
+    <br>
+    <label for="cell-size">Cell Size:</label>
+    <input id="cell-size" type="range" onchange="updateCellSize(this.value);" min="1" max="15" step="0.01">
+
+    <script type="module" src="js/game.js"></script>
+
+
+    <script>
+        async function automaticFileUpload(filePath) {
+            const importInput = document.getElementById("import-button");
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
+                const fileBlob = await response.blob();
+                const file = new File([fileBlob], "glider.bin", { type: "application/octet-stream" });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                importInput.files = dataTransfer.files;
+                importInput.dispatchEvent(new Event("change"));
+            } catch (error) {
+                console.error("Error during file simulation:", error);
+            }
+        }
+        window.onload = () => {
+            automaticFileUpload("./glider.bin");
+        };
+    </script>
+</div>

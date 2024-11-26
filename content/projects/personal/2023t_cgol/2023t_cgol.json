@@ -1,0 +1,11 @@
+{
+    "title": "Conway's Game of Life using Rust + WASM",
+    "collab-type": "Individual Project",
+    "status": "Complete",
+    "desc": "Quick implementation of CGOL to learn WASM",
+    "date": "Nov 2023; Nov 2024",
+    "location": "Columbia, Maryland",
+    "repos": [
+        "https://github.com/arpadav/rust-wasm-cgol/"
+    ]
+}
