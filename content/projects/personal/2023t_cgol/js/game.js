@@ -195,34 +195,42 @@ importInput.addEventListener("change", async event => {
         });
     };
     reader.readAsArrayBuffer(file);
+    importInput.value = "";
 });
 
 /// Mouse-down event handler
 canvas.addEventListener("mousedown", event => {
     isDrawing = true;
-    const { row, col } = getCanvasCoordinates(event);
-    Gol.toggle_cell(row, col);
-    drawCells();
+    handleDraw(event.clientX, event.clientY);
 });
-
 /// Mouse-up event handler
 canvas.addEventListener("mouseup", _ => {
     isDrawing = false;
 });
-
 /// Mouse-move event handler
 canvas.addEventListener("mousemove", event => {
     if (isDrawing) {
-        const { row, col } = getCanvasCoordinates(event);
-        Gol.toggle_cell(row, col);
-        drawCells();
+        handleDraw(event.clientX, event.clientY);
     }
 });
-/// Touch-start event handler
-canvas.addEventListener("touchstart", event => event.preventDefault());
 
+/// Touch-start event handler
+canvas.addEventListener("touchstart", event => {
+    isDrawing = true;
+    handleDraw(event.touches[0].clientX, event.touches[0].clientY);
+    event.preventDefault()
+});
 /// Touch-move event handler
-canvas.addEventListener("touchmove", event => event.preventDefault());
+canvas.addEventListener("touchmove", event => {
+    if (isDrawing) {
+        handleDraw(event.touches[0].clientX, event.touches[0].clientY);
+    }
+    event.preventDefault()
+});
+/// Touch-end event handler
+canvas.addEventListener("touchend", _ => {
+    isDrawing = false;
+});
 
 /// Canvas re-size event handler
 const canvasContainer = document.getElementById('canvas-container');
@@ -349,6 +357,12 @@ const render = () => {
     if (gridEnabled) ctx.drawImage(gridCanvas, 0, 0);
 }
 
+const handleDraw = (ex, ey) => {
+    const { row, col } = getCanvasCoordinates(ex, ey);
+    Gol.toggle_cell(row, col);
+    drawCells();
+}
+
 /**
  * Checks if the animation is currently paused.
  *
@@ -410,12 +424,12 @@ const step = () => {
  * @returns {Object} An object with two properties, row and col, which represent
  *     the coordinates on the canvas.
  */
-const getCanvasCoordinates = (event) => {
+const getCanvasCoordinates = (ex, ey) => {
     const boundingRect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / boundingRect.width;
     const scaleY = canvas.height / boundingRect.height;
-    const canvasLeft = (event.clientX - boundingRect.left) * scaleX;
-    const canvasTop = (event.clientY - boundingRect.top) * scaleY;
+    const canvasLeft = (ex - boundingRect.left) * scaleX;
+    const canvasTop = (ey - boundingRect.top) * scaleY;
     const col = Math.floor(canvasLeft / CellSize);
     const row = Math.floor(canvasTop / CellSize);
     return { row, col };
@@ -627,10 +641,37 @@ function deserializeAttributes(version, attrs) {
 }
 
 /**
+ * Simulates a file upload by fetching the given file and triggering a change
+ * event on the import button.
+ * 
+ * @param {string} filePath - URL of the file to simulate uploading.
+ * 
+ * @throws {Error} If the file fails to download or the change event fails to
+ *     trigger.
+ */
+async function automaticFileUpload(filePath) {
+    const importInput = document.getElementById("import-button");
+    const fileName = filePath.split('/').pop();
+    try {
+        const response = await fetch(filePath);
+        if (!response.ok) throw new Error(`Failed to fetch file: ${response.statusText}`);
+        const fileBlob = await response.blob();
+        const file = new File([fileBlob], fileName, { type: "application/octet-stream" });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        importInput.files = dataTransfer.files;
+        importInput.dispatchEvent(new Event("change"));
+    } catch (error) {
+        console.error("Error during file simulation:", error);
+    }
+}
+
+/**
  * Main!
  */
-function main() {
+async function main() {
     updateCanvasSize();
-    load().catch(console.error);
+    await load().catch(console.error);
+    automaticFileUpload("./glider.bin");
 }
-main();
+await main();

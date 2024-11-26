@@ -73,4 +73,4 @@ fi
 # --------------------------------------------------
 # python server
 # --------------------------------------------------
-python3 -m http.server 8004 --directory $FOLDER
+python3 -m http.server 8005 --directory $FOLDER
