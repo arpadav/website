@@ -1,0 +1,15 @@
+{
+  "name": "wasm-cgol",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "wasm_cgol_bg.wasm",
+    "wasm_cgol.js",
+    "wasm_cgol.d.ts"
+  ],
+  "main": "wasm_cgol.js",
+  "types": "wasm_cgol.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
