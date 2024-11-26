@@ -26,13 +26,23 @@
 
 <h3>Conways Game of Life</h3>
 
+<p>Good things:</p>
+
 <ul>
     <li>Click to draw + erase (toggle cells)</li>
     <li>Is resizable!</li>
-    <li><b><i>Resizing and changing cell size will result in a new board/game/map, randomly filled!!</i></b></li>
-    <li>Can import/export. Can not import same file twice in a row, since the event is triggered on a change. This is an
-        easy fix, but barely worth the effort</li>
+    <li>Can import/export game states!</li>
     <li>Is very fast! Try reducing the cell size + increasing the window size</li>
+</ul>
+
+<p>Not-so-good things:</p>
+<ul>
+    <li>Mobile drawing is not supported. This is likely an easy fix, but not worth the effort</li>
+    <li>Mobile loading of initial `glider.bin` doesn't work. Not worth the effort to debug.</li>
+    <li>Can not import same file twice in a row, since the event is triggered on a change. This is an
+        easy fix, but not worth the effort</li>
+    <li><b><i>Resizing and changing cell size will result in a new board/game/map, randomly filled!!</i></b> This is
+        intentional, but would be nice if there were alternatives. Also not worth the effort</li>
 </ul>
 
 <head>
