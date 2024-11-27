@@ -68,7 +68,7 @@ fn main() {
         .iter()
         .for_each(|proj| match deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&proj.src)) {
             true => (),
-            false => panic!("{} not found in deployment map", proj.src.display()),
+            false => panic!("`{}` found in `projects`, but not found in deployment map", proj.src.display()),
         });
     // --------------------------------------------------
     // * render + deploy project pages
@@ -91,7 +91,7 @@ fn main() {
         .iter()
         .for_each(|note| match deployutil::DEPLOYMENT_MAP.r().exists(deployutil::DeploymentFileType::Source(&note.src)) {
             true => (),
-            false => panic!("{} not found in deployment map", note.src.display()),
+            false => panic!("`{}` found in `notes`, but not found in deployment map", note.src.display()),
         });
     // --------------------------------------------------
     // * render + deploy project pages
