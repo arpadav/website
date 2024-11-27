@@ -107,38 +107,7 @@ pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
                         let content = match src.extension().and_then(|x| x.to_str()) {
                             Some("html") => std::fs::read_to_string(&src)
                                 .expect(format!("Failed to open {}.html for note `{}`", src.file_name().unwrap().to_string_lossy(), x.name).as_str()),
-                            Some("md") => {
-                                let md2html = String::from_utf8_lossy(&std::process::Command::new("pandoc")
-                                    .arg(&src)
-                                    .arg("--to")
-                                    .arg("html")
-                                    .arg("--mathjax")
-                                    .arg("-s")
-                                    .arg("--strip-comments")
-                                    // ----------------------------------------------------
-                                    // <<STYLE+TAG>>
-                                    // ----------------------------------------------------
-                                    // This is included here and not in `templates/markdown.html`
-                                    // ----------------------------------------------------
-                                    .arg("--css")
-                                    .arg("/css/std.css")
-                                    .arg("--highlight-style=zenburn")
-                                    .output()
-                                    .expect(format!("Failed to run `pandoc` for note `{}`", x.name).as_str())
-                                    .stdout
-                                ).to_string();
-                                // ----------------------------------------------------
-                                // * remove everything up until `<style>` (this include `<!DOCTYPE html>` and `<head>` and `<meta>`)
-                                // * then, add back `<head>`
-                                // * then, remove the trailing `</html>`
-                                // ----------------------------------------------------
-                                // this is to ensure that the formatting is consistent
-                                // across all notes
-                                // ----------------------------------------------------
-                                // <<STYLE+TAG>>
-                                // ----------------------------------------------------
-                                format!("<head>{}", md2html[md2html.find("<style>").unwrap_or(0)..].trim_end_matches("</html>"))
-                            },
+                            Some("md") => md2html(&src, &x.name),
                             _ => unimplemented!("Unsupported file type for note `{}`, please implement how to convert it to HTML for display.\n\nIf link is sufficient to view stand-alone (like a `.pdf`) please skip it in the `filter` call above.", x.name),
                         };
                         let content = content.replace("’", "'");
@@ -147,6 +116,7 @@ pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
                         Page {
                             src,
                             page: NotesTemplate {
+                                title: crate::title!(x.name),
                                 content,
                                 ..Default::default()
                             }
@@ -181,6 +151,7 @@ pub static NOTES_LINKS: LazyLock<Vec<(String, Vec<(String, Vec<Link>)>)>> = Lazy
 #[template(path = "notes.html")]
 /// Template for homepage of notes
 pub struct NotesHomepage {
+    title: String,
     pub sidebar: SidebarType,
     pub notes: Vec<(String, Vec<(String, Vec<Link>)>)>,
 }
@@ -188,6 +159,7 @@ pub struct NotesHomepage {
 impl Create for NotesHomepage {
     fn create() -> Self {
         Self {
+            title: crate::title!("Notes"),
             notes: (*NOTES_LINKS).clone(),
             ..Default::default()
         }
@@ -204,6 +176,7 @@ impl SourcePath<NotesHomepage> for NotesHomepage {
 #[template(path = "general/markdown.html")]
 /// Template for notes pages
 pub struct NotesTemplate {
+    title: String,
     pub sidebar: SidebarType,
     pub content: String,
 }

@@ -12,12 +12,14 @@ use crate::prelude::*;
 #[template(path = "homepage/index.html")]
 /// Template for home / main page of my website!
 pub struct LandingPage {
+    title: String,
     pub tabs: Vec<tabs::Tab>,
 }
 /// [`LandingPage`] implmentation of [`Create`]
 impl Create for LandingPage {
     fn create() -> Self {
         Self {
+            title: crate::title!(),
             tabs: (*tabs::ALL_TABS).clone(),
         }
     }

@@ -29,6 +29,7 @@ macro_rules! blank_page {
         #[template(path = $template_path)]
         #[doc = concat!("Template for ", $template_path)]
         pub struct $struct_name {
+            title: String,
             sidebar: $crate::primitives::SidebarType
         }
 
@@ -36,6 +37,7 @@ macro_rules! blank_page {
         impl $crate::prelude::Create for $struct_name {
             fn create() -> Self {
                 Self {
+                    title: $crate::title!(stringify!($struct_name)),
                     sidebar: Default::default()
                 }
             }
@@ -140,4 +142,15 @@ macro_rules! url_relative_manifest {
         let url_absolute = url_absolute.to_str().unwrap();
         url_absolute.replace(env!("CARGO_MANIFEST_DIR"), "").to_string()
     }};
+}
+
+#[macro_export]
+/// Creates the title for a page by prepending "Arpad Voros" with the title
+macro_rules! title {
+    () => {
+        String::from("Arpad Voros")
+    };
+    ($title:expr) => {
+        format!("{} - Arpad Voros", $title)
+    };
 }
