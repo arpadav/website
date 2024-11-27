@@ -25,9 +25,35 @@
         <!-- -------------------------------------------------- -->
         {% include "projects/project-header.html" %}
         <!-- -------------------------------------------------- -->
-        <!-- project contents -->
+        <!-- render differently based off source -->
+        <!-- -------------------------------------------------- -->
+        {% match srctype %}
+        {% when SourceType::Html %}
+        <!-- -------------------------------------------------- -->
+        <!-- raw HTML contents -->
         <!-- -------------------------------------------------- -->
         {{ content|safe }}
+        <!-- -------------------------------------------------- -->
+        {% when SourceType::Markdown %}
+        <!-- -------------------------------------------------- -->
+        <!-- markdown contents -->
+        <!-- -------------------------------------------------- -->
+        <div id="markdown-content">
+            <style>
+                #markdown-content h1 {
+                    margin-top: 0%;
+                }
+                #markdown-content img {
+                    max-width: 50vw;
+                    max-height: 70vh;
+                    margin: 0 auto;
+                    display: block;
+                    object-fit: contain;
+                }
+            </style>
+            {{ content|safe }}
+        </div>
+        {% endmatch %}
     </div>
     <base target="_top">
 </div>

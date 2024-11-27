@@ -12,6 +12,8 @@ use crate::prelude::*;
 #[template(path = "projects/project-template.html")]
 /// A template for displaying a single project
 pub struct ProjectTemplate {
+    /// The title of the page
+    pub title: String,
     /// The name of the project
     pub name: String,
     /// The URL of the project
@@ -22,6 +24,8 @@ pub struct ProjectTemplate {
     pub header: ProjectHeader,
     /// The sidebar of the project page
     pub sidebar: SidebarType,
+    /// The source type
+    pub srctype: SourceType,
 }
 
 #[derive(Debug, Clone, Deserialize)]

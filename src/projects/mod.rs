@@ -7,7 +7,7 @@ mod page;
 // local
 // --------------------------------------------------
 use crate::prelude::*;
-use page::ProjectTemplate;
+use page::{ProjectHeader, ProjectTemplate};
 
 // --------------------------------------------------
 // statics
@@ -74,6 +74,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             let project_name = project_path.file_name()?.to_string_lossy();
             let json_path = project_path.join(format!("{}.json", project_name));
             let html_path = project_path.join(format!("{}.html", project_name));
+            let md_path = project_path.join(format!("{}.md", project_name));
             // --------------------------------------------------
             // if doesnt exist, print warning
             // --------------------------------------------------
@@ -82,26 +83,38 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
                 return None;
             }
             let json_path = json_path.display().to_string();
-            if !html_path.exists() {
-                eprintln!("Warning: Missing HTML file for project: {}", project_path.display());
-                return None;
-            }
-            let content = std::fs::read_to_string(&html_path).ok()?;
+            // --------------------------------------------------
+            // if doesnt exist, print warning
+            // however, if both exist, panic! dont know which
+            // one to use
+            // --------------------------------------------------
+            let (content, src_path, srctype) = match (html_path.exists(), md_path.exists()) {
+                (true, true) => panic!("Error: Both HTML and Markdown files exist for project: {}. Only one can be used. Not deploying LOL!", project_path.display()),
+                (false, false) => {
+                    eprintln!("Warning: Missing HTML or Markdown file for project: {}", project_path.display());
+                    return None;
+                },
+                (false, true) => (md2html(&md_path, &project_name), md_path, SourceType::Markdown),
+                (true, false) => (std::fs::read_to_string(&html_path).ok()?, html_path, SourceType::Html),
+            };
             // --------------------------------------------------
             // return
             // --------------------------------------------------
+            let project_header: ProjectHeader = crate::json_template!(json_path);
             Some((
                 category_name,
-                html_path,
+                src_path,
                 ProjectTemplate {
+                    title: crate::title!(project_header.title),
                     name: project_name.to_string(),
                     // --------------------------------------------------
                     // <<STYLE+TAG>>
                     // --------------------------------------------------
                     url: format!("/projects/{}/", project_name),
-                    header: crate::json_template!(json_path),
+                    header: project_header,
                     content,
                     sidebar: SidebarType::Projects,
+                    srctype,
                 },
             ))
         })
@@ -147,12 +160,16 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
 #[template(path = "projects/projects-homepage.html")]
 /// Homepage which shows all projects
 pub struct ProjectsHomepage {
+    pub title: String,
     pub sidebar: SidebarType,
 }
 /// [`ProjectsHomepage`] implementation of [`Create`]
 impl Create for ProjectsHomepage {
     fn create() -> Self {
-        Self { sidebar: SidebarType::GatorOnly }
+        Self {
+            title: crate::title!("Projects"),
+            sidebar: SidebarType::GatorOnly,
+        }
     }
 }
 /// [`ProjectsHomepage`] implementation of [`SourcePath`]

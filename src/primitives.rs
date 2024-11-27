@@ -11,6 +11,14 @@ impl Default for SidebarType {
     }
 }
 
+#[derive(Clone, Debug)]
+/// The source type, if multiple sources can
+/// be generated into HTML
+pub enum SourceType {
+    Html,
+    Markdown,
+}
+
 /// A page type
 pub struct Page<T> where T: askama::Template {
     /// Indicates the path of the source file

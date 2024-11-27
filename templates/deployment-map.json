@@ -9,12 +9,14 @@
         "content/notes/<cat>/<typ>/<title>/index.md": "notes/<cat>/<typ>/<title>/index.html",
 
         "templates/projects/projects-homepage.html": "projects/index.html",
+        "content/projects/*/<folder>/<folder>.md": "projects/<folder>/index.html",
         "content/projects/*/<folder>/<folder>.html": "projects/<folder>/index.html",
         "content/projects/*/<folder>/<file>": "projects/<folder>/<file>"
     },
     "exclude": {
-        "content/notes/<cat>/<typ>/<title>/index.md": "notes/<cat>/<typ>/<title>/index.md",
+        "content/projects/*/<folder>/<folder>.md": "projects/<folder>/<folder>.md",
         "content/projects/*/<folder>/<folder>.html": "projects/<folder>/<folder>.html",
-        "content/projects/*/<folder>/<folder>.json": "projects/<folder>/<folder>.json"
+        "content/projects/*/<folder>/<folder>.json": "projects/<folder>/<folder>.json",
+        "content/notes/<cat>/<typ>/<title>/index.md": "notes/<cat>/<typ>/<title>/index.md"
     }
 }
