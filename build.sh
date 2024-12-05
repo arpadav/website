@@ -22,8 +22,8 @@ fi
 # ensure all expected folders exists
 # --------------------------------------------------
 if [ ! -d "$FOLDER" ]; then
-    echo "Folder-to-generate-to does not exist: $FOLDER"
-    exit
+    echo "Folder-to-generate-to does not exist, making directory w parents...: $FOLDER"
+    mkdir -p $FOLDER
 elif [ ! -d "$STATIC_DIR" ]; then
     echo "Static folder (with templates + static resources) does not exist: $STATIC_DIR"
     exit
@@ -46,6 +46,15 @@ bash $ROOT_DIR/.requirements/getreqs.sh
 # site to
 # --------------------------------------------------
 rsync -aq --delete --exclude '.git' $STATIC_DIR $FOLDER
+
+# --------------------------------------------------
+# cargo, check if vendor folder exists
+# --------------------------------------------------
+if [ ! -d "vendor" ]; then
+    echo "Vendor folder does not exist, attempting to make now..."
+    cargo vendor
+fi
+
 
 # --------------------------------------------------
 # cargo with deployment folder flag
