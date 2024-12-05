@@ -65,19 +65,25 @@ if [ $? -ne 0 ]; then
 fi
 
 # --------------------------------------------------
-# minify all .html files. pass in all HTML_FILES in
-# one command for parallel processing
+# minify all .html files
 # --------------------------------------------------
-HTML_FILES=$(find $FOLDER -name "*.html")
-NUM_FILES=$(wc -w <<< "$HTML_FILES")
-if [ $NUM_FILES -gt 1 ]; then
-    minhtml --do-not-minify-doctype $HTML_FILES > /dev/null 2>&1
-elif [ $NUM_FILES -eq 1 ]; then
-    # --------------------------------------------------
-    # have to specify output on 1 input, weird
-    # --------------------------------------------------
-    minhtml --do-not-minify-doctype $HTML_FILES -o $HTML_FILES > /dev/null 2>&1
-fi
+HTML_FILES=()
+while IFS= read -r -d '' file; do
+    HTML_FILES+=("$file")
+done < <(find "$FOLDER" -name "*.html" -print0)
+# --------------------------------------------------
+# need to loop, since `minhtml` can't handle the
+# combination of:
+# 1. multiple files
+# 2. file names/paths with spaces
+# if i try to do that using quotes, the paths with spaces do
+# not get properly minified
+# --------------------------------------------------
+# no time to debug this, this will be fine
+# --------------------------------------------------
+for html_file in "${HTML_FILES[@]}"; do
+    minhtml --do-not-minify-doctype "$html_file" -o "$html_file" > /dev/null 2>&1
+done
 
 # --------------------------------------------------
 # python server
