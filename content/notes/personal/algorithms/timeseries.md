@@ -1,5 +1,7 @@
 # notes
 
+_**This is just meant to be a test note, trying to render LaTeX. Ignore the contents for now please :)**_
+
 ## Diff EMA Risk
 
 $$

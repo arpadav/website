@@ -1,4 +1,4 @@
-# Wake-on-Lan (Linux)
+# Wake-on-LAN Instructions (Linux)
 
 ## On device that needs to be remotely woken
 
@@ -112,29 +112,25 @@ sudo apt install ethtool
 
 ## On device that wakes remote device
 
-### Requirements
-
-#### Linux
+### Requirements (Linux)
 
 ```bash
 sudo apt install wakeonlan
 ```
 
-#### Windows
+#### Requirements (Windows)
 
 ```powershell
 winget install --id=DarkfullDante.wol  -e
 ```
 
-### Setup
-
-#### Linux
+### Setup (Linux)
 
 ```bash
 wakeonlan <MAC-ADDRESS>
 ```
 
-#### Windows
+### Setup (Windows)
 
 ```powershell
 wol -m "<MAC-ADDRESS>"
