@@ -11,10 +11,13 @@ serde_json = "1.0"
 fancy-regex = "0.14"
 serde = { version = "1.0", features = ["derive"] }
 
-[profile.release]
+[profile.fast-build]
+inherits = "release"
 # for quick compilation: zero care for opt, zero care for size, zero care for debug
 lto = false
 debug = false
 opt-level = 0
-codegen-units = 1
+panic = "abort"
 incremental = true
+codegen-units = 256 # maximum number of compilation units
+overflow-checks = false

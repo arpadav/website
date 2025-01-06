@@ -1,4 +1,5 @@
 grep
+mold
 rsync
 pandoc
 python3

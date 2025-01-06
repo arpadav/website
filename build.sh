@@ -48,21 +48,39 @@ bash $ROOT_DIR/.requirements/getreqs.sh
 rsync -aq --delete --exclude '.git' $STATIC_DIR $FOLDER
 
 # --------------------------------------------------
-# cargo, check if vendor folder exists
+# cargo flags: check if vendor folder exists
 # --------------------------------------------------
+CARGO_FLAGS="--config source.crates-io.replace-with='vendored-sources' --config source.vendored-sources.directory='vendor'"
 if [ ! -d "vendor" ]; then
     echo "Vendor folder does not exist, attempting to make now..."
     cargo vendor
+    if [ $? -eq 0 ]; then
+        echo "Vendor folder created successfully."
+    else
+        echo "Failed to create vendor folder."
+        CARGO_FLAGS=""
+    fi
 fi
 
+# --------------------------------------------------
+# rust flags: check if `mold` linker exists, for faster building
+# --------------------------------------------------
+RUSTFLAGS=""
+if command -v mold >/dev/null 2>&1; then
+    RUSTFLAGS="-C link-arg=-fuse-ld=mold"
+fi
 
 # --------------------------------------------------
 # cargo with deployment folder flag
 # --------------------------------------------------
-cargo run --release -- --deploy $FOLDER
+export RUSTFLAGS
+cmd="cargo run --profile fast-build $CARGO_FLAGS -- --deploy $FOLDER"
+echo -e "\n\tRUSTFLAGS=\"$RUSTFLAGS\" $cmd\n"
+$cmd
 if [ $? -ne 0 ]; then
     exit
 fi
+unset RUSTFLAGS
 
 # --------------------------------------------------
 # minify all .html files

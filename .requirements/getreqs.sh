@@ -3,10 +3,10 @@
 REQUIREMENTS_DIR="$(dirname "$(realpath "$0")")"
 
 # --------------------------------------------------
-# get requirements from `apt-requirements.txt`
+# get requirements from `requirements.txt`
 # install any that are missing
 # --------------------------------------------------
-mapfile -t requirements < "$REQUIREMENTS_DIR/apt-requirements.txt"
+mapfile -t requirements < "$REQUIREMENTS_DIR/requirements.txt"
 missing=()
 for pkg in "${requirements[@]}"; do
     # --------------------------------------------------
@@ -35,6 +35,10 @@ for pkg in "${requirements[@]}"; do
             wget "https://github.com/jgm/pandoc/releases/download/3.5/$pkgname"
             sudo dpkg -i "$pkgname"
             rm "$pkgname"
+            continue
+        fi
+        if [ "$pkg" == "mold" ]; then
+            echo "Please install the `mold` linker for quicker building times: https://github.com/rui314/mold"
             continue
         fi
         # --------------------------------------------------
