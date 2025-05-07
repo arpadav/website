@@ -1,0 +1,8 @@
+{
+    "title": "misb: MISB Standards implementation in Rust",
+    "collab-type": "Personal Project",
+    "status": "In Progress / Under Review",
+    "desc": "Implement the entire MISB standard in Rust, with C++ and Python bindings",
+    "date": "Sep 2024",
+    "location": "Columbia, Maryland"
+}

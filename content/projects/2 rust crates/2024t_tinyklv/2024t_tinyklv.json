@@ -1,0 +1,8 @@
+{
+    "title": "tinyklv: A KLV (Key-Length-Value) parser and generator for Rust",
+    "collab-type": "Personal Project",
+    "status": "In Progress - Release: July 2025",
+    "desc": "Procedural macro to enable parsing and generating of generic KLV packets.",
+    "date": "Sep 2024; Jan 2025; May 2025",
+    "location": "Columbia, Maryland"
+}

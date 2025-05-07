@@ -138,13 +138,23 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             v
         });
     // --------------------------------------------------
-    // sort projects based off category (reverse alphabetic)
+    // sort projects based off category (alphabetic, where projects
+    // are labeled using `<num> <name>`)
     // then name (reverse alphabetic, which is actually reverse chronological
     // so that the most recent projects are first)
     // --------------------------------------------------
     // <<STYLE+TAG>>
     // --------------------------------------------------
-    pages.sort_by(|a, b| b.0.cmp(&a.0));
+    pages.sort_by(|a, b| a.0.cmp(&b.0));
+    pages
+        .iter_mut()
+        .for_each(|(category_name, _)| match category_name.find(' ') {
+            Some(idx) => {
+                let (_, name) = category_name.split_at(idx);
+                *category_name = name.to_string();
+            },
+            None => (),
+        });
     pages
         .iter_mut()
         .for_each(|(_, categorized_projects)|
