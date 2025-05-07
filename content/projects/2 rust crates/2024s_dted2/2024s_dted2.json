@@ -1,0 +1,11 @@
+{
+    "title": "dted2: DTED reader for Rust",
+    "collab-type": "Personal Project",
+    "status": "Complete / Maintained",
+    "desc": "Refactored outdated DTED crate to be more performant and easier to use",
+    "date": "May 2024",
+    "location": "Columbia, Maryland",
+    "repos": [
+        "https://github.com/arpadav/dted2"
+    ]
+}

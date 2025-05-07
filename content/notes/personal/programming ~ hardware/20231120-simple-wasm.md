@@ -17,10 +17,10 @@
     [dependencies]
     wasm-bindgen = "0.2"
 
-    # helpful (but not necessary) dependencies
-    js-sys = "0.3.65" # JS interface
+    # helpful (but not required) dependencies
+    js-sys = "0.3" # JS interface
     reqwasm = "0.2" # requests: paired with futures
-    wasm-bindgen-futures = "0.4.38" # futures / async / await
+    wasm-bindgen-futures = "0.4" # futures / async / await
     web-sys = { version = "0.3", features = ['console'] } # console logging
 
     [dev-dependencies]

@@ -1,0 +1,11 @@
+{
+    "title": "crosstalk: In-memory pub-sub messaging for Rust",
+    "collab-type": "Personal Project",
+    "status": "Complete / Maintained",
+    "desc": "Topic-based in-memory pub-sub mpmc messaging for Rust using enum arms as topics.",
+    "date": "Feb 2024",
+    "location": "Columbia, Maryland",
+    "repos": [
+        "https://github.com/arpadav/crosstalk"
+    ]
+}
