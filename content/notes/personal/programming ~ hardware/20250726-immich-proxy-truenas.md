@@ -1,117 +1,117 @@
-# setting up immich public proxy on truenas scale
+# setting up Immich-Public-Proxy on TrueNAS Scale
 
-TLDR: Use cloudflare!!!!!!!!!!!!!!!!!!!!!!!!
+TLDR: Use Cloudflare!!!!
 
-there are plenty of tutorials on how to transfer your domain to cloudflare from any other registrar (e.g. i was originally on godaddy), so this step is purposefully not included. a basic overview is to change your nameservers to cloudflare on original registrar, then turn off all "locks" on domain to initiate transfer, get an authorization code, import into cloudflare, wait sometime for DNS to update, then import into cloudflare, then done.
+There are plenty of tutorials on how to transfer your domain to Cloudflare from any other registrar (e.g., I was originally on GoDaddy), so this step is purposefully not included. A basic overview is to change your nameservers to Cloudflare on the original registrar, then turn off all "locks" on the domain to initiate transfer, get an authorization code, import into Cloudflare, wait some time for DNS to update, then import into Cloudflare, then done.
 
-see my [struggle](#struggle) at the end to understand how i got here
+See my [struggle](#struggle) at the end to understand how I got here.
 
 [result :) click me to see a picture of my beautiful childhood pet cat](https://images.arpadvoros.com/share/zHZ_RlibRuu-D-mDv8lnpYRr3sv7ySpxGBSyzK3dN-K8qAXWoyr_MZMIm6zmr8Gai48)
 
 ## goals
 
-1. share read-only images / albums with friends on my website @ `images.arpadvoros.com`
-2. host images on my TrueNAS Scale NAS using Immich
+1. Share read-only images/albums with friends on my website @ `images.arpadvoros.com`
+2. Host images on my TrueNAS Scale NAS using Immich
 3. Click `Share` and fetch a link (with/without password)
-4. secure with HTTPS
+4. Secure with HTTPS
 
 ## assumptions
 
-1. user is using TrueNAS Scale
-2. user has Immich installed as a TrueNAS app (just docker)
-3. user has a domain on Cloudflare
+1. User is using TrueNAS Scale
+2. User has Immich installed as a TrueNAS app (just Docker)
+3. User has a domain on Cloudflare
 
 ## steps
 
-### install immich public proxy as custom truenas app
+### Install Immich Public Proxy as Custom TrueNAS App
 
-[Immich Public Proxy](https://github.com/alangrainger/immich-public-proxy) is a tool to only expose read-only endpoints of Immich, preventing things like the `/api` endpoint or writable endpoints. This is at least my understanding
+[Immich Public Proxy](https://github.com/alangrainger/immich-public-proxy) is a tool to only expose read-only endpoints of Immich, preventing things like the `/api` endpoint or writable endpoints. This is at least my understanding.
 
 On TrueNAS, this app does not exist. It must be installed manually.
 
-I would highly recommend [this video by Techno Tim](https://www.youtube.com/watch?v=gPL7_tzsJO8) on the best approach to install apps manually on TrueNAS. it makes things easy, and I version controll all of mine through a private git repo.
+I would highly recommend [this video by Techno Tim](https://www.youtube.com/watch?v=gPL7_tzsJO8) on the best approach to install apps manually on TrueNAS. It makes things easy, and I version control all of mine through a private git repo.
 
-a TLDR of the video is:
+A TLDR of the video is:
 
 1. Log into TrueNAS
 2. Go to `Datasets -> Add Dataset`
-3. Create one for your custom app. In this case, i called mine `immich-public-proxy`
+3. Create one for your custom app. In this case, I called mine `immich-public-proxy`
 4. This creates a folder called `<path-to-pool>/immich-public-proxy`. Set permissions if need be (explained in video)
 5. Add any `docker-compose.yml` file inside of `<path-to-pool>/immich-public-proxy`
 6. Navigate to `Apps -> Discover Apps -> ... Install via YAML`
 7. Add the following:
 
     ```yaml
-    include
-        - "<path-to-pool>/immich-public-proxy/compose.yml"
+    include:
+      - "<path-to-pool>/immich-public-proxy/compose.yml"
     ```
 
 8. Click `Save` and you can now see your custom app!
 
-### configure immich public proxy
+### Configure Immich Public Proxy
 
-The instructions above were for any Docker compose yaml file -> custom TrueNAS app. These instructions are explicitly for immich public proxy.
+The instructions above were for any Docker Compose YAML file -> custom TrueNAS app. These instructions are explicitly for Immich Public Proxy.
 
-1. Copy paste [https://github.com/alangrainger/immich-public-proxy/blob/main/docker-compose.yml] into `<path-to-pool>/immich-public-proxy/compose.yml`
-2. Change `PUBLIC_BASE_URL` to your domain, e.g. `images.arpadvoros.com` for me. even if this domain is not yet configured, don't worry
-3. Change `IMMICH_URL` to the url of your immich instance. this can **not** be `localhost` since this URL is defined within the docker container. it must be a static IP or some domain name of your NAS. For example `192.168.0.100:30041`
-4. I would recommend to add another environment variable called `IPP_PORT` to customize your port value. Ensure to modify the `ports` and `healthcheck` sections with that hard-coded port. if this is not done, it will **always** default to 3000, which prevents the healthcheck from working and looks like the app is not running. This environment variable is not documented in the repo, but you can search for it in issues and [also here](https://github.com/alangrainger/immich-public-proxy/blob/93b6e6ef5171ec0cd6600c6c4af2659527560b34/app/src/index.ts#L186)
+1. Copy-paste [this `docker-compose.yml`](https://github.com/alangrainger/immich-public-proxy/blob/main/docker-compose.yml) into `<path-to-pool>/immich-public-proxy/compose.yml`
+2. Change `PUBLIC_BASE_URL` to your domain, e.g., `images.arpadvoros.com` for me. Even if this domain is not yet configured, don't worry.
+3. Change `IMMICH_URL` to the URL of your Immich instance. This can **not** be `localhost` since this URL is defined within the Docker container. It must be a static IP or some domain name of your NAS. For example, `192.168.0.100:30041`.
+4. I would recommend adding another environment variable called `IPP_PORT` to customize your port value. Ensure to modify the `ports` and `healthcheck` sections with that hard-coded port. If this is not done, it will **always** default to 3000, which prevents the healthcheck from working and looks like the app is not running. This environment variable is not documented in the repo, but you can search for it in issues and [also here](https://github.com/alangrainger/immich-public-proxy/blob/93b6e6ef5171ec0cd6600c6c4af2659527560b34/app/src/index.ts#L186).
 
 To verify all this, I would navigate over to Immich and try to get a share link. This share link will give you the following format:
 
 `http[s]://<NAS-IP>:<IMMICH-PORT>/share/<UID>`
 
-Go ahead and _**just**_ change the port from the Immich port -> Immich public proxy port, and if you can see the image then the proxy is running properly. Ensure to also check the logs via docker or via the truenas apps logs
+Go ahead and _**just**_ change the port from the Immich port to the Immich Public Proxy port, and if you can see the image then the proxy is running properly. Ensure to also check the logs via Docker or via the TrueNAS apps logs.
 
-### using cloudflare tunnel
+### Using Cloudflared Tunnel
 
 Documentation:
 
-* [https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
+- [https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
 
 My instructions:
 
 1. On TrueNAS, look for the [`Cloudflared`](https://github.com/cloudflare/cloudflared) app
-2. During installation, it will ask for a Tunnel api token
+2. During installation, it will ask for a Tunnel API token
 3. Navigate to [Zero Trust - Cloudflare Dashboard](https://one.dash.cloudflare.com/)
 4. Go to `Networks -> Tunnels -> Create a tunnel`
 5. Select `Cloudflared`
-6. Enter a descriptive name of tunnel. This is **not** the service, so name it something like `mynas`
+6. Enter a descriptive name for the tunnel. This is **not** the service, so name it something like `mynas`
 7. Copy the Docker command. Don't run it, just copy the token out of it
 8. Return to TrueNAS (step 2) and enter the token there. Create the `Cloudflared` TrueNAS app
 9. Return to Cloudflare, click `Public hostnames` to add one
 10. Add:
 
-    ```md
+    ```markdown
     **Subdomain**: images
     **Domain**: arpadvoros.com
-    **Service Type**: HTTP      _# this is internal / local. it is HTTP locally, but HTTPS via the cloudflare tunnel. you can set this to HTTPS if you have Immich configured as such_
-    **URL**: NAS_IP:IPP_PORT    _# this is immich public proxy env variable, see above_
+    **Service Type**: HTTP      _# this is internal / local. It is HTTP locally, but HTTPS via the Cloudflare tunnel. You can set this to HTTPS if you have Immich configured as such._
+    **URL**: NAS_IP:IPP_PORT    _# this is the Immich Public Proxy env variable, see above._
     ```
 
 11. Click `Save`
 
-And it should be magically done?? now you can modify in your Immich settings the end-point of your share links. And now you will automatically have HTTPS thanks to Cloudflare, the URL will automatically be forwarding to the Cloudflared tunnel to your nas:ipp_port, and it should just work. This was far easier than the struggle I initially had with a bunch more moving parts. Read below.
+And it should be magically done! Now you can modify in your Immich settings the endpoint of your share links. And now you will automatically have HTTPS thanks to Cloudflare, the URL will automatically be forwarding to the Cloudflared tunnel to your NAS:IPP_PORT, and it should just work. This was far easier than the struggle I initially had with a bunch more moving parts. Read below.
 
 ## notes
 
-Previously I was using DuckDNS for DDNS resolution, i wanted HTTPS using Caddy, custom certificate generation, port forwarding on my router, etc.
+Previously I was using DuckDNS for DDNS resolution, I wanted HTTPS using Caddy, custom certificate generation, port forwarding on my router, etc.
 
-And it did not help that I was using GoDaddy, which barely had any options for advanced configuration, and my router was also awful. I spent 4+ hours the other day running around in circles to get this to work with no avail. I definitely learned a lot, however, the fact that at the end of the day it **still** did not work and it was completely out of my hands (due to GoDaddy and my router from allowing advanced configuration) was extremely frustrating. I have been using DuckDNS in the past for DDNS resolution but after searching online, it looked like Cloudflare solved all my issues:
+And it did not help that I was using GoDaddy, which barely had any options for advanced configuration, and my router was also awful. I spent 4+ hours the other day running around in circles to get this to work with no avail. I definitely learned a lot, however, the fact that at the end of the day it **still** did not work and it was completely out of my hands (due to GoDaddy and my router not allowing advanced configuration) was extremely frustrating. I have been using DuckDNS in the past for DDNS resolution but after searching online, it looked like Cloudflare solved all my issues:
 
-* domain registration + purchase
-* allowed for advanced configration of DNS
-* using `Cloudflared`, set up a tunnel rather than a traditional DDNS solution like DuckDNS
-* no port-forwarding required, since `Cloudflared` also solved this
-* all free, similar to previous solutions, but under one provider
+- Domain registration + purchase
+- Allowed for advanced configuration of DNS
+- Using `Cloudflared`, set up a tunnel rather than a traditional DDNS solution like DuckDNS
+- No port-forwarding required, since `Cloudflared` also solved this
+- All free, similar to previous solutions, but under one provider
 
 The only thing I had to pay for at the end of the day was the registrar transfer, moving my domain from GoDaddy -> Cloudflare. Which was like 10 bucks and so worth it.
 
 ## struggle
 
-rather than going into detail, i will just relay my chatgpt conversation so you can see the insanity I was attempting to tie together and failing to do so. it did not help that my [router (TP-Link Festa FR205)](https://www.tp-link.com/us/business-networking/soho-festa-gateway/festa-fr205/) absolutely sucks dogshit in terms of configurability... in order to port-forward anything or manage your router you can NOT just log into the default web-interface, but go through some tp-link cloud?? and then you lose DHCP functionality/access/control, and once you have the cloud configured you can no longer log in locally?? it is awful.....
+Rather than going into detail, I will just relay my ChatGPT conversation so you can see the insanity I was attempting to tie together and failing to do so. It did not help that my [router (TP-Link Festa FR205)](https://www.tp-link.com/us/business-networking/soho-festa-gateway/festa-fr205/) absolutely sucks in terms of configurability... In order to port-forward anything or manage your router you can NOT just log into the default web interface, but go through some TP-Link cloud?? And then you lose DHCP functionality/access/control, and once you have the cloud configured you can no longer log in locally?? It is awful.....
 
-anyways, here is the gist of the initial approach prior to moving to cloudflare:
+Anyways, here is the gist of the initial approach prior to moving to Cloudflare:
 
 ```markdown
 a lot of moving parts. need your help.
