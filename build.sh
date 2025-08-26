@@ -100,7 +100,13 @@ done < <(find "$FOLDER" -name "*.html" -print0)
 # no time to debug this, this will be fine
 # --------------------------------------------------
 for html_file in "${HTML_FILES[@]}"; do
-    minhtml "$html_file" -o "$html_file" > /dev/null || exit
+    minhtml "$html_file" \
+        --minify-js \
+        --minify-css \
+        --do-not-minify-doctype \
+        --ensure-spec-compliant-unquoted-attribute-values \
+        -o "$html_file" \
+        >/dev/null || exit
 done
 
 # --------------------------------------------------
