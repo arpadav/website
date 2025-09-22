@@ -79,17 +79,29 @@ function init() {
         if (e.key == " " || e.key == "Enter") name_click();
     }
 
-    // testing ---------------------------------------------
-    // // debug
-    // document.body.onkeyup = function(e) {
-    //   if(e.keyCode == 65) {
-    //     smooth_scrollTo(document.body, 0, 100, function(){
-    //       console.log("huh1");
-    //     });
-    //     // document.body.scrollTop = 0;
-    //     console.log("pressed A"); }
-    // }
-    // testing ---------------------------------------------
+    // perform click on load, if first load
+    // must wait 0.5 seconds after page load
+    setTimeout(name_click, 500);
+
+    // // after 5 seconds, if the name is not rotated, then
+    // // display a little message saying Click me! pointing
+    // // to the `name` div
+    // setTimeout(function () {
+    //     if (!rotated) {
+    //         let clickme = document.createElement('div');
+    //         clickme.id = "clickme";
+    //         clickme.style.position = "absolute";
+    //         clickme.style.top = "10%";
+    //         clickme.style.left = "50%";
+    //         clickme.style.transform = "translate(-50%, -50%)";
+    //         clickme.style.color = "white";
+    //         clickme.style.backgroundColor = "black";
+    //         clickme.style.padding = "5px";
+    //         clickme.style.borderRadius = "5px";
+    //         clickme.innerHTML = "Click me!";
+    //         document.getElementById('name').appendChild(clickme);
+    //     }
+    // }, 5000);
 }
 
 
