@@ -10,15 +10,6 @@ mapfile -t requirements <"$REQUIREMENTS_DIR/requirements.txt"
 missing=()
 for pkg in "${requirements[@]}"; do
     # --------------------------------------------------
-    # edge cases: apt install name != binary name
-    # --------------------------------------------------
-    if [ "$pkg" == "node-typescript" ]; then
-        if ! type "tsc" >/dev/null 2>&1; then
-            missing+=("$pkg")
-        fi
-        continue
-    fi
-    # --------------------------------------------------
     # check if package exists
     # --------------------------------------------------
     if ! type "$pkg" &>/dev/null; then
@@ -27,7 +18,7 @@ for pkg in "${requirements[@]}"; do
         # --------------------------------------------------
         if [ "$pkg" == "pandoc" ]; then
             arch=$(uname -m)
-            pandoc_version="3.7.0.2"
+            pandoc_version="3.8.1"
             if [ "$arch" == "x86_64" ]; then
                 pkgname="pandoc-$pandoc_version-1-amd64.deb"
             else

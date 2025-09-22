@@ -3,4 +3,3 @@ mold
 rsync
 pandoc
 python3
-node-typescript
