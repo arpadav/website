@@ -96,8 +96,6 @@ for html_file in "${HTML_FILES[@]}"; do
     minhtml "$html_file" \
         --minify-js \
         --minify-css \
-        --do-not-minify-doctype \
-        --ensure-spec-compliant-unquoted-attribute-values \
         -o "$html_file" \
         >/dev/null || exit
 done
