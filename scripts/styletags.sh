@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # --------------------------------------------------
 # Finds style-tags in comments of code
@@ -10,7 +10,7 @@
 # "layout" or other visuals to this statically generated
 # website.
 # --------------------------------------------------
-# Therefore, if quick visual changes are required, can 
+# Therefore, if quick visual changes are required, can
 # run this script to find exactly where this occurs if you
 # havent seen the source in years.
 # --------------------------------------------------

@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 REQUIREMENTS_DIR="$(dirname "$(realpath "$0")")"
 
 # --------------------------------------------------
@@ -18,7 +17,7 @@ for pkg in "${requirements[@]}"; do
         # --------------------------------------------------
         if [ "$pkg" == "pandoc" ]; then
             arch=$(uname -m)
-            pandoc_version="3.8.1"
+            pandoc_version="3.9.0.2"
             if [ "$arch" == "x86_64" ]; then
                 pkgname="pandoc-$pandoc_version-1-amd64.deb"
             else

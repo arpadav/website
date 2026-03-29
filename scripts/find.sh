@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # --------------------------------------------------
 # Finds a string, printing exact location(s) to console
@@ -24,7 +24,7 @@ EXCLUDE_DIRS=("${OMIT[@]/#/--exclude-dir=}")
 # --------------------------------------------------
 # magic
 # --------------------------------------------------
-echo "Searching for: $search_string in `pwd`"
+echo "Searching for: $search_string in $(pwd)"
 grep -rn -F "$search_string" . "${EXCLUDE_DIRS[@]}" | while IFS=: read -r file line content; do
     col=$(grep -bo "$search_string" "$file" | grep -m 1 -Eo '^[0-9]+' | head -1)
     if [[ -n $col ]]; then
