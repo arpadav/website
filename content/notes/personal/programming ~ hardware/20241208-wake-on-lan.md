@@ -31,13 +31,13 @@ sudo apt install ethtool
 
     _Source: [https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/deployment_guide/s1-ethtool](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/6/html/deployment_guide/s1-ethtool#idm140653496737808)_
 
-    * `p` — Wake on PHY activity.
-    * `u` — Wake on unicast messages.
-    * `m` — Wake on multicast messages.
-    * `b` — Wake on broadcast messages.
-    * `g` — Wake-on-Lan; wake on receipt of a "magic packet".
-    * `s` — Enable security function using password for Wake-on-Lan.
-    * `d` — Disable Wake-on-Lan and clear all settings.
+    * `p` - Wake on PHY activity.
+    * `u` - Wake on unicast messages.
+    * `m` - Wake on multicast messages.
+    * `b` - Wake on broadcast messages.
+    * `g` - Wake-on-Lan; wake on receipt of a "magic packet".
+    * `s` - Enable security function using password for Wake-on-Lan.
+    * `d` - Disable Wake-on-Lan and clear all settings.
 
     If not `g`, then run the following to set it:
 

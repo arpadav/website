@@ -21,7 +21,7 @@
 <!-- collab type (e.g. individual, group, etc) -->
 <!-- and project status -->
 <!-- -------------------------------------------------- -->
-<h4>&emsp;&emsp;{{ header.collab_type }} — <i><span style="font-weight:normal">Status:</span> {{ header.status }}</i></h4>
+<h4>&emsp;&emsp;{{ header.collab_type }} - <i><span style="font-weight:normal">Status:</span> {{ header.status }}</i></h4>
 <!-- -------------------------------------------------- -->
 <!-- optional date / date range -->
 <!-- -------------------------------------------------- -->
@@ -35,7 +35,7 @@
 <!-- -------------------------------------------------- -->
 {% match header.location %}
 {% when Some with (location) %}
-— <i>{{ location }}</i></p>
+- <i>{{ location }}</i></p>
 {% when None %}
 </p>
 {% endmatch %}
@@ -45,7 +45,7 @@
 {% for repo in header.repos %}
 {% if loop.first %} <p>Repositories</p> {% endif %}
 {% if !loop.first %} <br> {% endif %}
-&emsp;&emsp; — <a href="{{ repo }}">{{ crate::url_last!(repo) }}</a>
+&emsp;&emsp; - <a href="{{ repo }}">{{ crate::url_last!(repo) }}</a>
 {% endfor %}
 <!-- -------------------------------------------------- -->
 <!-- horizontal line separator with body -->
