@@ -8,10 +8,13 @@ use std::sync::{Arc, RwLock};
 // constants / statics
 // --------------------------------------------------
 static BRACKET_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"<(.*?)>").unwrap());
-pub static DEPLOYMENT_MAP: LazyLock<DeploymentMap> = LazyLock::new(|| match DeploymentMapInner::from_static() {
-    Ok(m) => DeploymentMap { inner: Arc::new(RwLock::new(m)) },
-    Err(e) => panic!("{}", e),
-});
+pub static DEPLOYMENT_MAP: LazyLock<DeploymentMap> =
+    LazyLock::new(|| match DeploymentMapInner::from_static() {
+        Ok(m) => DeploymentMap {
+            inner: Arc::new(RwLock::new(m)),
+        },
+        Err(e) => panic!("{}", e),
+    });
 
 // --------------------------------------------------
 // prelude
@@ -21,9 +24,9 @@ use crate::prelude::*;
 // --------------------------------------------------
 // external
 // --------------------------------------------------
-use std::path::PathBuf;
 use fancy_regex::Regex;
 use std::collections::HashSet;
+use std::path::PathBuf;
 
 #[derive(Debug)]
 /// Easy path pattern mapping from source to destination,
@@ -33,16 +36,13 @@ pub struct PathPattern {
 }
 /// [`PathPattern`] implementation
 impl PathPattern {
-    fn new(input: impl Into<String>) -> Result<Self, fancy_regex::Error> {
+    fn new(input: impl Into<String>) -> Result<Self, Box<fancy_regex::Error>> {
         // --------------------------------------------------
         // get regex pattern, return if error
         // --------------------------------------------------
         let strinput: String = input.into();
         let (capnames, re) = PathPattern::init_regex(&strinput);
-        let re = match Regex::new(&re) {
-            Ok(re) => re,
-            Err(e) => return Err(e),
-        };
+        let re = Regex::new(&re)?;
         // --------------------------------------------------
         // glob all
         // --------------------------------------------------
@@ -58,12 +58,7 @@ impl PathPattern {
             .map(|f| match re.captures(f.display().to_string().as_str()) {
                 Ok(Some(caps)) => capnames
                     .iter()
-                    .map(|n| match caps.name(n) {
-                        Some(c) => Some((n.clone(), c.as_str().to_string())),
-                        _ => None,
-                    })
-                    .filter(|x| x.is_some())
-                    .map(|x| x.unwrap())
+                    .filter_map(|n| caps.name(n).map(|c| (n.clone(), c.as_str().to_string())))
                     .collect::<HashMap<String, String>>(),
                 _ => HashMap::new(),
             })
@@ -71,13 +66,15 @@ impl PathPattern {
         // --------------------------------------------------
         // zip and return
         // --------------------------------------------------
-        Ok(Self { captures: results.into_iter().zip(captures).collect::<Vec<_>>() })
+        Ok(Self {
+            captures: results.into_iter().zip(captures).collect::<Vec<_>>(),
+        })
     }
 
     /// Gets `glob` string from input path
     fn init_glob(text: &str) -> String {
         let text = BRACKET_RE.replace_all(text, "*");
-        text.replace("**", "*").into()
+        text.replace("**", "*")
     }
 
     /// Gets `regex` string from input path
@@ -95,8 +92,8 @@ impl PathPattern {
             // --------------------------------------------------
             let first_instance_re = Regex::new(&format!(r"<{}>", item)).unwrap();
             replacement_string = first_instance_re
-            .replacen(&replacement_string, 1, &format!("(?P<{}>.*)", item))
-            // .replacen(&replacement_string, 1, &format!("(?P<{}>.+?)", item))
+                .replacen(&replacement_string, 1, &format!("(?P<{}>.*)", item))
+                // .replacen(&replacement_string, 1, &format!("(?P<{}>.+?)", item))
                 .to_string();
             // --------------------------------------------------
             // store shorthand reference for subsequent replacements, if any
@@ -111,13 +108,18 @@ impl PathPattern {
         // --------------------------------------------------
         for (item, shorthand) in &replacements {
             let remaining_instance_re = Regex::new(&format!(r"(?<!\(\?P)<{}>", item)).unwrap();
-            replacement_string = remaining_instance_re.replace_all(&replacement_string, shorthand).to_string();
+            replacement_string = remaining_instance_re
+                .replace_all(&replacement_string, shorthand)
+                .to_string();
         }
         // --------------------------------------------------
         // replace all `*` with `[^/]+` to ensure multiple
         // characters are matched, never none
         // --------------------------------------------------
-        (unique_items.clone(), replacement_string.replace("*", "[^/]+"))
+        (
+            unique_items.clone(),
+            replacement_string.replace("*", "[^/]+"),
+        )
     }
 
     /// Map sources to destination
@@ -126,7 +128,8 @@ impl PathPattern {
         // let debug_print = destination.contains("<ext>");
         // let debug_print = true;
         let unique_items = PathPattern::get_uniq_bracketized(&destination);
-        let res = self.captures
+        let res = self
+            .captures
             .iter()
             .map(|(src, captures)| {
                 let mut dst = destination.clone();
@@ -137,7 +140,9 @@ impl PathPattern {
                     //     true => panic!("{:?}", captures),
                     //     false => dst = dst.replace(&format!("<{}>", ci), captures.get(ci).unwrap()),
                     // });
-                    .for_each(|ci| { dst = dst.replace(&format!("<{}>", ci), captures.get(ci).unwrap()); });
+                    .for_each(|ci| {
+                        dst = dst.replace(&format!("<{}>", ci), captures.get(ci).unwrap());
+                    });
                 (src.clone(), std::path::PathBuf::from(dst))
             })
             .collect();
@@ -145,7 +150,7 @@ impl PathPattern {
     }
 
     /// Captures all unique bracketed items
-    /// 
+    ///
     /// E.g. `<folder>` -> "folder", collecting all unique
     /// names into a hashset
     pub fn get_uniq_bracketized(text: &str) -> HashSet<String> {
@@ -154,13 +159,12 @@ impl PathPattern {
         // capture groups
         // --------------------------------------------------
         let mut unique_items = HashSet::new();
-        BRACKET_RE
-            .captures_iter(text)
-            .filter(|x| x.is_ok())
-            .map(|x| x.unwrap())
-            .map(|x| x.get(1))
-            .filter(|x| x.is_some())
-            .for_each(|x| { let _ = unique_items.insert(x.unwrap().as_str().to_string()); });
+        unique_items.extend(
+            BRACKET_RE
+                .captures_iter(text)
+                .flatten()
+                .filter_map(|x| x.get(1).map(|m| m.as_str().to_string())),
+        );
         unique_items
     }
 }
@@ -197,25 +201,36 @@ impl DeploymentMapInner {
         // --------------------------------------------------
         // open deployment map json
         // --------------------------------------------------
-        let contents: HashMap<String, Vec<(String, String)>> = match std::fs::read_to_string(std::path::PathBuf::from(crate::DEPLOYMENT_MAP_JSON)) {
-            Ok(contents) => match serde_json::from_str::<HashMap<String, serde_json::Value>>(&contents) {
-                Ok(mappings) => mappings
-                    .iter()
-                    .map(|(k, v)| {
-                        let ordered: Vec<(&String, &serde_json::Value)> = v.as_object().unwrap().into_iter().collect();
-                        let ordered: Vec<(String, String)> = ordered.into_iter().map(|(k, v)| (k.clone(), v.as_str().unwrap().to_string())).collect();
-                        (k.clone(), ordered)
-                    })
-                    .collect(),
-                Err(e) => return Err(e.into()),
-            },
-            Err(e) => return Err(e),
-        };
+        let contents: HashMap<String, Vec<(String, String)>> =
+            match std::fs::read_to_string(std::path::PathBuf::from(crate::DEPLOYMENT_MAP_JSON)) {
+                Ok(contents) => {
+                    match serde_json::from_str::<HashMap<String, serde_json::Value>>(&contents) {
+                        Ok(mappings) => mappings
+                            .iter()
+                            .map(|(k, v)| {
+                                let ordered: Vec<(&String, &serde_json::Value)> =
+                                    v.as_object().unwrap().into_iter().collect();
+                                let ordered: Vec<(String, String)> = ordered
+                                    .into_iter()
+                                    .map(|(k, v)| (k.clone(), v.as_str().unwrap().to_string()))
+                                    .collect();
+                                (k.clone(), ordered)
+                            })
+                            .collect(),
+                        Err(e) => return Err(e.into()),
+                    }
+                }
+                Err(e) => return Err(e),
+            };
         // --------------------------------------------------
         // get include and exclude files
         // --------------------------------------------------
-        let include_contents = contents.get("include").expect("Failed to find `include` in deployment map");
-        let exclude_contents = contents.get("exclude").expect("Failed to find `exclude` in deployment map");
+        let include_contents = contents
+            .get("include")
+            .expect("Failed to find `include` in deployment map");
+        let exclude_contents = contents
+            .get("exclude")
+            .expect("Failed to find `exclude` in deployment map");
         // --------------------------------------------------
         // convert to deployment maps, and take difference, return
         // --------------------------------------------------
@@ -227,8 +242,9 @@ impl DeploymentMapInner {
     /// Gets a copy of the source/destination, depending on the input [`DeploymentFileType`]
     pub fn pop(&self, f: DeploymentFileType) -> Option<&PathBuf> {
         match f {
-            DeploymentFileType::Source(src) => self.files.iter().find(|x| x.src == **src).map(|x| &x.dst),
-            // DeploymentFileType::Destination(dst) => self.files.iter().find(|x| x.dst == **dst).map(|x| &x.src),
+            DeploymentFileType::Source(src) => {
+                self.files.iter().find(|x| x.src == **src).map(|x| &x.dst)
+            } // DeploymentFileType::Destination(dst) => self.files.iter().find(|x| x.dst == **dst).map(|x| &x.src),
         }
     }
 
@@ -240,21 +256,19 @@ impl DeploymentMapInner {
         }
     }
 
+    #[inline(always)]
     /// Marks a file as deployed
-    /// 
+    ///
     /// This is used in [`crate::deploy!`]
     pub fn mark(&mut self, dst: PathBuf) {
-        self.files
-            .iter_mut()
-            .find(|x| x.dst == dst)
-            .map(|x| x.deployed = true);
+        if let Some(file) = self.files.iter_mut().find(|x| x.dst == dst) {
+            file.deployed = true;
+        }
     }
 
     /// Iterates over files that have not been deployed
     pub fn not_deployed(&mut self) -> impl Iterator<Item = &mut DeploymentFile> {
-        self.files
-            .iter_mut()
-            .filter(|x| !x.deployed)
+        self.files.iter_mut().filter(|x| !x.deployed)
     }
 }
 /// [`DeploymentMapInner`] implementation of [`From`] for [`Vec<(String, String)>`]
@@ -262,34 +276,42 @@ impl From<&Vec<(String, String)>> for DeploymentMapInner {
     fn from(input: &Vec<(String, String)>) -> Self {
         input
             .iter()
-            .map(|(src, dst)| -> Option<Vec<(PathBuf, PathBuf)>> {
+            .filter_map(|(src, dst)| -> Option<Vec<(PathBuf, PathBuf)>> {
                 let src = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(src);
-                let dst = std::path::PathBuf::from(crate::DEPLOY_DIR.get().expect("`DEPLOY_DIR` is not initialized")).join(dst);
+                let dst = std::path::PathBuf::from(
+                    crate::DEPLOY_DIR
+                        .get()
+                        .expect("`DEPLOY_DIR` is not initialized"),
+                )
+                .join(dst);
                 match PathPattern::new(src.display().to_string()) {
                     Ok(pattern) => Some(pattern.map(dst.display().to_string())),
                     Err(err) => {
                         println!("Error creating `PathPattern`: {}", err);
                         None
-                    },
+                    }
                 }
             })
-            .filter_map(|x| x)
             .flatten()
             .collect::<Vec<(PathBuf, PathBuf)>>()
             .iter()
             // --------------------------------------------------
             // reverse and remove all duplicates from the beginning
             // therefore in `deployment-map.json`, you can think about
-            // it like general cases come first, and specific cases 
+            // it like general cases come first, and specific cases
             // overwrite them afterwards
             // --------------------------------------------------
             // <<STYLE+TAG>>
             // --------------------------------------------------
             .rev()
             .scan(HashSet::new(), |seen, (src, dst)| {
-                if seen.insert(src) { Some(Some((src.clone(), dst.clone()))) } else {  Some(None) }
+                if seen.insert(src) {
+                    Some(Some((src.clone(), dst.clone())))
+                } else {
+                    Some(None)
+                }
             })
-            .filter_map(|x| x)
+            .flatten()
             .collect::<Vec<_>>()
             .into_iter()
             .rev()
@@ -325,9 +347,9 @@ impl std::ops::Sub for DeploymentMapInner {
     }
 }
 /// [`DeploymentMapInner`] implementation of [`std::ops::Deref`]
-/// 
+///
 /// This makes for easy iteration
-impl<'a> std::ops::Deref for DeploymentMapInner {
+impl std::ops::Deref for DeploymentMapInner {
     type Target = Vec<DeploymentFile>;
     fn deref(&self) -> &Self::Target {
         &self.files
@@ -354,16 +376,20 @@ impl DeploymentFile {
 
     /// Copies a file OR directory from `src` to `dst`
     pub fn copy(&mut self) -> std::io::Result<()> {
-        if let Some(parent) = self.dst.parent() { std::fs::create_dir_all(parent)?; }
+        if let Some(parent) = self.dst.parent() {
+            std::fs::create_dir_all(parent)?;
+        }
         match self.dst.extension() {
             None => {
-                if !self.dst.exists() { std::fs::create_dir(&self.dst)?; }
+                if !self.dst.exists() {
+                    std::fs::create_dir(&self.dst)?;
+                }
                 copy_dir(&self.src, &self.dst)?;
-            },
+            }
             Some(_) => {
                 std::fs::File::create(&self.dst)?.write_all(&[])?;
                 std::fs::copy(&self.src, &self.dst)?;
-            },
+            }
         }
         self.deployed = true;
         Ok(())
@@ -378,7 +404,9 @@ fn copy_dir(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()>
         let target = dst.join(entry.file_name().unwrap());
         match entry.is_dir() {
             true => copy_dir(&entry, &target)?,
-            false => { let _ = std::fs::copy(entry, target)?; },
+            false => {
+                let _ = std::fs::copy(entry, target)?;
+            }
         };
     }
     Ok(())
@@ -391,10 +419,16 @@ pub enum DeploymentFileType<'a> {
 }
 
 /// Deploys a page
-/// 
+///
 /// To be used by [`crate::deploy!`] macro only
-pub(crate) fn deploy_fn(path: &PathBuf, page_to_render: &impl askama::Template, desc: &str) -> std::io::Result<()> {
-    if let Some(parent) = path.parent() { std::fs::create_dir_all(parent)?; }
+pub(crate) fn deploy_fn(
+    path: &PathBuf,
+    page_to_render: &impl askama::Template,
+    desc: &str,
+) -> std::io::Result<()> {
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
     let mut file = std::fs::OpenOptions::new()
         .write(true)
         .truncate(true)
@@ -403,7 +437,7 @@ pub(crate) fn deploy_fn(path: &PathBuf, page_to_render: &impl askama::Template, 
     let mut output = String::new();
     page_to_render
         .render_into(&mut output)
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, format!("Failed to render {}: {}", desc, e)))?;
+        .map_err(|e| std::io::Error::other(format!("Failed to render {}: {}", desc, e)))?;
     std::io::Write::write_all(&mut file, output.as_bytes())?;
     Ok(())
 }
@@ -413,13 +447,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn from_main() -> () {
-        let _ = crate::DEPLOY_DIR.set(std::path::PathBuf::from("/home/arpadav/repos/website/deploy/dev"));
+    fn from_main() {
+        let _ = crate::DEPLOY_DIR.set(std::path::PathBuf::from(
+            "/home/arpadav/repos/website/deploy/dev",
+        ));
         assert!(DeploymentMapInner::from_static().is_ok());
     }
 
     #[test]
-    fn match_escape_period() -> () {
+    fn match_escape_period() {
         let regex_str = r"/home/arpadav/repos/website/content/notes/(?P<cat>.*)/(?P<typ>.*)/(?P<title>.*)\.(?P<ext>.*)";
         // let regex_st2 = r"/home/arpadav/repos/website/content/notes/(?P<cat>.[^/]+)/(?P<typ>.[^/]+)/(?P<title>.[^/]+)\.(?P<ext>.[^/]+)";
         let path = "/home/arpadav/repos/website/content/notes/academic/2021 - ECE 558/Voros_Arpad_ECE558_proj3.pdf";

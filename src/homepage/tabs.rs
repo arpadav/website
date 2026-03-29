@@ -29,7 +29,9 @@ pub static ALL_TABS: LazyLock<Vec<Tab>> = LazyLock::new(|| {
     // --------------------------------------------------
     let SOCIALS_TAB = Tab {
         head: TabHead::default("socials"),
-        body: Some(TabBodyType::Socials(crate::json_template!("homepage/tabs/socials-tab-links.json"))),
+        body: Some(TabBodyType::Socials(crate::json_template!(
+            "homepage/tabs/socials-tab-links.json"
+        ))),
     };
     // --------------------------------------------------
     // remaining links
@@ -39,11 +41,7 @@ pub static ALL_TABS: LazyLock<Vec<Tab>> = LazyLock::new(|| {
     // --------------------------------------------------
     // order them and return
     // --------------------------------------------------
-    let mut tabs_ordered = vec![
-        ABOUT_ME_TAB,
-        CONTACT_TAB,
-        SOCIALS_TAB,
-    ];
+    let mut tabs_ordered = vec![ABOUT_ME_TAB, CONTACT_TAB, SOCIALS_TAB];
     tabs_ordered.append(&mut REMAINING_TABS);
     tabs_ordered
 });
@@ -58,20 +56,20 @@ pub enum TabBodyType {
     /// The contact tab
     Contact,
     /// The tab with links to socials
-    /// 
+    ///
     /// See [`SocialTabLink`]
     Socials(Vec<SocialTabLink>),
 }
 
 #[derive(Clone)]
-//// A struct describing a tab on the home page
-/// 
+/// A struct describing a tab on the home page
+///
 /// Please refer to `templates/homepage/index.html` for more information
 pub struct Tab {
     /// Required text/title of the tab
     pub head: TabHead,
     /// Optional expanding body
-    /// 
+    ///
     /// See [`TabBodyType`]
     pub body: Option<TabBodyType>,
 }
@@ -86,7 +84,7 @@ impl From<TabHead> for Tab {
 }
 
 #[derive(Clone, Deserialize)]
-//// A struct describing a tab head on the home page
+/// A struct describing a tab head on the home page
 pub struct TabHead {
     /// The id of the tab, used in `div id={{ id }}`
     pub id: String,
@@ -120,14 +118,14 @@ impl Render for TabHead {
         let title_html = self.render_title();
         match &self.link {
             Some(link) => format!("<a href=\"{}\">{}</a>", link, title_html),
-            None => format!("{}", title_html),
+            None => title_html,
         }
     }
 }
 
 #[derive(Debug, Clone, Deserialize)]
 /// Social link structure
-/// 
+///
 /// Tied to: `templates/homepage/tabs/socials-tab-links.json`
 pub struct SocialTabLink {
     /// The name of the social media website

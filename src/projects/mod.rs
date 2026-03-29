@@ -15,7 +15,7 @@ use page::{ProjectHeader, ProjectTemplate};
 /// Parses the project directory using the following format:
 ///
 /// <<STYLE+TAG>>>
-/// 
+///
 /// ```no_run ignore
 /// <templates-directory>/projects
 /// ├── <category-0>
@@ -36,15 +36,15 @@ use page::{ProjectHeader, ProjectTemplate};
 ///
 /// * Each `category` contains multiple projects
 /// * Each project is expected to have both a `.json` and `.html`
-/// file. If either file is missing, a warning is printed and the 
-/// project is then skipped.
-pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = LazyLock::new(|| {
-    // --------------------------------------------------
-    // loop through project categories
-    // --------------------------------------------------
-    let mut pages: Vec<(String, Vec<Page<ProjectTemplate>>)> = std::fs::read_dir(crate::PROJECT_CATEGORIES_DIR)
+///   file. If either file is missing, a warning is printed and the
+///   project is then skipped.
+pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = LazyLock::new(
+    || {
+        // --------------------------------------------------
+        // loop through project categories
+        // --------------------------------------------------
+        let mut pages: Vec<(String, Vec<Page<ProjectTemplate>>)> = std::fs::read_dir(crate::PROJECT_CATEGORIES_DIR)
         .expect("Failed to read project categories directory")
-        .into_iter()
         .filter_map(Result::ok)
         // --------------------------------------------------
         // get the category name, pass it down
@@ -53,7 +53,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             let category_path = category_entry.path();
             let category_name = category_path.file_name()?.to_string_lossy().to_string();
             let category_projects = std::fs::read_dir(category_path.clone()).ok()?;
-            category_path.is_dir().then(|| (category_name, category_projects))
+            category_path.is_dir().then_some((category_name, category_projects))
         })
         // --------------------------------------------------
         // handle invalid items
@@ -137,34 +137,30 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             v.push((category.clone(), projects));
             v
         });
-    // --------------------------------------------------
-    // sort projects based off category (alphabetic, where projects
-    // are labeled using `<num> <name>`)
-    // then name (reverse alphabetic, which is actually reverse chronological
-    // so that the most recent projects are first)
-    // --------------------------------------------------
-    // <<STYLE+TAG>>
-    // --------------------------------------------------
-    pages.sort_by(|a, b| a.0.cmp(&b.0));
-    pages
-        .iter_mut()
-        .for_each(|(category_name, _)| match category_name.find(' ') {
-            Some(idx) => {
+        // --------------------------------------------------
+        // sort projects based off category (alphabetic, where projects
+        // are labeled using `<num> <name>`)
+        // then name (reverse alphabetic, which is actually reverse chronological
+        // so that the most recent projects are first)
+        // --------------------------------------------------
+        // <<STYLE+TAG>>
+        // --------------------------------------------------
+        pages.sort_by(|a, b| a.0.cmp(&b.0));
+        pages.iter_mut().for_each(|(category_name, _)| {
+            if let Some(idx) = category_name.find(' ') {
                 let (_, name) = category_name.split_at(idx);
                 *category_name = name.to_string();
-            },
-            None => (),
+            }
         });
-    pages
-        .iter_mut()
-        .for_each(|(_, categorized_projects)|
-        categorized_projects.sort_by(|a, b| b.page.name.cmp(&a.page.name))
-    );
-    // --------------------------------------------------
-    // return
-    // --------------------------------------------------
-    pages
-});
+        pages.iter_mut().for_each(|(_, categorized_projects)| {
+            categorized_projects.sort_by(|a, b| b.page.name.cmp(&a.page.name))
+        });
+        // --------------------------------------------------
+        // return
+        // --------------------------------------------------
+        pages
+    },
+);
 
 #[derive(Debug, Clone, Template)]
 #[template(path = "projects/projects-homepage.html")]
@@ -185,6 +181,8 @@ impl Create for ProjectsHomepage {
 /// [`ProjectsHomepage`] implementation of [`SourcePath`]
 impl SourcePath<ProjectsHomepage> for ProjectsHomepage {
     fn src_path() -> std::path::PathBuf {
-        [ crate::TEMPLATES_DIR, "/projects/projects-homepage.html" ].concat().into()
+        [crate::TEMPLATES_DIR, "/projects/projects-homepage.html"]
+            .concat()
+            .into()
     }
 }

@@ -27,6 +27,8 @@ impl Create for LandingPage {
 /// [`LandingPage`] implmentation of [`SourcePath`]
 impl SourcePath<LandingPage> for LandingPage {
     fn src_path() -> std::path::PathBuf {
-        [ crate::TEMPLATES_DIR, "/homepage/index.html" ].concat().into()
+        [crate::TEMPLATES_DIR, "/homepage/index.html"]
+            .concat()
+            .into()
     }
 }

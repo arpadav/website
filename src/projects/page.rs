@@ -29,7 +29,7 @@ pub struct ProjectTemplate {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-/// A JSON file describing a project, used at the top of 
+/// A JSON file describing a project, used at the top of
 /// every project page
 pub struct ProjectHeader {
     /// The title of the project
@@ -37,12 +37,12 @@ pub struct ProjectHeader {
 
     #[serde(rename = "collab-type")]
     /// The type of collaboration
-    /// 
+    ///
     /// E.g. "Group", "Individual", etc
     pub collab_type: String,
-    
+
     /// The status of the project
-    /// 
+    ///
     /// E.g. "Completed", "Hiatus", etc.
     pub status: String,
 
