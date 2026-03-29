@@ -12,6 +12,12 @@
         "title": "projects"
     },
     {
+        "id": "blog",
+        "link": "/blog",
+        "tag": "h2",
+        "title": "blog"
+    },
+    {
         "id": "notes",
         "link": "/notes",
         "tag": "h2",

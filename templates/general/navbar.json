@@ -24,6 +24,10 @@
         "link": "/projects"
     },
     {
+        "disp": "blog",
+        "link": "/blog"
+    },
+    {
         "disp": "notes",
         "link": "/notes"
     }

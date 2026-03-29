@@ -1,0 +1,12 @@
+<!-- -------------------------------------------------- -->
+<!-- child of: `general/sidebar.html` -->
+<!-- blog posts, newest first -->
+<!-- -------------------------------------------------- -->
+{% for post in crate::blog::BLOG_POSTS_META.iter() %}
+<li>
+    <a href="{{ post.url }}" target="_parent">
+        <i>{{ post.title }}</i>
+    </a>
+</li>
+{% if !loop.last %} <li>§</li> {% endif %}
+{% endfor %}

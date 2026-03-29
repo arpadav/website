@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<!-- -------------------------------------------------- -->
+<!-- include header -->
+<!-- -------------------------------------------------- -->
+<head>{% include "general/header.html" %}</head>
+<!-- -------------------------------------------------- -->
+<!-- include sidebar -->
+<!-- -------------------------------------------------- -->
+{% include "general/sidebar.html" %}
+<!-- -------------------------------------------------- -->
+<!-- include navbar -->
+<!-- -------------------------------------------------- -->
+<div class="beside-sidebar">
+    {% include "general/navbar.html" %}
+</div>
+<!-- -------------------------------------------------- -->
+<!-- main contents -->
+<!-- -------------------------------------------------- -->
+<div class="blog-listing">
+    <h1>arpad blog</h1>
+    <p>thoughts, ideas, and longer-form writing</p>
+    <hr>
+    <!-- -------------------------------------------------- -->
+    <!-- loop through blog posts, newest first -->
+    <!-- -------------------------------------------------- -->
+    {% for post in posts %}
+    <a href="{{ post.url }}" class="blog-entry no-underline">
+        <div class="blog-entry-inner">
+            <h2>{{ post.title }}</h2>
+            <p class="blog-date">{{ post.date }}</p>
+        </div>
+    </a>
+    {% if !loop.last %}<hr>{% endif %}
+    {% endfor %}
+</div>
+<base target="_top">
+<!-- -------------------------------------------------- -->
+<!-- stylesheets -->
+<!-- -------------------------------------------------- -->
+<link rel="stylesheet" href="/css/std.css">
+<link rel="stylesheet" href="/css/blog.css">
+</html>
