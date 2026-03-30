@@ -7,6 +7,7 @@ use crate::prelude::*;
 // types
 // --------------------------------------------------
 type Notes = Vec<(String, Vec<(String, Vec<Link>)>)>;
+
 // --------------------------------------------------
 // statics
 // --------------------------------------------------
@@ -84,44 +85,14 @@ pub static NOTES: LazyLock<Vec<Page<NotesTemplate>>> = LazyLock::new(|| {
                 x.iter()
                     .filter(|x| !x.url.ends_with(".pdf"))
                     .map(|x| {
-                        // determine source path
-                        let src = match std::path::Path::new(&x.url).extension() {
-                            // ----------------------------------------------------
-                            // if folder, find the index
-                            // ----------------------------------------------------
-                            // <<STYLE+TAG>>
-                            // ----------------------------------------------------
-                            None => {
-                                let index_html = std::path::Path::new(&x.url).join("index.html");
-                                let index_md = std::path::Path::new(&x.url).join("index.md");
-                                if index_html.exists() {
-                                    index_html
-                                } else if index_md.exists() {
-                                    index_md
-                                } else {
-                                    panic!(
-                                        "Failed to find index.html or index.md for note `{}`",
-                                        x.name
-                                    );
-                                }
+                        let path = std::path::Path::new(&x.url);
+                        let (src, source_type) = MarkdownDocument::resolve_source(path, &x.name);
+                        let content = match source_type {
+                            SourceType::Html => {
+                                MarkdownDocument::from_html_file(&src, &x.name).html
                             }
-                            // ----------------------------------------------------
-                            // otherwise, just file
-                            // ----------------------------------------------------
-                            Some(_) => std::path::Path::new(&x.url).to_path_buf(),
+                            SourceType::Markdown => MarkdownDocument::from_file(&src, &x.name).html,
                         };
-
-                        let content = match src.extension().and_then(|x| x.to_str()) {
-                            Some("html") => std::fs::read_to_string(&src).unwrap_or_else(|_| panic!("Failed to open {}.html for note `{}`",
-                                src.file_name().unwrap().to_string_lossy(),
-                                x.name)),
-                            Some("md") => md2html(&src, &x.name),
-                            _ => unimplemented!("Unsupported file type for note {}, please implement how to convert it to HTML for display.\n\nIf link is sufficient to view stand-alone (like a .pdf) please skip it in the filter call above.", x.name),
-                        };
-                        let content = content
-                            .replace("’", "'")
-                            .replace("“", "\"")
-                            .replace("”", "\"");
                         Page {
                             src,
                             page: NotesTemplate {

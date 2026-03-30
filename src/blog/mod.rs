@@ -1,108 +1,13 @@
 // --------------------------------------------------
+// mods
+// --------------------------------------------------
+mod blog_date;
+
+// --------------------------------------------------
 // local
 // --------------------------------------------------
 use crate::prelude::*;
-
-// --------------------------------------------------
-// constants
-// --------------------------------------------------
-const MONTHS: [&str; 12] = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-];
-
-// --------------------------------------------------
-// types
-// --------------------------------------------------
-#[derive(Clone, Debug)]
-/// Metadata for a single blog post
-pub struct BlogPost {
-    /// Display title (from first H1 in markdown)
-    pub title: String,
-    /// Formatted display date, e.g. "March 29, 2026"
-    pub date: String,
-    /// Raw YYYYMMDDHHMM string for sorting
-    pub date_raw: String,
-    /// Deployment URL, e.g. "/blog/20260329-hello-world"
-    pub url: String,
-}
-
-/// Parse a YYYYMMDD-HHMM prefix from a filename into (raw, display) date strings.
-/// Returns raw as "YYYYMMDDHHMM" (12 digits) for sorting.
-/// Display stays human-readable, e.g. "March 29, 2026".
-fn parse_blog_date(filename: &str) -> (String, String) {
-    assert!(
-        filename.len() >= 13,
-        "Blog filename `{}` too short - expected YYYYMMDD-HHMM prefix",
-        filename
-    );
-    let date_part = &filename[..8];
-    let time_part = &filename[9..13];
-    assert!(
-        filename.as_bytes()[8] == b'-',
-        "Blog filename `{}` missing hyphen after YYYYMMDD",
-        filename
-    );
-    let year: u32 = date_part[..4]
-        .parse()
-        .unwrap_or_else(|_| panic!("Invalid year in blog filename `{}`", filename));
-    let month: u32 = date_part[4..6]
-        .parse()
-        .unwrap_or_else(|_| panic!("Invalid month in blog filename `{}`", filename));
-    let day: u32 = date_part[6..8]
-        .parse()
-        .unwrap_or_else(|_| panic!("Invalid day in blog filename `{}`", filename));
-    let _hour: u32 = time_part[..2]
-        .parse()
-        .unwrap_or_else(|_| panic!("Invalid hour in blog filename `{}`", filename));
-    let _minute: u32 = time_part[2..4]
-        .parse()
-        .unwrap_or_else(|_| panic!("Invalid minute in blog filename `{}`", filename));
-    assert!(
-        (1..=12).contains(&month),
-        "Month out of range in blog filename `{}`",
-        filename
-    );
-    assert!(
-        (1..=31).contains(&day),
-        "Day out of range in blog filename `{}`",
-        filename
-    );
-    let raw = format!("{}{}", date_part, time_part);
-    let display = format!("{} {}, {}", MONTHS[(month - 1) as usize], day, year);
-    (raw, display)
-}
-
-/// Extract the first `# ...` heading from raw markdown content.
-/// Returns None if no H1 is found.
-fn extract_h1(md_content: &str) -> Option<String> {
-    md_content
-        .lines()
-        .find(|line| line.starts_with("# "))
-        .map(|line| line.trim_start_matches("# ").trim().to_string())
-}
-
-/// Strip the first `<h1>...</h1>` block from HTML content
-/// so the template can render the title separately.
-fn strip_first_h1(html: &str) -> String {
-    if let Some(start) = html.find("<h1") {
-        if let Some(end) = html[start..].find("</h1>") {
-            let end_abs = start + end + "</h1>".len();
-            return format!("{}{}", &html[..start], &html[end_abs..]);
-        }
-    }
-    html.to_string()
-}
+use blog_date::BlogDateFormat;
 
 // --------------------------------------------------
 // statics
@@ -139,15 +44,14 @@ pub static BLOG_POSTS_META: LazyLock<Vec<BlogPost>> = LazyLock::new(|| {
             } else {
                 name.trim_end_matches(".md").to_string()
             };
-            let (date_raw, date) = parse_blog_date(&stem);
+            let date: BlogDateFormat = stem.parse().unwrap();
             // --------------------------------------------------
             // extract title from first H1
             // --------------------------------------------------
             let md_content = std::fs::read_to_string(&md_path)
                 .unwrap_or_else(|_| panic!("Failed to read blog post `{}`", name));
-            let title = extract_h1(&md_content).unwrap_or_else(|| {
-                // fallback: derive from slug
-                stem[14..]
+            let title = MarkdownDocument::extract_h1(&md_content).unwrap_or_else(|| {
+                stem[BlogDateFormat::PREFIX_LEN + 1..]
                     .replace('-', " ")
                     .split_whitespace()
                     .map(|w| {
@@ -166,8 +70,8 @@ pub static BLOG_POSTS_META: LazyLock<Vec<BlogPost>> = LazyLock::new(|| {
             let url = format!("/blog/{}", stem);
             Some(BlogPost {
                 title,
-                date,
-                date_raw,
+                date_raw: date.sort_key(),
+                date: date.to_string(),
                 url,
             })
         })
@@ -209,27 +113,23 @@ pub static BLOG_PAGES: LazyLock<Vec<Page<BlogPostTemplate>>> = LazyLock::new(|| 
             } else {
                 name.trim_end_matches(".md").to_string()
             };
-            let (_, date) = parse_blog_date(&stem);
+            let date: BlogDateFormat = stem.parse().unwrap_or_else(|e| panic!("{}", e));
             let md_content = std::fs::read_to_string(&md_path)
                 .unwrap_or_else(|_| panic!("Failed to read blog post `{}`", name));
-            let post_title =
-                extract_h1(&md_content).unwrap_or_else(|| stem[14..].replace('-', " "));
+            let post_title = MarkdownDocument::extract_h1(&md_content)
+                .unwrap_or_else(|| stem[BlogDateFormat::PREFIX_LEN + 1..].replace('-', " "));
             // --------------------------------------------------
             // convert to HTML + strip first H1
             // --------------------------------------------------
-            let content = md2html(&src, &name);
-            let content = strip_first_h1(&content);
-            let content = content.replace("\u{2018}", "'");
-            let content = content.replace("\u{201c}", "\"");
-            let content = content.replace("\u{201d}", "\"");
-
+            let doc = MarkdownDocument::from_file(&src, &name);
+            let content = MarkdownDocument::strip_first_h1(&doc.html);
             Some(Page {
                 src,
                 page: BlogPostTemplate {
                     title: crate::title!(post_title),
                     sidebar: SidebarType::Blog,
                     post_title: post_title.clone(),
-                    date,
+                    date: date.to_string(),
                     content,
                 },
             })
@@ -237,9 +137,6 @@ pub static BLOG_PAGES: LazyLock<Vec<Page<BlogPostTemplate>>> = LazyLock::new(|| 
         .collect()
 });
 
-// --------------------------------------------------
-// templates
-// --------------------------------------------------
 #[derive(Template, Default)]
 #[template(path = "blog/blog.html")]
 /// Template for blog homepage / listing page
@@ -274,4 +171,17 @@ pub struct BlogPostTemplate {
     pub post_title: String,
     pub date: String,
     pub content: String,
+}
+
+#[derive(Clone, Debug)]
+/// Metadata for a single blog post
+pub struct BlogPost {
+    /// Display title (from first H1 in markdown)
+    pub title: String,
+    /// Formatted display date, e.g. "March 29, 2026"
+    pub date: String,
+    /// Raw YYYYMMDDHHMM string for sorting
+    pub date_raw: String,
+    /// Deployment URL, e.g. "/blog/20260329-hello-world"
+    pub url: String,
 }

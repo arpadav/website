@@ -5,6 +5,7 @@ mod blog;
 mod deployutil;
 mod homepage;
 mod macros;
+mod markdown;
 mod miscpages;
 mod navbar;
 mod notes;

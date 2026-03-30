@@ -94,7 +94,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
                     eprintln!("Warning: Missing HTML or Markdown file for project: {}", project_path.display());
                     return None;
                 },
-                (false, true) => (md2html(&md_path, &project_name), md_path, SourceType::Markdown),
+                (false, true) => (MarkdownDocument::from_file(&md_path, &project_name).html, md_path, SourceType::Markdown),
                 (true, false) => (std::fs::read_to_string(&html_path).ok()?, html_path, SourceType::Html),
             };
             // --------------------------------------------------
