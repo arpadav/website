@@ -7,7 +7,13 @@ var tabs_first_invisible = true;
 var first_load = true;
 
 // transforms, do not edit
-var transforms = ['-moz-transform', '-webkit-transform', '-o-transform', '-ms-transform', 'transform'];
+var transforms = [
+    "-moz-transform",
+    "-webkit-transform",
+    "-o-transform",
+    "-ms-transform",
+    "transform",
+];
 
 // resize timeout
 var resize_timeout;
@@ -55,12 +61,12 @@ function init() {
     resize_divs();
 
     // name clicking listener
-    let name_div = document.getElementById('name');
+    let name_div = document.getElementById("name");
     name_div.style.cursor = "pointer";
     name_div.addEventListener("click", name_click);
 
     // tabs head clicking listener
-    let tabs_title = document.getElementsByClassName('head');
+    let tabs_title = document.getElementsByClassName("head");
     for (let i = 0; i < tabs_title.length; i++) {
         tabs_title[i].style.cursor = "pointer";
         tabs_title[i].addEventListener("click", toggle_collapse);
@@ -77,7 +83,7 @@ function init() {
     document.body.onkeyup = function (e) {
         // if(e.keyCode == 13 || e.keyCode == 32) name_click();
         if (e.key == " " || e.key == "Enter") name_click();
-    }
+    };
 
     // perform click on load, if first load
     // must wait 0.5 seconds after page load
@@ -104,23 +110,27 @@ function init() {
     // }, 5000);
 }
 
-
 // =======================================================================
 // =                           VISUALS                                   =
 // =======================================================================
 // toggles visibility of 'tabs'
 function set_tab_visibility(visible) {
     let tabs = document.getElementsByClassName("tab");
-    if (visible) for (let i = 0; i < tabs.length; i++) tabs[i].style.visibility = "visible";
-    else for (let i = 0; i < tabs.length; i++) tabs[i].style.visibility = "hidden";
+    if (visible)
+        for (let i = 0; i < tabs.length; i++)
+            tabs[i].style.visibility = "visible";
+    else
+        for (let i = 0; i < tabs.length; i++)
+            tabs[i].style.visibility = "hidden";
 }
 
 // single collapsing body, used in anchors
 function single_tab_open(id) {
     let headers = document.getElementById(id);
     for (let i = 0; i < headers.children.length; i++) {
-        if (headers.children[i].className == 'body') {
-            headers.children[i].style.maxHeight = headers.children[i].scrollHeight + "px";
+        if (headers.children[i].className == "body") {
+            headers.children[i].style.maxHeight =
+                headers.children[i].scrollHeight + "px";
         }
     }
 }
@@ -128,28 +138,36 @@ function single_tab_open(id) {
 // reset the height of tabs
 // called upon resizing window
 function reset_tabs_height() {
-    let bodies = document.getElementsByClassName('body');
-    for (let i = 0; i < bodies.length; i++) if (bodies[i].style.maxHeight) bodies[i].style.maxHeight = bodies[i].scrollHeight + "px";
+    let bodies = document.getElementsByClassName("body");
+    for (let i = 0; i < bodies.length; i++)
+        if (bodies[i].style.maxHeight)
+            bodies[i].style.maxHeight = bodies[i].scrollHeight + "px";
 }
 
 // collapse bodies upon clicking title or name
 // links do not cause collapse animations
 function toggle_collapse(force_collapse) {
-    let bodies = document.getElementsByClassName('body');
-    if (force_collapse == true) for (let i = 0; i < bodies.length; i++) bodies[i].style.maxHeight = null;
+    let bodies = document.getElementsByClassName("body");
+    if (force_collapse == true)
+        for (let i = 0; i < bodies.length; i++)
+            bodies[i].style.maxHeight = null;
     else {
         // "this" refers to click event
-        if (this.children[0].tagName != 'A') {
+        if (this.children[0].tagName != "A") {
             this.classList.toggle("active");
             let content = this.nextElementSibling;
-            for (let i = 0; i < bodies.length; i++) if (bodies[i] != content) bodies[i].style.maxHeight = null;
+            for (let i = 0; i < bodies.length; i++)
+                if (bodies[i] != content) bodies[i].style.maxHeight = null;
             if (content.style.maxHeight) {
                 content.style.maxHeight = null;
-                window.history.replaceState(' ', '', ' ');
-            }
-            else {
+                window.history.replaceState(" ", "", " ");
+            } else {
                 content.style.maxHeight = content.scrollHeight + "px";
-                window.history.replaceState("#" + this.parentNode.id, '', "#" + this.parentNode.id);
+                window.history.replaceState(
+                    "#" + this.parentNode.id,
+                    "",
+                    "#" + this.parentNode.id,
+                );
             }
         }
     }
@@ -157,8 +175,9 @@ function toggle_collapse(force_collapse) {
 
 // sets the overflow of the Y direction to hidden/auto
 function toggle_scrollbar() {
-    let body = document.querySelector('body');
-    if (body.style.overflowY == 'hidden' || body.style.overflowY == '') body.style.overflowY = "scroll";
+    let body = document.querySelector("body");
+    if (body.style.overflowY == "hidden" || body.style.overflowY == "")
+        body.style.overflowY = "scroll";
     else body.style.overflowY = "hidden";
 }
 
@@ -166,7 +185,7 @@ function toggle_scrollbar() {
 // finds the current fontsize and new fontsize, then
 // calls resize name and reset tabs height to resize
 function resize_divs() {
-    let main_div = document.getElementsByClassName('main');
+    let main_div = document.getElementsByClassName("main");
     // fs_cur = fs_cur ? Number(main_div[0].style.fontSize.match(/(.+?)(?=px)/g)) : 32;
     fs_cur = Number(main_div[0].style.fontSize.match(/(.+?)(?=px)/g));
     fs_new = Math.round(window.innerWidth / 32);
@@ -177,8 +196,8 @@ function resize_divs() {
 
 // recursive resizing of name
 function resize_name() {
-    let container_div = document.getElementById('home');
-    let main_div = document.getElementsByClassName('main');
+    let container_div = document.getElementById("home");
+    let main_div = document.getElementsByClassName("main");
     let timeout = 5;
 
     if (fs_new != fs_cur) {
@@ -188,14 +207,21 @@ function resize_name() {
         setTimeout(resize_name, timeout);
     } else {
         // change scale of transform, depending on window height
-        name_scale_in[0] = window.innerHeight / Number(container_div.style.width.match(/(.+?)(?=px)/g));
+        name_scale_in[0] =
+            window.innerHeight /
+            Number(container_div.style.width.match(/(.+?)(?=px)/g));
         // update the css animation specs
         update_css_anim();
         // update other font sizes
-        let headers = document.getElementsByClassName('head');
-        let bodies = document.getElementsByClassName('body');
-        for (let i = 0; i < headers.length; i++) recursive_resize_font(headers[i]);
-        for (let i = 0; i < bodies.length; i++) recursive_resize_font(bodies[i]);
+        let headers = document.getElementsByClassName("head");
+        let bodies = document.getElementsByClassName("body");
+        for (let i = 0; i < headers.length; i++) {
+            headers[i].style.fontSize =
+                `${h2_scale * fs_new * name_scale_in[0]}px`;
+            recursive_resize_font(headers[i]);
+        }
+        for (let i = 0; i < bodies.length; i++)
+            recursive_resize_font(bodies[i]);
         if (window.location.hash && first_load) {
             first_load = false;
             name_click();
@@ -206,22 +232,30 @@ function resize_name() {
 
 // change the font size of other elements, according to the main name
 function recursive_resize_font(elements) {
-    let root_tag_exceptions = ['P'];
+    let root_tag_exceptions = ["P"];
     for (let c = 0; c < elements.children.length; c++) {
-        if (elements.children[c].children.length && !root_tag_exceptions.includes(elements.children[c].tagName)) recursive_resize_font(elements.children[c]);
+        if (
+            elements.children[c].children.length &&
+            !root_tag_exceptions.includes(elements.children[c].tagName)
+        )
+            recursive_resize_font(elements.children[c]);
         else {
             switch (elements.children[c].tagName) {
-                case 'H2':
-                    elements.children[c].style.fontSize = `${h2_scale * fs_new * name_scale_in[0]}px`;
+                case "H2":
+                    elements.children[c].style.fontSize =
+                        `${h2_scale * fs_new * name_scale_in[0]}px`;
                     break;
-                case 'H3':
-                    elements.children[c].style.fontSize = `${h3_scale * fs_new * name_scale_in[0]}px`;
+                case "H3":
+                    elements.children[c].style.fontSize =
+                        `${h3_scale * fs_new * name_scale_in[0]}px`;
                     break;
-                case 'P':
-                    elements.children[c].style.fontSize = `${p_scale * fs_new * name_scale_in[0]}px`;
+                case "P":
+                    elements.children[c].style.fontSize =
+                        `${p_scale * fs_new * name_scale_in[0]}px`;
                     break;
-                case 'LI':
-                    elements.children[c].style.fontSize = `${p_scale * fs_new * name_scale_in[0]}px`;
+                case "LI":
+                    elements.children[c].style.fontSize =
+                        `${p_scale * fs_new * name_scale_in[0]}px`;
                     break;
             }
         }
@@ -244,8 +278,8 @@ function call_anchors() {
 // rotate name on click, disable clicking for animation length
 // change visibility of other elements depending on status
 function name_click() {
-    let name_div = document.getElementById('name');
-    let tabs = document.getElementsByClassName('tab');
+    let name_div = document.getElementById("name");
+    let tabs = document.getElementsByClassName("tab");
     // check if clicking on 'name' is enabled
     if (click_enable) {
         // disable for length of animation & start animation
@@ -253,13 +287,14 @@ function name_click() {
         if (rotated) {
             // scroll to the top, otherwise reset animation looks bad
             smooth_scrollTo(document.body, 0, 3, function () {
-                window.history.replaceState(' ', '', ' ');
+                window.history.replaceState(" ", "", " ");
                 // animation for making name centered (horz)
                 name_div.style.animation = `name_rotate_horz ${anim_len}s forwards`;
-                name_div.style.webkitAnimation = `name_rotate_horz ${anim_len}s forwards`;
                 for (let i = 0; i < tabs.length; i++) {
-                    tabs[i].style.animation = `tabs_rotate_horz ${anim_len}s forwards fade_out ease ${anim_len}s forwards`;
-                    tabs[i].style.webkitAnimation = `tabs_rotate_horz ${anim_len}s forwards, fade_out ease ${anim_len}s forwards`;
+                    tabs[i].style.animation =
+                        `tabs_rotate_horz ${anim_len}s forwards fade_out ease ${anim_len}s forwards`;
+                    tabs[i].style.webkitAnimation =
+                        `tabs_rotate_horz ${anim_len}s forwards, fade_out ease ${anim_len}s forwards`;
                     tabs[i].style.pointerEvents = "none";
                 }
                 toggle_scrollbar();
@@ -274,16 +309,20 @@ function name_click() {
             toggle_collapse(true);
             // animation for making name rotated (vert)
             name_div.style.animation = `name_rotate_vert ${anim_len}s forwards`;
-            name_div.style.webkitAnimation = `name_rotate_vert ${anim_len}s forwards`;
             for (let i = 0; i < tabs.length; i++) {
-                tabs[i].style.animation = `tabs_rotate_vert ${anim_len}s forwards, fade_in ease ${anim_len}s forwards`;
-                tabs[i].style.webkitAnimation = `tabs_rotate_vert ${anim_len}s forwards, fade_in ease ${anim_len}s forwards`;
+                tabs[i].style.animation =
+                    `tabs_rotate_vert ${anim_len}s forwards, fade_in ease ${anim_len}s forwards`;
+                tabs[i].style.webkitAnimation =
+                    `tabs_rotate_vert ${anim_len}s forwards, fade_in ease ${anim_len}s forwards`;
                 tabs[i].style.pointerEvents = "auto";
             }
             rotated = true;
         }
         // disable clicking for length of animation
-        setTimeout(function () { click_enable = true; if (rotated) toggle_scrollbar(); }, anim_len * 1000);
+        setTimeout(function () {
+            click_enable = true;
+            if (rotated) toggle_scrollbar();
+        }, anim_len * 1000);
     }
 }
 
@@ -293,61 +332,157 @@ function update_css_anim() {
     let keyframes = find_keyframes_rule("name_rotate_vert");
     keyframes.deleteRule("0%");
     keyframes.deleteRule("100%");
-    keyframes.appendRule(create_css_transform_rule(0,
-        "translate", true, name_anim_begin_pos,
-        "rotate", true, name_anim_begin_rot,
-        "transform-origin", false, name_pivot,
-        "scale", true, name_scale_out));
-    keyframes.appendRule(create_css_transform_rule(100,
-        "translate", true, name_anim_end_pos,
-        "rotate", true, name_anim_end_rot,
-        "transform-origin", false, name_pivot,
-        "scale", true, name_scale_in));
+    keyframes.appendRule(
+        create_css_transform_rule(
+            0,
+            "translate",
+            true,
+            name_anim_begin_pos,
+            "rotate",
+            true,
+            name_anim_begin_rot,
+            "transform-origin",
+            false,
+            name_pivot,
+            "scale",
+            true,
+            name_scale_out,
+        ),
+    );
+    keyframes.appendRule(
+        create_css_transform_rule(
+            100,
+            "translate",
+            true,
+            name_anim_end_pos,
+            "rotate",
+            true,
+            name_anim_end_rot,
+            "transform-origin",
+            false,
+            name_pivot,
+            "scale",
+            true,
+            name_scale_in,
+        ),
+    );
 
     // NAME CENTERED ROTATION (HORZ)
     keyframes = find_keyframes_rule("name_rotate_horz");
     keyframes.deleteRule("0%");
     keyframes.deleteRule("100%");
-    keyframes.appendRule(create_css_transform_rule(0,
-        "translate", true, name_anim_end_pos,
-        "rotate", true, name_anim_end_rot,
-        "transform-origin", false, name_pivot,
-        "scale", true, name_scale_in));
-    keyframes.appendRule(create_css_transform_rule(100,
-        "translate", true, name_anim_begin_pos,
-        "rotate", true, name_anim_begin_rot,
-        "transform-origin", false, name_pivot,
-        "scale", true, name_scale_out));
+    keyframes.appendRule(
+        create_css_transform_rule(
+            0,
+            "translate",
+            true,
+            name_anim_end_pos,
+            "rotate",
+            true,
+            name_anim_end_rot,
+            "transform-origin",
+            false,
+            name_pivot,
+            "scale",
+            true,
+            name_scale_in,
+        ),
+    );
+    keyframes.appendRule(
+        create_css_transform_rule(
+            100,
+            "translate",
+            true,
+            name_anim_begin_pos,
+            "rotate",
+            true,
+            name_anim_begin_rot,
+            "transform-origin",
+            false,
+            name_pivot,
+            "scale",
+            true,
+            name_scale_out,
+        ),
+    );
 
     // TABS DISPLAYING ROTATION (VERT)
     keyframes = find_keyframes_rule("tabs_rotate_vert");
     keyframes.deleteRule("0%");
     keyframes.deleteRule("100%");
-    keyframes.appendRule(create_css_transform_rule(0,
-        "translate", true, tabs_anim_begin_pos,
-        "rotate", true, tabs_anim_begin_rot,
-        "transform-origin", false, tabs_pivot,
-        "scale", true, tabs_scale_out));
-    keyframes.appendRule(create_css_transform_rule(100,
-        "translate", true, tabs_anim_end_pos,
-        "rotate", true, tabs_anim_end_rot,
-        "transform-origin", false, tabs_pivot,
-        "scale", true, tabs_scale_in));
+    keyframes.appendRule(
+        create_css_transform_rule(
+            0,
+            "translate",
+            true,
+            tabs_anim_begin_pos,
+            "rotate",
+            true,
+            tabs_anim_begin_rot,
+            "transform-origin",
+            false,
+            tabs_pivot,
+            "scale",
+            true,
+            tabs_scale_out,
+        ),
+    );
+    keyframes.appendRule(
+        create_css_transform_rule(
+            100,
+            "translate",
+            true,
+            tabs_anim_end_pos,
+            "rotate",
+            true,
+            tabs_anim_end_rot,
+            "transform-origin",
+            false,
+            tabs_pivot,
+            "scale",
+            true,
+            tabs_scale_in,
+        ),
+    );
 
     // TABS DISAPPEARING ROTATION (HORZ)
     keyframes = find_keyframes_rule("tabs_rotate_horz");
     keyframes.deleteRule("0%");
     keyframes.deleteRule("100%");
-    keyframes.appendRule(create_css_transform_rule(0,
-        "translate", true, tabs_anim_end_pos,
-        "rotate", true, tabs_anim_end_rot,
-        "transform-origin", false, tabs_pivot,
-        "scale", true, tabs_scale_in));
-    keyframes.appendRule(create_css_transform_rule(100,
-        "translate", true, tabs_anim_begin_pos,
-        "rotate", true, tabs_anim_begin_rot,
-        "transform-origin", false, tabs_pivot,
-        "scale", true, tabs_scale_out));
+    keyframes.appendRule(
+        create_css_transform_rule(
+            0,
+            "translate",
+            true,
+            tabs_anim_end_pos,
+            "rotate",
+            true,
+            tabs_anim_end_rot,
+            "transform-origin",
+            false,
+            tabs_pivot,
+            "scale",
+            true,
+            tabs_scale_in,
+        ),
+    );
+    keyframes.appendRule(
+        create_css_transform_rule(
+            100,
+            "translate",
+            true,
+            tabs_anim_begin_pos,
+            "rotate",
+            true,
+            tabs_anim_begin_rot,
+            "transform-origin",
+            false,
+            tabs_pivot,
+            "scale",
+            true,
+            tabs_scale_out,
+        ),
+    );
 }
 
 // mainly taken from: https://gist.github.com/andjosh/6764939
@@ -387,13 +522,12 @@ function smooth_scrollTo(element, to, speed, callback) {
  * @returns {number} value between 'b' and 'c' at time 't'
  */
 function easeInOutQuad(t, b, c, d) {
-    t /= (d / 2);
+    t /= d / 2;
     if (t < 1) return (c / 2) * (t * t) + b;
     t--;
     return -(c / 2) * (t * (t - 2) - 1) + b;
-};
+}
 // =======================================================================
-
 
 // =======================================================================
 // =                           FULL TECHNICAL                            =
@@ -439,7 +573,8 @@ function create_css_transform_rule() {
 
     // populate said arrays
     for (let i = 2; i < this_args.length; i += 3) {
-        if (this_args[i]) trans_dep_idx.push(i - 1); else trans_indep_idx.push(i - 1);
+        if (this_args[i]) trans_dep_idx.push(i - 1);
+        else trans_indep_idx.push(i - 1);
     }
 
     // append 'rule' string with transform functions first
@@ -449,12 +584,15 @@ function create_css_transform_rule() {
             let function_name = this_args[idx];
             let args = this_args[idx + 2];
 
-            rule = (!more_trans_dep) ? rule + t_item + ": " : rule + " ";
+            rule = !more_trans_dep ? rule + t_item + ": " : rule + " ";
             more_trans_dep = 1;
             rule = rule + function_name + "(";
 
             args.forEach(function (item, idx) {
-                rule = (idx != args.length - 1) ? rule + item + ", " : rule + item + ")";
+                rule =
+                    idx != args.length - 1
+                        ? rule + item + ", "
+                        : rule + item + ")";
             });
         });
         rule = rule + "; ";
@@ -467,7 +605,7 @@ function create_css_transform_rule() {
 
         rule = rule + function_name + ": ";
         args.forEach(function (item, idx) {
-            rule = (idx != args.length - 1) ? rule + item + ", " : rule + item;
+            rule = idx != args.length - 1 ? rule + item + ", " : rule + item;
         });
         rule = rule + "; ";
     });
@@ -495,7 +633,10 @@ function find_keyframes_rule(rule) {
     let ss = document.styleSheets;
     for (let i = 0; i < ss.length; ++i) {
         for (let j = 0; j < ss[i].cssRules.length; ++j) {
-            if (ss[i].cssRules[j].type == window.CSSRule.KEYFRAMES_RULE && ss[i].cssRules[j].name == rule) {
+            if (
+                ss[i].cssRules[j].type == window.CSSRule.KEYFRAMES_RULE &&
+                ss[i].cssRules[j].name == rule
+            ) {
                 return ss[i].cssRules[j];
             }
         }
