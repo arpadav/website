@@ -123,6 +123,8 @@ pub static BLOG_PAGES: LazyLock<Vec<Page<BlogPostTemplate>>> = LazyLock::new(|| 
             // --------------------------------------------------
             let doc = MarkdownDocument::from_file(&src, &name);
             let content = MarkdownDocument::strip_first_h1(&doc.html);
+            let toc = MarkdownDocument::extract_toc(&content);
+            let content = MarkdownDocument::inject_anchor_links(&content); // overwrite content with anchor links
             Some(Page {
                 src,
                 page: BlogPostTemplate {
@@ -131,6 +133,7 @@ pub static BLOG_PAGES: LazyLock<Vec<Page<BlogPostTemplate>>> = LazyLock::new(|| 
                     post_title: post_title.clone(),
                     date: date.to_string(),
                     content,
+                    toc,
                 },
             })
         })
@@ -171,6 +174,7 @@ pub struct BlogPostTemplate {
     pub post_title: String,
     pub date: String,
     pub content: String,
+    pub toc: Vec<TocEntry>,
 }
 
 #[derive(Clone, Debug)]

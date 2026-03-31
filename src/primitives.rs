@@ -39,3 +39,14 @@ pub struct Link {
     /// The URL of the link
     pub url: String,
 }
+
+#[derive(Clone, Debug)]
+/// A table-of-contents entry extracted from an HTML heading
+pub struct TocEntry {
+    /// Heading level (1-6)
+    pub level: u8,
+    /// The `id` attribute of the heading (used for anchor links)
+    pub id: String,
+    /// Plain-text content of the heading
+    pub text: String,
+}

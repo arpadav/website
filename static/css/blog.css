@@ -68,3 +68,79 @@
     font-style: italic;
     opacity: 0.85;
 }
+
+/* -------------------------------------------------- */
+/* header anchor links */
+/* -------------------------------------------------- */
+.header-anchor {
+    text-decoration: none;
+    color: inherit;
+}
+
+.anchor-icon {
+    visibility: hidden;
+    margin-left: 8px;
+    font-size: 0.7em;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+h1:hover .anchor-icon,
+h2:hover .anchor-icon,
+h3:hover .anchor-icon,
+h4:hover .anchor-icon,
+h5:hover .anchor-icon,
+h6:hover .anchor-icon {
+    visibility: visible;
+}
+
+.anchor-icon:hover {
+    opacity: 1;
+}
+
+/* -------------------------------------------------- */
+/* table of contents sidebar */
+/* -------------------------------------------------- */
+.blog-toc {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    width: 200px;
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
+}
+
+.blog-toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.blog-toc li {
+    padding: 3px 0;
+}
+
+.blog-toc a {
+    text-decoration: none;
+    color: #000090;
+    opacity: 0.7;
+}
+
+.blog-toc a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* indentation and sizing by heading level */
+.toc-h2 { padding-left: 0; font-size: 0.95em; }
+.toc-h3 { padding-left: 14px; font-size: 0.85em; }
+.toc-h4 { padding-left: 28px; font-size: 0.78em; }
+.toc-h5 { padding-left: 42px; font-size: 0.72em; }
+.toc-h6 { padding-left: 56px; font-size: 0.68em; }
+
+/* hide toc on narrow screens */
+@media (max-width: 1200px) {
+    .blog-toc {
+        display: none;
+    }
+}

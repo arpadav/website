@@ -1,12 +1,25 @@
 // --------------------------------------------------
 // local
 // --------------------------------------------------
-use crate::primitives::SourceType;
+use crate::primitives::{SourceType, TocEntry};
 
 // --------------------------------------------------
 // external
 // --------------------------------------------------
 use std::path::{Path, PathBuf};
+use std::sync::LazyLock;
+
+// --------------------------------------------------
+// statics
+// --------------------------------------------------
+/// Matches `<hN id="...">...</hN>` heading elements
+/// Groups: 1=tag (e.g. "h2"), 2=level digit, 3=id, 4=content
+static HEADING_RE: LazyLock<fancy_regex::Regex> = LazyLock::new(|| {
+    fancy_regex::Regex::new(r#"<(h([1-6]))\s+id="([^"]+)">(.*?)</h[1-6]>"#).unwrap()
+});
+/// Matches any HTML tag for stripping
+static TAG_RE: LazyLock<fancy_regex::Regex> =
+    LazyLock::new(|| fancy_regex::Regex::new(r"<[^>]+>").unwrap());
 
 /// A markdown document converted to HTML with standard post-processing applied.
 pub struct MarkdownDocument {
@@ -96,6 +109,41 @@ impl MarkdownDocument {
     fn normalize_quotes(html: &str) -> String {
         html.replace(['\u{2018}', '\u{2019}'], "'")
             .replace(['\u{201c}', '\u{201d}'], "\"")
+    }
+
+    /// Inject anchor links into headings that have `id` attributes.
+    ///
+    /// Transforms `<hN id="foo">Text</hN>` into
+    /// `<hN id="foo"><a href="#foo" class="header-anchor">Text<span class="anchor-icon" title="Copy link">#</span></a></hN>`
+    pub fn inject_anchor_links(html: &str) -> String {
+        HEADING_RE
+            .replace_all(html, |caps: &fancy_regex::Captures| {
+                let tag = caps.get(1).map(|m| m.as_str());
+                let id = caps.get(3).map(|m| m.as_str());
+                let content = caps.get(4).map(|m| m.as_str());
+                match (tag, id, content) {
+                    (Some(tag), Some(id), Some(content)) => format!(
+                        r##"<{tag} id="{id}"><a href="#{id}" class="header-anchor">{content}<span class="anchor-icon" title="Copy link">#</span></a></{tag}>"##,
+                    ),
+                    _ => caps.get(0).map(|m| m.as_str()).unwrap_or("").to_string(),
+                }
+            })
+            .to_string()
+    }
+
+    /// Extract table-of-contents entries from HTML headings.
+    pub fn extract_toc(html: &str) -> Vec<TocEntry> {
+        HEADING_RE
+            .captures_iter(html)
+            .filter_map(|cap| cap.ok())
+            .filter_map(|cap| {
+                let level: u8 = cap.get(2)?.as_str().parse().ok()?;
+                let id = cap.get(3)?.as_str().to_string();
+                let raw_text = cap.get(4)?.as_str();
+                let text = TAG_RE.replace_all(raw_text, "").trim().to_string();
+                Some(TocEntry { level, id, text })
+            })
+            .collect()
     }
 
     /// Convert markdown to HTML via `pandoc`, stripping the `pandoc` document wrapper.
