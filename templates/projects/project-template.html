@@ -1,65 +1,66 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<!-- -------------------------------------------------- -->
-<!-- include header -->
-<!-- -------------------------------------------------- -->
-<head>{% include "general/header.html" %}</head>
-<!-- -------------------------------------------------- -->
-<!-- include sidebar -->
-<!-- -------------------------------------------------- -->
-{% include "general/sidebar.html" %}
-<!-- -------------------------------------------------- -->
-<!-- div for body, beside the sidebar -->
-<!-- -------------------------------------------------- -->
-<div class="beside-sidebar">
     <!-- -------------------------------------------------- -->
-    <!-- include navbar -->
+    <!-- include header -->
     <!-- -------------------------------------------------- -->
-    {% include "general/navbar.html" %}
+    <head>
+        {% include "general/header.html" %}
+    </head>
     <!-- -------------------------------------------------- -->
-    <!-- project -->
+    <!-- include sidebar -->
     <!-- -------------------------------------------------- -->
-    <div class="project-body">
+    {% include "general/sidebar.html" %}
+    <!-- -------------------------------------------------- -->
+    <!-- div for body, beside the sidebar -->
+    <!-- -------------------------------------------------- -->
+    <div class="beside-sidebar">
         <!-- -------------------------------------------------- -->
-        <!-- project header -->
+        <!-- include navbar -->
         <!-- -------------------------------------------------- -->
-        {% include "projects/project-header.html" %}
+        {% include "general/navbar.html" %}
         <!-- -------------------------------------------------- -->
-        <!-- render differently based off source -->
+        <!-- project -->
         <!-- -------------------------------------------------- -->
-        {% match srctype %}
-        {% when SourceType::Html %}
-        <!-- -------------------------------------------------- -->
-        <!-- raw HTML contents -->
-        <!-- -------------------------------------------------- -->
-        {{ content|safe }}
-        <!-- -------------------------------------------------- -->
-        {% when SourceType::Markdown %}
-        <!-- -------------------------------------------------- -->
-        <!-- markdown contents -->
-        <!-- -------------------------------------------------- -->
-        <div id="markdown-content">
-            <style>
-                #markdown-content h1 {
-                    margin-top: 0%;
-                }
-                #markdown-content img {
-                    max-width: 50vw;
-                    max-height: 70vh;
-                    margin: 0 auto;
-                    display: block;
-                    object-fit: contain;
-                }
-            </style>
+        <div class="project-body">
+            <!-- -------------------------------------------------- -->
+            <!-- project header -->
+            <!-- -------------------------------------------------- -->
+            {% include "projects/project-header.html" %}
+            <!-- -------------------------------------------------- -->
+            <!-- render differently based off source -->
+            <!-- -------------------------------------------------- -->
+            {% match srctype %} {% when SourceType::Html %}
+            <!-- -------------------------------------------------- -->
+            <!-- raw HTML contents -->
+            <!-- -------------------------------------------------- -->
             {{ content|safe }}
+            <!-- -------------------------------------------------- -->
+            {% when SourceType::Markdown %}
+            <!-- -------------------------------------------------- -->
+            <!-- markdown contents -->
+            <!-- -------------------------------------------------- -->
+            <div id="markdown-content">
+                <style>
+                    #markdown-content h1 {
+                        margin-top: 0%;
+                    }
+                    #markdown-content img {
+                        max-width: 50vw;
+                        max-height: 70vh;
+                        margin: 0 auto;
+                        display: block;
+                        object-fit: contain;
+                    }
+                </style>
+                {{ content|safe }}
+            </div>
+            {% endmatch %}
+            <br />
         </div>
-        {% endmatch %}
-        <br>
+        <base target="_top" />
     </div>
-    <base target="_top">
-</div>
-<!-- -------------------------------------------------- -->
-<!-- stylesheets -->
-<!-- -------------------------------------------------- -->
-<link rel="stylesheet" href="/css/std.css">
+    <!-- -------------------------------------------------- -->
+    <!-- stylesheets -->
+    <!-- -------------------------------------------------- -->
+    <link rel="stylesheet" href="/css/std.css" />
 </html>

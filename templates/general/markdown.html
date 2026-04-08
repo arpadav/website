@@ -1,36 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<!-- -------------------------------------------------- -->
-<!-- include header -->
-<!-- -------------------------------------------------- -->
-<head>{% include "general/header.html" %}</head>
-<!-- -------------------------------------------------- -->
-<!-- include sidebar -->
-<!-- -------------------------------------------------- -->
-{% include "general/sidebar.html" %}
-<!-- -------------------------------------------------- -->
-<!-- include navbar -->
-<!-- -------------------------------------------------- -->
-<div class="beside-sidebar">
-    {% include "general/navbar.html" %}
-</div>
-<!-- -------------------------------------------------- -->
-<!-- markdown content -->
-<!-- -------------------------------------------------- -->
-<div id="markdown-content">
-    <style>
-        #markdown-content h1 {
-            margin-top: 0%;
-        }
-        #markdown-content img {
-            max-width: 50vw;
-            max-height: 70vh;
-            margin: 0 auto;
-            display: block;
-            object-fit: contain;
-        }
-    </style>
-    {{ content|safe }}
-</div>
-<br>
+    <!-- -------------------------------------------------- -->
+    <!-- include header -->
+    <!-- -------------------------------------------------- -->
+    <head>
+        {% include "general/header.html" %}
+    </head>
+    <!-- -------------------------------------------------- -->
+    <!-- include sidebar -->
+    <!-- -------------------------------------------------- -->
+    {% include "general/sidebar.html" %}
+    <!-- -------------------------------------------------- -->
+    <!-- include navbar -->
+    <!-- -------------------------------------------------- -->
+    <div class="beside-sidebar">{% include "general/navbar.html" %}</div>
+    <!-- -------------------------------------------------- -->
+    <!-- markdown content -->
+    <!-- -------------------------------------------------- -->
+    <div id="markdown-content">
+        <style>
+            #markdown-content h1 {
+                margin-top: 0%;
+            }
+            #markdown-content img {
+                max-width: 50vw;
+                max-height: 70vh;
+                margin: 0 auto;
+                display: block;
+                object-fit: contain;
+            }
+        </style>
+        {{ content|safe }}
+    </div>
+    <br />
 </html>

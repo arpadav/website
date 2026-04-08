@@ -1,83 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<!-- -------------------------------------------------- -->
-<!-- include header -->
-<!-- -------------------------------------------------- -->
-<head>{% include "general/header.html" %}</head>
-<!-- -------------------------------------------------- -->
-<!-- include sidebar -->
-<!-- -------------------------------------------------- -->
-{% include "general/sidebar.html" %}
-<!-- -------------------------------------------------- -->
-<!-- include navbar -->
-<!-- -------------------------------------------------- -->
-<div class="beside-sidebar">
-{% include "general/navbar.html" %}
-</div>
-<body>
-    <div class="main">
-        <hr>
-        <h1>PROJECTS</h1>
-        <p>an archive of my academic, personal, and professional projects</p>
-        <!-- -------------------------------------------------- -->
-        <!-- child of: `general/sidebar.html` -->
-        <!-- note that crate::projects::ALL_PROJECTS is already sorted
+    <!-- -------------------------------------------------- -->
+    <!-- include header -->
+    <!-- -------------------------------------------------- -->
+    <head>
+        {% include "general/header.html" %}
+    </head>
+    <!-- -------------------------------------------------- -->
+    <!-- include sidebar -->
+    <!-- -------------------------------------------------- -->
+    {% include "general/sidebar.html" %}
+    <!-- -------------------------------------------------- -->
+    <!-- include navbar -->
+    <!-- -------------------------------------------------- -->
+    <div class="beside-sidebar">{% include "general/navbar.html" %}</div>
+    <body>
+        <div class="main">
+            <hr />
+            <h1>PROJECTS</h1>
+            <p>
+                an archive of my academic, personal, and professional projects
+            </p>
+            <!-- -------------------------------------------------- -->
+            <!-- child of: `general/sidebar.html` -->
+            <!-- note that crate::projects::ALL_PROJECTS is already sorted
             by category and chronologically -->
-        <!-- -------------------------------------------------- -->
-        {% for (category, projects) in crate::projects::ALL_PROJECTS.iter() %}
-        <!-- -------------------------------------------------- -->
-        <!-- type/category of project -->
-        <!-- -------------------------------------------------- -->
-        <hr>
-        <h2>{{ category }}</h2>
-        <!-- -------------------------------------------------- -->
-        <!-- loop through each link, add as bullet -->
-        <!-- -------------------------------------------------- -->
-        {% for project in projects %}
-        <!-- -------------------------------------------------- -->
-        <!-- add the project link -->
-        <!-- -------------------------------------------------- -->
-        <a href="{{ project.page.url }}" target="_parent" class="no-underline">
-            <div class="card" style="cursor: pointer;">
-                <img style="width: 7px; height: 7px" src="/images/tri.png">
-                <h3 style="margin-left: 7px">
-                    {% let num_space = 54 %}
-                    {% let offset = 40 %}
-                    {% let length = project.page.header.title.len() %}
-                    {% if length < num_space %}
-                        {% let long_title = format!("{} {} ", project.page.header.title, "&nbsp;".repeat(num_space - length + offset)) %}
+            <!-- -------------------------------------------------- -->
+            {% for (category, projects) in crate::projects::ALL_PROJECTS.iter()
+            %}
+            <!-- -------------------------------------------------- -->
+            <!-- type/category of project -->
+            <!-- -------------------------------------------------- -->
+            <hr />
+            <h2>{{ category }}</h2>
+            <!-- -------------------------------------------------- -->
+            <!-- loop through each link, add as bullet -->
+            <!-- -------------------------------------------------- -->
+            {% for project in projects %}
+            <!-- -------------------------------------------------- -->
+            <!-- add the project link -->
+            <!-- -------------------------------------------------- -->
+            <a
+                href="{{ project.page.url }}"
+                target="_parent"
+                class="no-underline"
+            >
+                <div class="card" style="cursor: pointer">
+                    <img
+                        style="width: 7px; height: 7px"
+                        src="/images/tri.png"
+                    />
+                    <h3 style="margin-left: 7px">
+                        {% let num_space = 54 %} {% let offset = 40 %} {% let
+                        length = project.page.header.title.len() %} {% if length
+                        < num_space %} {% let long_title = format!("{} {} ",
+                        project.page.header.title, "&nbsp;".repeat(num_space -
+                        length + offset)) %}
                         <i>{{ long_title|safe }}</i>
-                    {% else %}
+                        {% else %}
                         <i>{{ project.page.header.title }}</i>
-                    {% endif %}
-                </h3>
-            </div>
-        </a>
-        {% endfor %}
-        {% endfor %}
+                        {% endif %}
+                    </h3>
+                </div>
+            </a>
+            {% endfor %} {% endfor %}
 
-        <hr>
-        <h2>professional</h2>
-        <p>out of privacy and respect of all my current & previous employers, detailed descriptions of my professional work
-            experience is not included. what can be publicly disclosed is already done so in my <a
-                href="/cv.pdf">curriculum vitae</a> under 'work history'</p>
+            <hr />
+            <h2>professional</h2>
+            <p>
+                out of privacy and respect of all my current & previous
+                employers, detailed descriptions of my professional work
+                experience is not included. what can be publicly disclosed is
+                already done so in my
+                <a href="/cv.pdf">curriculum vitae</a> under 'work history'
+            </p>
 
-        <p>However, I can provide links of <b>public</b> projects which I was <b>historically</b> part of:</p>
-        <ul>
-            <li><a href="https://www.iarpa.gov/research-programs/wriva">T + E, WRIVA program</a>, data doi: <a href="https://dx.doi.org/10.21227/cjk5-gf33">https://dx.doi.org/10.21227/cjk5-gf33</a></li>
-            <li><a href="https://www.iarpa.gov/research-programs/core3d">T + E, Core3D</a></li>
-            <li><a href="https://www.diu.mil/replicator">Performer, Replicator</a></li>
-        </ul>
+            <p>
+                However, I can provide links of <b>public</b> projects which I
+                was <b>historically</b> part of:
+            </p>
+            <ul>
+                <li>
+                    <a href="https://www.iarpa.gov/research-programs/wriva"
+                        >T + E, WRIVA program</a
+                    >, data doi:
+                    <a href="https://dx.doi.org/10.21227/cjk5-gf33"
+                        >https://dx.doi.org/10.21227/cjk5-gf33</a
+                    >
+                </li>
+                <li>
+                    <a href="https://www.iarpa.gov/research-programs/core3d"
+                        >T + E, Core3D</a
+                    >
+                </li>
+                <li>
+                    <a href="https://www.diu.mil/replicator"
+                        >Performer, Replicator</a
+                    >
+                </li>
+            </ul>
 
-        <br>
-        <br>
-    </div>
-</body>
-<base target="_top">
+            <br />
+            <br />
+        </div>
+    </body>
+    <base target="_top" />
 
-<!-- -------------------------------------------------- -->
-<!-- stylesheets -->
-<!-- -------------------------------------------------- -->
-<link rel="stylesheet" href="/css/std.css">
-
+    <!-- -------------------------------------------------- -->
+    <!-- stylesheets -->
+    <!-- -------------------------------------------------- -->
+    <link rel="stylesheet" href="/css/std.css" />
 </html>
