@@ -100,6 +100,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             // --------------------------------------------------
             // prepend the start year to the title
             // --------------------------------------------------
+            let page_title = project_header.title.clone();
             project_header.title = format!("{project_start_year} - {}", project_header.title);
             // --------------------------------------------------
             // if doesnt exist, print warning
@@ -122,7 +123,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
                 category_name,
                 src_path,
                 ProjectTemplate {
-                    title: crate::title!(project_header.title),
+                    title: crate::title!(page_title),
                     name: project_name.to_string(),
                     // --------------------------------------------------
                     // <<STYLE+TAG>>
