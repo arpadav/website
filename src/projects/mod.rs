@@ -76,6 +76,13 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             let html_path = project_path.join(format!("{}.html", project_name));
             let md_path = project_path.join(format!("{}.md", project_name));
             // --------------------------------------------------
+            // get the year (get nums until alphabet hit)
+            // --------------------------------------------------
+            let project_start_year = project_name
+                .chars()
+                .take_while(|c| c.is_numeric())
+                .collect::<String>();
+            // --------------------------------------------------
             // if doesnt exist, print warning
             // --------------------------------------------------
             if !json_path.exists() {
@@ -83,6 +90,17 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
                 return None;
             }
             let json_path = json_path.display().to_string();
+            // --------------------------------------------------
+            // parse json, if archived, then return early
+            // --------------------------------------------------
+            let mut project_header: ProjectHeader = crate::json_template!(json_path);
+            if project_header.is_archived {
+                return None;
+            }
+            // --------------------------------------------------
+            // prepend the start year to the title
+            // --------------------------------------------------
+            project_header.title = format!("{project_start_year} - {}", project_header.title);
             // --------------------------------------------------
             // if doesnt exist, print warning
             // however, if both exist, panic! dont know which
@@ -100,7 +118,6 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             // --------------------------------------------------
             // return
             // --------------------------------------------------
-            let project_header: ProjectHeader = crate::json_template!(json_path);
             Some((
                 category_name,
                 src_path,

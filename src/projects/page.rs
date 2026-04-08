@@ -61,6 +61,10 @@ pub struct ProjectHeader {
     #[serde(default)]
     /// The list of repositories associated with the project, if any
     pub repos: Vec<String>,
+
+    #[serde(default)]
+    /// Whether the project is archived. Default is false
+    pub is_archived: bool,
 }
 
 /// Deserializes an empty string into [`None`]
