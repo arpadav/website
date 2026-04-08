@@ -173,7 +173,7 @@ macro_rules! url_relative_manifest {
 }
 
 #[macro_export]
-/// Creates the title for a page by prepending "Arpad Voros" with the title
+/// Creates the title for a page by appending "Arpad Voros" with the title
 macro_rules! title {
     () => {
         String::from("Arpad Voros")
