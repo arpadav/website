@@ -1,0 +1,9 @@
+{
+    "title": "Email budget summary / reminder",
+    "collab-type": "Individual Project",
+    "status": "Complete",
+    "desc": "Daily email summarizing budget from custom Google Sheet",
+    "date": "Dec 2025",
+    "location": null,
+    "repos": ["https://github.com/arpadav/budget-reminder"]
+}
