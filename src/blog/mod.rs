@@ -2,78 +2,28 @@
 // mods
 // --------------------------------------------------
 mod blog_date;
+mod parse_fs;
 
 // --------------------------------------------------
 // local
 // --------------------------------------------------
 use crate::prelude::*;
 use blog_date::BlogDateFormat;
+use parse_fs::_INNER_BLOG_PAGES;
 
 // --------------------------------------------------
 // statics
 // --------------------------------------------------
-/// Scans `content/blog/` for blog posts, extracts metadata,
-/// sorts newest-first. Handles both flat `.md` files and
-/// folders with `index.md`.
+/// Metadata for blog posts, used for indexing and display
 pub static BLOG_POSTS_META: LazyLock<Vec<BlogPost>> = LazyLock::new(|| {
-    let mut posts: Vec<BlogPost> = std::fs::read_dir(crate::BLOG_DIR)
-        .expect("Failed to read blog directory")
-        .filter_map(Result::ok)
-        .filter_map(|entry| {
-            let name = entry.file_name().into_string().ok()?;
-            let path = entry.path();
-            // --------------------------------------------------
-            // determine the markdown source file
-            // --------------------------------------------------
-            let md_path = if path.is_dir() {
-                let index_md = path.join("index.md");
-                if !index_md.exists() {
-                    panic!("Blog folder `{}` missing index.md", name);
-                }
-                index_md
-            } else if name.ends_with(".md") {
-                path.clone()
-            } else {
-                return None;
-            };
-            // --------------------------------------------------
-            // parse date from filename/folder name
-            // --------------------------------------------------
-            let stem = if path.is_dir() {
-                name.clone()
-            } else {
-                name.trim_end_matches(".md").to_string()
-            };
-            let date: BlogDateFormat = stem.parse().unwrap();
-            // --------------------------------------------------
-            // extract title from first H1
-            // --------------------------------------------------
-            let md_content = std::fs::read_to_string(&md_path)
-                .unwrap_or_else(|_| panic!("Failed to read blog post `{}`", name));
-            let title = MarkdownDocument::extract_h1(&md_content).unwrap_or_else(|| {
-                stem[BlogDateFormat::PREFIX_LEN + 1..]
-                    .replace('-', " ")
-                    .split_whitespace()
-                    .map(|w| {
-                        let mut c = w.chars();
-                        match c.next() {
-                            None => String::new(),
-                            Some(f) => f.to_uppercase().to_string() + c.as_str(),
-                        }
-                    })
-                    .collect::<Vec<_>>()
-                    .join(" ")
-            });
-            // --------------------------------------------------
-            // build url
-            // --------------------------------------------------
-            let url = format!("/blog/{}", stem);
-            Some(BlogPost {
-                title,
-                date_raw: date.sort_key(),
-                date: date.to_string(),
-                url,
-            })
+    LazyLock::force(&_INNER_BLOG_PAGES);
+    let mut posts: Vec<BlogPost> = _INNER_BLOG_PAGES
+        .iter()
+        .map(|p| BlogPost {
+            title: p.title.clone(),
+            date_raw: p.date.as_key(),
+            date: p.date.to_string(),
+            url: format!("/blog/{}", p.filestem),
         })
         .collect();
     // --------------------------------------------------
@@ -85,57 +35,28 @@ pub static BLOG_POSTS_META: LazyLock<Vec<BlogPost>> = LazyLock::new(|| {
 
 /// Blog post pages: markdown -> HTML for each post
 pub static BLOG_PAGES: LazyLock<Vec<Page<BlogPostTemplate>>> = LazyLock::new(|| {
-    std::fs::read_dir(crate::BLOG_DIR)
-        .expect("Failed to read blog directory")
-        .filter_map(Result::ok)
-        .filter_map(|entry| {
-            let name = entry.file_name().into_string().ok()?;
-            let path = entry.path();
-            // --------------------------------------------------
-            // determine source file
-            // --------------------------------------------------
-            let (md_path, src) = if path.is_dir() {
-                let index_md = path.join("index.md");
-                if !index_md.exists() {
-                    return None;
-                }
-                (index_md.clone(), index_md)
-            } else if name.ends_with(".md") {
-                (path.clone(), path.clone())
-            } else {
-                return None;
-            };
-            // --------------------------------------------------
-            // parse metadata
-            // --------------------------------------------------
-            let stem = if path.is_dir() {
-                name.clone()
-            } else {
-                name.trim_end_matches(".md").to_string()
-            };
-            let date: BlogDateFormat = stem.parse().unwrap_or_else(|e| panic!("{}", e));
-            let md_content = std::fs::read_to_string(&md_path)
-                .unwrap_or_else(|_| panic!("Failed to read blog post `{}`", name));
-            let post_title = MarkdownDocument::extract_h1(&md_content)
-                .unwrap_or_else(|| stem[BlogDateFormat::PREFIX_LEN + 1..].replace('-', " "));
+    LazyLock::force(&_INNER_BLOG_PAGES);
+    _INNER_BLOG_PAGES
+        .iter()
+        .map(|p| {
             // --------------------------------------------------
             // convert to HTML + strip first H1
             // --------------------------------------------------
-            let doc = MarkdownDocument::from_file(&src, &name);
+            let doc = MarkdownDocument::from_file(&p.src, &p.filename);
             let content = MarkdownDocument::strip_first_h1(&doc.html);
             let toc = MarkdownDocument::extract_toc(&content);
             let content = MarkdownDocument::inject_anchor_links(&content); // overwrite content with anchor links
-            Some(Page {
-                src,
+            Page {
+                src: p.src.clone(),
                 page: BlogPostTemplate {
-                    title: crate::title!(post_title),
+                    title: crate::title!(p.title),
+                    post_title: p.title.clone(),
                     sidebar: SidebarType::Blog,
-                    post_title: post_title.clone(),
-                    date: date.to_string(),
+                    date: p.date.to_string(),
                     content,
                     toc,
                 },
-            })
+            }
         })
         .collect()
 });
@@ -168,17 +89,27 @@ impl SourcePath<BlogHomepage> for BlogHomepage {
 #[derive(Template, Default)]
 #[template(path = "blog/post.html")]
 /// Template for individual blog post pages
+///
+/// This renders the markdown as HTML
 pub struct BlogPostTemplate {
+    /// Page title, e.g. "Hello World"
     title: String,
-    pub sidebar: SidebarType,
+    /// Post title, see [`BlogPost::title`]
     pub post_title: String,
+    /// Sidebar type, e.g. [`SidebarType::Blog`]
+    pub sidebar: SidebarType,
+    /// Formatted display date, see [`BlogPost::date`]
     pub date: String,
+    /// The rendered HTML content of the post
     pub content: String,
+    /// Table of contents entries, see [`TocEntry`]
     pub toc: Vec<TocEntry>,
 }
 
 #[derive(Clone, Debug)]
 /// Metadata for a single blog post
+///
+/// This is lightweight and mainly used for indexing
 pub struct BlogPost {
     /// Display title (from first H1 in markdown)
     pub title: String,
