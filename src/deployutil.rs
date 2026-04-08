@@ -128,8 +128,7 @@ impl PathPattern {
         // let debug_print = destination.contains("<ext>");
         // let debug_print = true;
         let unique_items = PathPattern::get_uniq_bracketized(&destination);
-        let res = self
-            .captures
+        self.captures
             .iter()
             .map(|(src, captures)| {
                 let mut dst = destination.clone();
@@ -145,8 +144,7 @@ impl PathPattern {
                     });
                 (src.clone(), std::path::PathBuf::from(dst))
             })
-            .collect();
-        res
+            .collect()
     }
 
     /// Captures all unique bracketed items

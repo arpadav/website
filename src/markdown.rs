@@ -96,11 +96,11 @@ impl MarkdownDocument {
     /// Strip the first `<h1>...</h1>` block from HTML so the template can
     /// render the title separately.
     pub fn strip_first_h1(html: &str) -> String {
-        if let Some(start) = html.find("<h1") {
-            if let Some(end) = html[start..].find("</h1>") {
-                let end_abs = start + end + "</h1>".len();
-                return format!("{}{}", &html[..start], &html[end_abs..]);
-            }
+        if let Some(start) = html.find("<h1")
+            && let Some(end) = html[start..].find("</h1>")
+        {
+            let end_abs = start + end + "</h1>".len();
+            return format!("{}{}", &html[..start], &html[end_abs..]);
         }
         html.to_string()
     }

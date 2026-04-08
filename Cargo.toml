@@ -1,15 +1,15 @@
 [package]
 name = "website"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 publish = false
 
 [dependencies]
-glob = "~0.3"
-askama = "~0.14"
-serde_json = "~1.0"
-fancy-regex = "~0.16"
-serde = { version = "~1.0", features = ["derive"] }
+glob = "^0.3"
+askama = "^0.14"
+serde_json = "^1.0"
+fancy-regex = "^0.16"
+serde = { version = "^1.0", features = ["derive"] }
 
 [profile.fast-build]
 inherits = "release"
