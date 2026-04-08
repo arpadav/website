@@ -51,24 +51,26 @@ impl PathPattern {
             .filter_map(|result| result.ok())
             .collect::<Vec<_>>();
         // --------------------------------------------------
-        // regex to capture all in `re`
+        // regex to capture all, filter out those which
+        // dont match
         // --------------------------------------------------
         let captures = results
-            .iter()
-            .map(|f| match re.captures(f.display().to_string().as_str()) {
-                Ok(Some(caps)) => capnames
-                    .iter()
-                    .filter_map(|n| caps.name(n).map(|c| (n.clone(), c.as_str().to_string())))
-                    .collect::<HashMap<String, String>>(),
-                _ => HashMap::new(),
+            .into_iter()
+            .filter_map(|f| match re.captures(f.display().to_string().as_str()) {
+                Ok(Some(caps)) => {
+                    let map = capnames
+                        .iter()
+                        .filter_map(|n| caps.name(n).map(|c| (n.clone(), c.as_str().to_string())))
+                        .collect::<HashMap<String, String>>();
+                    Some((f, map))
+                }
+                _ => None,
             })
-            .collect::<Vec<HashMap<String, String>>>();
+            .collect::<Vec<_>>();
         // --------------------------------------------------
-        // zip and return
+        // filter and return
         // --------------------------------------------------
-        Ok(Self {
-            captures: results.into_iter().zip(captures).collect::<Vec<_>>(),
-        })
+        Ok(Self { captures })
     }
 
     /// Gets `glob` string from input path
@@ -457,7 +459,7 @@ mod tests {
     #[test]
     fn from_main() {
         let _ = crate::DEPLOY_DIR.set(std::path::PathBuf::from(
-            "/home/arpadav/repos/website/deploy/dev",
+            "/home/arpad/repos/personal/website/deploy/dev",
         ));
         assert!(DeploymentMapInner::from_static().is_ok());
     }

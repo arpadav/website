@@ -2,7 +2,7 @@
     "include": {
         "templates/homepage/index.html": "index.html",
         "templates/<page>.html": "<page>/index.html",
-        
+
         "content/notes/<cat>/<typ>/<title>.<ext>": "notes/<cat>/<typ>/<title>.<ext>",
         "content/notes/<cat>/<typ>/<title>.md": "notes/<cat>/<typ>/<title>.md/index.html",
         "content/notes/<cat>/<typ>/<title>/<file>": "notes/<cat>/<typ>/<title>/<file>",
