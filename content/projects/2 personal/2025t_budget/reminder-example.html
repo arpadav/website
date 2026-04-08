@@ -1,0 +1,1577 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            /* ═══════════════════════════════════════════════════════════
+           BASE / RESET
+           ═══════════════════════════════════════════════════════════ */
+            body {
+                font-family: "Segoe UI", Arial, sans-serif;
+                max-width: 680px;
+                margin: 0 auto;
+                padding: 20px;
+                color: #2d2a26;
+                background: #faf8f5;
+                line-height: 1.5;
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           TYPOGRAPHY
+           ═══════════════════════════════════════════════════════════ */
+            .section-label {
+                font-size: 12px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: #7a756e;
+                margin-bottom: 12px;
+            }
+
+            .muted {
+                color: #7a756e;
+            }
+
+            .text-sm {
+                font-size: 12px;
+            }
+
+            .text-bold {
+                font-weight: 600;
+            }
+
+            .text-heavy {
+                font-weight: 700;
+            }
+
+            .nowrap {
+                white-space: nowrap;
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           LAYOUT
+           ═══════════════════════════════════════════════════════════ */
+            .header-border {
+                border-bottom: 2px solid #2d2a26;
+                padding-bottom: 0;
+                margin-bottom: 15px;
+            }
+
+            .divider {
+                border: none;
+                border-top: 1px solid #e8e4df;
+                margin: 20px 0;
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           CARDS & ALERTS
+           ═══════════════════════════════════════════════════════════ */
+            .card {
+                background: #fff;
+                border: 1px solid #e8e4df;
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 16px;
+            }
+
+            .card-compact {
+                padding: 14px 16px;
+            }
+
+            .alert {
+                padding: 12px 14px;
+                margin-bottom: 16px;
+                border-radius: 0 8px 8px 0;
+                font-size: 14px;
+            }
+
+            .alert-success {
+                background: #e8f5ee;
+                border-left: 4px solid #38a169;
+            }
+
+            .alert-warning {
+                background: #fefcbf;
+                border-left: 4px solid #d69e2e;
+            }
+
+            .alert-error {
+                background: #fed7d7;
+                border-left: 4px solid #e53e3e;
+            }
+
+            .alert-info {
+                background: #eef4fb;
+                border-left: 4px solid #4a90e2;
+            }
+
+            .alert-custom {
+                background: #ffe5e5;
+                border-radius: 8px;
+                padding: 14px 18px;
+                margin-bottom: 16px;
+                font-size: 14px;
+                text-align: center;
+                font-style: italic;
+                color: #c53030;
+                line-height: 1.6;
+            }
+
+            .footer {
+                background: #edeae7;
+                border-radius: 8px;
+                padding: 14px 16px;
+                font-size: 12px;
+                color: #736e67;
+                margin-top: 20px;
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           TABLES
+           ═══════════════════════════════════════════════════════════ */
+            .data-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px;
+            }
+
+            .table-header {
+                background: #f7f5f2;
+            }
+
+            .table-header th {
+                padding: 10px 8px;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 0.4px;
+                color: #7a756e;
+                border-bottom: 1px solid #e8e4df;
+            }
+
+            .table-cell {
+                padding: 10px 8px;
+                border-bottom: 1px solid #f2efeb;
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           BADGES & INDICATORS
+           ═══════════════════════════════════════════════════════════ */
+            .badge {
+                display: inline-block;
+                padding: 2px 8px;
+                border-radius: 10px;
+                font-size: 11px;
+                font-weight: 600;
+            }
+
+            .badge-bill {
+                background: #fff7ed;
+                color: #ea580c;
+            }
+
+            .badge-saving {
+                background: #f3edff;
+                color: #6b46c1;
+            }
+
+            .color-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           BUDGET PROGRESS INDICATORS
+           ═══════════════════════════════════════════════════════════ */
+            .progress-title {
+                font-size: 13px;
+                font-weight: 700;
+                margin-bottom: 4px;
+                text-align: center;
+            }
+
+            .progress-pct {
+                font-size: 28px;
+                font-weight: 700;
+                margin: 6px 0;
+                text-align: center;
+            }
+
+            .progress-subtitle {
+                font-size: 11px;
+                color: #7a756e;
+                margin-top: 6px;
+                line-height: 1.3;
+                text-align: center;
+            }
+
+            .progress-bar-track {
+                border-radius: 4px;
+                height: 8px;
+                padding: 0;
+            }
+
+            .progress-bar-fill {
+                border-radius: 4px;
+                height: 8px;
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           TRANSFERS
+           ═══════════════════════════════════════════════════════════ */
+            .transfer-section {
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px solid #f2efeb;
+            }
+
+            .transfer-item {
+                background: #faf8f5;
+                border-radius: 8px;
+                padding: 12px 14px;
+                border-left: 3px solid #7a756e;
+                margin-bottom: 8px;
+            }
+
+            .transfer-badge {
+                background: #fff;
+                border: 1px solid #e8e4df;
+                border-radius: 6px;
+                padding: 4px 10px;
+                font-size: 13px;
+                font-weight: 600;
+                color: #2d2a26;
+            }
+
+            .transfer-arrow {
+                color: #7a756e;
+                font-size: 18px;
+                font-weight: 700;
+                padding: 0 4px;
+            }
+
+            .transfer-amount {
+                font-weight: 700;
+                font-size: 16px;
+                color: #2d2a26;
+                white-space: nowrap;
+            }
+
+            .transfer-breakdown {
+                margin-top: 8px;
+                background: #fff;
+                border: 1px solid #e8e4df;
+                border-radius: 6px;
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .transfer-breakdown-header {
+                font-weight: 600;
+                margin-bottom: 6px;
+                color: #7a756e;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.4px;
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           BUDGET BREAKDOWN ROW (income, bills, savings, etc.)
+           ═══════════════════════════════════════════════════════════ */
+            .breakdown-row {
+                padding: 10px 0;
+                border-bottom: 1px solid #f2efeb;
+            }
+
+            .breakdown-row-total {
+                padding: 12px 0 4px;
+                border-top: 2px solid #2d2a26;
+            }
+
+            .breakdown-amount {
+                display: inline-block;
+                text-align: left;
+                font-weight: 600;
+                font-size: 14px;
+                white-space: nowrap;
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           ATTENTION TABLE (accounts needing attention)
+           ═══════════════════════════════════════════════════════════ */
+            .attn-th {
+                padding: 4px 6px;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.4px;
+                color: #92600e;
+                font-weight: 600;
+            }
+
+            .attn-td {
+                padding: 6px;
+                border-bottom: 1px solid rgba(210, 170, 60, 0.25);
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           PROGRESSIVE ENHANCEMENT (hover, transitions)
+           Only works in Apple Mail, some webmail — degrades gracefully
+           ═══════════════════════════════════════════════════════════ */
+            @media screen and (-webkit-min-device-pixel-ratio: 0) {
+                .transfer-item:hover {
+                    background-color: #f7f5f2 !important;
+                }
+            }
+
+            /* ═══════════════════════════════════════════════════════════
+           MOBILE RESPONSIVE
+           Supported by Apple Mail, Gmail app, Yahoo, Outlook apps.
+           Falls back gracefully in desktop Outlook (ignores @media).
+           ═══════════════════════════════════════════════════════════ */
+            @media only screen and (max-width: 600px) {
+                body {
+                    padding: 12px !important;
+                }
+
+                .card,
+                .card-compact {
+                    padding: 12px !important;
+                }
+
+                /* Stack the 4 progress indicators into a 2×2 grid */
+                .progress-cell {
+                    display: block !important;
+                    width: 50% !important;
+                    float: left !important;
+                    box-sizing: border-box !important;
+                    padding: 8px 4px !important;
+                }
+
+                .progress-pct {
+                    font-size: 24px !important;
+                }
+
+                .progress-title {
+                    font-size: 12px !important;
+                }
+
+                .progress-subtitle {
+                    font-size: 10px !important;
+                }
+
+                /* Stack "What You Can Spend" table for readability */
+                .data-table {
+                    font-size: 13px !important;
+                }
+
+                .table-cell,
+                .table-header th {
+                    padding: 8px 4px !important;
+                    font-size: 11px !important;
+                }
+
+                /* Transfer badges: smaller on mobile */
+                .transfer-badge {
+                    padding: 3px 6px !important;
+                    font-size: 11px !important;
+                }
+
+                .transfer-arrow {
+                    font-size: 14px !important;
+                }
+
+                .transfer-amount {
+                    font-size: 14px !important;
+                }
+
+                /* Accounts attention table: let it scroll if needed */
+                .attn-th,
+                .attn-td {
+                    padding: 4px 3px !important;
+                    font-size: 10px !important;
+                }
+
+                /* Footer */
+                .footer {
+                    font-size: 11px !important;
+                    padding: 12px !important;
+                }
+
+                .footer a {
+                    word-break: break-all;
+                }
+
+                /* General font scaling */
+                h2 {
+                    font-size: 20px !important;
+                }
+            }
+
+            /* Extra-small phones */
+            @media only screen and (max-width: 400px) {
+                .progress-cell {
+                    width: 100% !important;
+                    float: none !important;
+                }
+
+                .transfer-badge {
+                    padding: 2px 5px !important;
+                    font-size: 10px !important;
+                }
+            }
+        </style>
+    </head>
+
+    <body
+        style="
+            font-family: &quot;Segoe UI&quot;, Arial, sans-serif;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #2d2a26;
+            background: #faf8f5;
+            line-height: 1.5;
+        "
+    >
+        <div class="header-border">
+            <h2 style="margin: 0 0 4px 0; font-size: 24px; color: #2d2a26">
+                arpads partner's Budget
+            </h2>
+
+            <div class="card card-compact" style="font-size: 14px">
+                <table
+                    width="100%"
+                    cellpadding="0"
+                    cellspacing="0"
+                    style="font-size: 14px"
+                >
+                    <tr>
+                        <td class="muted" style="padding: 2px 0">Today</td>
+                        <td align="right" class="text-bold">Friday, Apr 03</td>
+                    </tr>
+                    <tr>
+                        <td class="muted" style="padding: 2px 0">Period</td>
+                        <td align="right" class="text-bold">
+                            Mar 25 - Apr 09, 2026
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="muted" style="padding: 2px 0">Days left</td>
+                        <td align="right" class="text-bold">
+                            7 days (including today)
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="alert-custom">
+                Gentle reminder: &lt;custom debt reminder&gt;
+            </div>
+
+            <div class="alert alert-success">
+                <strong style="color: #2e7d5b">On track!</strong> Looking good.
+            </div>
+
+            <div class="alert alert-info">
+                <a
+                    href="https://www.astroyogi.com/horoscopes/daily/libra-free-horoscope.aspx"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Read More!"
+                    style="
+                        color: #2c5aa0;
+                        text-decoration: underline;
+                        font-size: 13px;
+                        font-weight: 600;
+                    "
+                >
+                    Your horoscope for today <i>(April 03, 2026)</i>
+                </a>
+                <p
+                    style="
+                        margin: 6px 0 0 0;
+                        font-style: italic;
+                        color: #555;
+                        font-size: 14px;
+                    "
+                >
+                    Dear Libra, the Moon in Libra can make you mentally
+                    exhausted and you may feel like a lot is happening today.
+                    People love your company because you can have cheerful and
+                    entertaining conversations. However, if you have a lot of
+                    things on your plate, you may find yourself losing your
+                    cool. Astrologers suggest that if you get too personal,
+                    things may look worse than they are. Be patient as this is a
+                    temporary phase that will end soon. Pink will be your lucky
+                    color of the day. The time between 12 pm and 2:30 pm is
+                    considered auspicious for you today.
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-label">Due Soon (Next 5 Days)</div>
+
+            <table class="data-table" style="font-size: 13px">
+                <tr class="table-header">
+                    <th align="left">Due Date</th>
+                    <th align="left">Type</th>
+                    <th align="left">Item</th>
+                    <th align="right">Amount</th>
+                </tr>
+
+                <tr>
+                    <td
+                        align="left"
+                        class="table-cell"
+                        style="font-size: 12px; color: #d69e2e"
+                    >
+                        Monday, Apr 06
+                    </td>
+                    <td class="table-cell">
+                        <span class="badge badge-bill"> Bill </span>
+                    </td>
+                    <td class="table-cell">Health // Redacted</td>
+                    <td
+                        align="right"
+                        class="table-cell nowrap"
+                        style="font-weight: 600; color: #ea580c"
+                    >
+                        $30.00
+                    </td>
+                </tr>
+
+                <tr>
+                    <td
+                        align="left"
+                        class="table-cell"
+                        style="font-size: 12px; color: #d69e2e"
+                    >
+                        Tuesday, Apr 07
+                    </td>
+                    <td class="table-cell">
+                        <span class="badge badge-bill"> Bill </span>
+                    </td>
+                    <td class="table-cell">Internet // Internet</td>
+                    <td
+                        align="right"
+                        class="table-cell nowrap"
+                        style="font-weight: 600; color: #ea580c"
+                    >
+                        $41.45
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr class="divider" />
+
+        <div class="card" style="margin-bottom: 20px">
+            <div class="section-label" style="margin-bottom: 16px">
+                Budget Usage at a Glance
+            </div>
+
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td
+                        width="25%"
+                        valign="top"
+                        align="center"
+                        class="progress-cell"
+                        style="padding: 10px"
+                    >
+                        <div class="progress-title" style="color: #ea580c">
+                            Bills &amp; Must-Pays
+                        </div>
+                        <div class="progress-pct" style="color: #ea580c">
+                            76%
+                        </div>
+                        <table
+                            cellpadding="0"
+                            cellspacing="0"
+                            style="width: 80%; max-width: 120px; margin: 0 auto"
+                        >
+                            <tr>
+                                <td
+                                    class="progress-bar-track"
+                                    style="background: #fed7aa"
+                                >
+                                    <div
+                                        class="progress-bar-fill"
+                                        style="
+                                            background: #ea580c;
+                                            width: 76%;
+                                            min-width: 4px;
+                                        "
+                                    ></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="progress-subtitle">
+                            <strong style="color: #ea580c">$783.83</strong> of
+                            $1,028.18
+                        </div>
+                    </td>
+
+                    <td
+                        width="25%"
+                        valign="top"
+                        align="center"
+                        class="progress-cell"
+                        style="padding: 10px"
+                    >
+                        <div class="progress-title" style="color: #6b46c1">
+                            Savings Goals
+                        </div>
+                        <div class="progress-pct" style="color: #6b46c1">
+                            68%
+                        </div>
+                        <table
+                            cellpadding="0"
+                            cellspacing="0"
+                            style="width: 80%; max-width: 120px; margin: 0 auto"
+                        >
+                            <tr>
+                                <td
+                                    class="progress-bar-track"
+                                    style="background: #e9d5ff"
+                                >
+                                    <div
+                                        class="progress-bar-fill"
+                                        style="
+                                            background: #6b46c1;
+                                            width: 68%;
+                                            min-width: 4px;
+                                        "
+                                    ></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="progress-subtitle">
+                            <strong style="color: #6b46c1">$169.78</strong> of
+                            $248.80
+                        </div>
+                    </td>
+
+                    <td
+                        width="25%"
+                        valign="top"
+                        align="center"
+                        class="progress-cell"
+                        style="padding: 10px"
+                    >
+                        <div class="progress-title" style="color: #2b6cb0">
+                            Spending Money
+                        </div>
+                        <div class="progress-pct" style="color: #2b6cb0">
+                            100%
+                        </div>
+                        <table
+                            cellpadding="0"
+                            cellspacing="0"
+                            style="width: 80%; max-width: 120px; margin: 0 auto"
+                        >
+                            <tr>
+                                <td
+                                    class="progress-bar-track"
+                                    style="background: #bfdbfe"
+                                >
+                                    <div
+                                        class="progress-bar-fill"
+                                        style="
+                                            background: #2b6cb0;
+                                            width: 100%;
+                                            min-width: 4px;
+                                        "
+                                    ></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="progress-subtitle">
+                            <strong style="color: #2b6cb0">$360.00</strong> of
+                            $360.00
+                        </div>
+                    </td>
+
+                    <td
+                        width="25%"
+                        valign="top"
+                        align="center"
+                        class="progress-cell"
+                        style="padding: 10px"
+                    >
+                        <div class="progress-title" style="color: #2d2a26">
+                            Overflow
+                        </div>
+                        <div class="progress-pct" style="color: #2d2a26">
+                            36%
+                        </div>
+                        <table
+                            cellpadding="0"
+                            cellspacing="0"
+                            style="width: 80%; max-width: 120px; margin: 0 auto"
+                        >
+                            <tr>
+                                <td
+                                    class="progress-bar-track"
+                                    style="background: #e5e7eb"
+                                >
+                                    <div
+                                        class="progress-bar-fill"
+                                        style="
+                                            background: #2d2a26;
+                                            width: 36%;
+                                            min-width: 4px;
+                                        "
+                                    ></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="progress-subtitle">
+                            <strong style="color: #2d2a26">$23.44</strong> of
+                            $64.80
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div
+                class="section-label"
+                style="margin-top: 12px; margin-bottom: 16px"
+            >
+                What You Can Spend Today
+            </div>
+            <table
+                width="100%"
+                cellpadding="8"
+                cellspacing="0"
+                class="data-table"
+            >
+                <tr class="table-header">
+                    <th align="left">Category</th>
+                    <th align="right">Left</th>
+                    <th align="right">Per Day</th>
+                    <th align="right" style="font-weight: 800">Today</th>
+                </tr>
+
+                <tr>
+                    <td class="table-cell">Food</td>
+                    <td align="right" class="table-cell" style="color: #2e7d5b">
+                        $66.69
+                    </td>
+                    <td align="right" class="table-cell" style="color: #2e7d5b">
+                        $9.53
+                    </td>
+                    <td
+                        align="right"
+                        class="table-cell text-heavy"
+                        style="color: #2e7d5b"
+                    >
+                        $9.53
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-cell">Travel</td>
+                    <td align="right" class="table-cell" style="color: #2e7d5b">
+                        $66.54
+                    </td>
+                    <td align="right" class="table-cell" style="color: #2e7d5b">
+                        $9.51
+                    </td>
+                    <td
+                        align="right"
+                        class="table-cell text-heavy"
+                        style="color: #2e7d5b"
+                    >
+                        $9.51
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-cell">Pet</td>
+                    <td align="right" class="table-cell" style="color: #2e7d5b">
+                        $28.24
+                    </td>
+                    <td align="right" class="table-cell" style="color: #2e7d5b">
+                        $4.03
+                    </td>
+                    <td
+                        align="right"
+                        class="table-cell text-heavy"
+                        style="color: #2e7d5b"
+                    >
+                        $4.03
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-cell">Leisure</td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td
+                        align="right"
+                        class="table-cell text-heavy"
+                        style="color: #2d2a26"
+                    >
+                        $0.00
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-cell">Merchandise</td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td
+                        align="right"
+                        class="table-cell text-heavy"
+                        style="color: #2d2a26"
+                    >
+                        $0.00
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-cell">Bills</td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td
+                        align="right"
+                        class="table-cell text-heavy"
+                        style="color: #2d2a26"
+                    >
+                        $0.00
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-cell">Debt</td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td
+                        align="right"
+                        class="table-cell text-heavy"
+                        style="color: #2d2a26"
+                    >
+                        $0.00
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="table-cell">Mandatory Expenses</td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td align="right" class="table-cell" style="color: #2d2a26">
+                        $0.00
+                    </td>
+                    <td
+                        align="right"
+                        class="table-cell text-heavy"
+                        style="color: #c53030"
+                    >
+                        $-67.45
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="card" style="margin-bottom: 4px">
+            <div class="section-label">Budget Breakdown</div>
+
+            <table
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                style="font-size: 14px"
+            >
+                <tr>
+                    <td class="breakdown-row">
+                        <table cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td
+                                    style="
+                                        width: 12px;
+                                        vertical-align: top;
+                                        padding-top: 4px;
+                                    "
+                                >
+                                    <div
+                                        class="color-dot"
+                                        style="background: #2e7d5b"
+                                    ></div>
+                                </td>
+                                <td style="padding-left: 10px">
+                                    <div
+                                        class="text-bold"
+                                        style="font-size: 14px; color: #2e7d5b"
+                                    >
+                                        Income This Period
+                                    </div>
+                                    <div class="text-sm muted">
+                                        Deposited to checking
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right" class="breakdown-row">
+                        <div class="breakdown-amount" style="color: #2e7d5b">
+                            <span style="margin-right: 4px">+</span>$1,701.78
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="breakdown-row">
+                        <table cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td
+                                    style="
+                                        width: 12px;
+                                        vertical-align: top;
+                                        padding-top: 4px;
+                                    "
+                                >
+                                    <div
+                                        class="color-dot"
+                                        style="background: #ea580c"
+                                    ></div>
+                                </td>
+                                <td style="padding-left: 10px">
+                                    <div
+                                        class="text-bold"
+                                        style="font-size: 14px; color: #ea580c"
+                                    >
+                                        Bills &amp; Must-Pays
+                                    </div>
+                                    <div class="text-sm muted">
+                                        Rent, debt, insurance, subscriptions,
+                                        etc.
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right" class="breakdown-row">
+                        <div class="breakdown-amount" style="color: #ea580c">
+                            <span style="margin-right: 4px">-</span>$1,028.18
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="breakdown-row">
+                        <table cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td
+                                    style="
+                                        width: 12px;
+                                        vertical-align: top;
+                                        padding-top: 4px;
+                                    "
+                                >
+                                    <div
+                                        class="color-dot"
+                                        style="background: #6b46c1"
+                                    ></div>
+                                </td>
+                                <td style="padding-left: 10px">
+                                    <div
+                                        class="text-bold"
+                                        style="font-size: 14px; color: #6b46c1"
+                                    >
+                                        Savings Goals
+                                    </div>
+                                    <div class="text-sm muted">
+                                        Vacation, concerts, emergency fund, etc.
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right" class="breakdown-row">
+                        <div class="breakdown-amount" style="color: #6b46c1">
+                            <span style="margin-right: 4px">-</span>$248.80
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="breakdown-row">
+                        <table cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td
+                                    style="
+                                        width: 12px;
+                                        vertical-align: top;
+                                        padding-top: 4px;
+                                    "
+                                ></td>
+                                <td style="padding-left: 10px">
+                                    <div
+                                        class="text-heavy"
+                                        style="font-size: 14px"
+                                    >
+                                        Available for spending
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right" class="breakdown-row">
+                        <div
+                            class="breakdown-amount text-heavy"
+                            style="color: #2d2a26"
+                        >
+                            <span style="margin-right: 4px">=</span>$424.80
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="breakdown-row">
+                        <table cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td
+                                    style="
+                                        width: 12px;
+                                        vertical-align: top;
+                                        padding-top: 4px;
+                                    "
+                                >
+                                    <div
+                                        class="color-dot"
+                                        style="background: #2b6cb0"
+                                    ></div>
+                                </td>
+                                <td style="padding-left: 10px">
+                                    <div
+                                        class="text-bold"
+                                        style="font-size: 14px; color: #2b6cb0"
+                                    >
+                                        Your spending budget
+                                    </div>
+                                    <div class="text-sm muted">
+                                        Food, fun, gas, shopping, etc.
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right" class="breakdown-row">
+                        <div class="breakdown-amount" style="color: #2b6cb0">
+                            <span style="margin-right: 4px">-</span>$360.00
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="breakdown-row-total">
+                        <table cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td
+                                    style="
+                                        width: 12px;
+                                        vertical-align: top;
+                                        padding-top: 4px;
+                                    "
+                                ></td>
+                                <td style="padding-left: 10px">
+                                    <div
+                                        class="text-heavy"
+                                        style="font-size: 14px"
+                                    >
+                                        Overflow
+                                    </div>
+                                    <div class="text-sm muted">
+                                        Not budgeted yet
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td align="right" class="breakdown-row-total">
+                        <div
+                            class="breakdown-amount text-heavy"
+                            style="color: #2d2a26"
+                        >
+                            <span style="margin-right: 4px">=</span>$64.80
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="transfer-section">
+                <div class="section-label">Transfers to Make</div>
+
+                <div class="transfer-item">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td valign="middle">
+                                <span class="transfer-badge"
+                                    >BankA Checking</span
+                                >
+                                <span class="transfer-arrow">&rarr;</span>
+                                <span class="transfer-badge"
+                                    >BankB Checking</span
+                                >
+                            </td>
+                            <td align="right" valign="middle">
+                                <div class="transfer-amount">$320.00</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="transfer-breakdown">
+                        <div class="transfer-breakdown-header">Breakdown:</div>
+                        <table
+                            width="100%"
+                            cellpadding="0"
+                            cellspacing="0"
+                            style="font-size: 12px"
+                        >
+                            <tr>
+                                <td
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                    "
+                                >
+                                    <span
+                                        class="badge badge-bill"
+                                        style="
+                                            font-size: 10px;
+                                            padding: 1px 5px;
+                                            margin-right: 4px;
+                                        "
+                                    >
+                                        Bill
+                                    </span>
+                                    BankB
+                                </td>
+                                <td
+                                    align="right"
+                                    class="text-bold nowrap"
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                        color: #2d2a26;
+                                    "
+                                >
+                                    $320.00
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="transfer-item">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td valign="middle">
+                                <span class="transfer-badge"
+                                    >BankA Checking</span
+                                >
+                                <span class="transfer-arrow">&rarr;</span>
+                                <span class="transfer-badge">Venmo</span>
+                            </td>
+                            <td align="right" valign="middle">
+                                <div class="transfer-amount">$469.33</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="transfer-breakdown">
+                        <div class="transfer-breakdown-header">Breakdown:</div>
+                        <table
+                            width="100%"
+                            cellpadding="0"
+                            cellspacing="0"
+                            style="font-size: 12px"
+                        >
+                            <tr>
+                                <td
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                    "
+                                >
+                                    <span
+                                        class="badge badge-bill"
+                                        style="
+                                            font-size: 10px;
+                                            padding: 1px 5px;
+                                            margin-right: 4px;
+                                        "
+                                    >
+                                        Bill
+                                    </span>
+                                    Rent
+                                </td>
+                                <td
+                                    align="right"
+                                    class="text-bold nowrap"
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                        color: #2d2a26;
+                                    "
+                                >
+                                    $416.00
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                    "
+                                >
+                                    <span
+                                        class="badge badge-bill"
+                                        style="
+                                            font-size: 10px;
+                                            padding: 1px 5px;
+                                            margin-right: 4px;
+                                        "
+                                    >
+                                        Bill
+                                    </span>
+                                    Electricity
+                                </td>
+                                <td
+                                    align="right"
+                                    class="text-bold nowrap"
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                        color: #2d2a26;
+                                    "
+                                >
+                                    $53.33
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="transfer-item">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td valign="middle">
+                                <span class="transfer-badge"
+                                    >BankA Checking</span
+                                >
+                                <span class="transfer-arrow">&rarr;</span>
+                                <span class="transfer-badge">BankA Saving</span>
+                            </td>
+                            <td align="right" valign="middle">
+                                <div class="transfer-amount">$248.80</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="transfer-breakdown">
+                        <div class="transfer-breakdown-header">Breakdown:</div>
+                        <table
+                            width="100%"
+                            cellpadding="0"
+                            cellspacing="0"
+                            style="font-size: 12px"
+                        >
+                            <tr>
+                                <td
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                    "
+                                >
+                                    <span
+                                        class="badge badge-saving"
+                                        style="
+                                            font-size: 10px;
+                                            padding: 1px 5px;
+                                            margin-right: 4px;
+                                        "
+                                    >
+                                        Save
+                                    </span>
+                                    Redacted
+                                </td>
+                                <td
+                                    align="right"
+                                    class="text-bold nowrap"
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                        color: #2d2a26;
+                                    "
+                                >
+                                    $98.67
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                    "
+                                >
+                                    <span
+                                        class="badge badge-saving"
+                                        style="
+                                            font-size: 10px;
+                                            padding: 1px 5px;
+                                            margin-right: 4px;
+                                        "
+                                    >
+                                        Save
+                                    </span>
+                                    Redacted
+                                </td>
+                                <td
+                                    align="right"
+                                    class="text-bold nowrap"
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                        color: #2d2a26;
+                                    "
+                                >
+                                    $85.33
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                    "
+                                >
+                                    <span
+                                        class="badge badge-saving"
+                                        style="
+                                            font-size: 10px;
+                                            padding: 1px 5px;
+                                            margin-right: 4px;
+                                        "
+                                    >
+                                        Save
+                                    </span>
+                                    Redacted
+                                </td>
+                                <td
+                                    align="right"
+                                    class="text-bold nowrap"
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                        color: #2d2a26;
+                                    "
+                                >
+                                    $30.00
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                    "
+                                >
+                                    <span
+                                        class="badge badge-saving"
+                                        style="
+                                            font-size: 10px;
+                                            padding: 1px 5px;
+                                            margin-right: 4px;
+                                        "
+                                    >
+                                        Save
+                                    </span>
+                                    Redacted
+                                </td>
+                                <td
+                                    align="right"
+                                    class="text-bold nowrap"
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                        color: #2d2a26;
+                                    "
+                                >
+                                    $21.92
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                    "
+                                >
+                                    <span
+                                        class="badge badge-saving"
+                                        style="
+                                            font-size: 10px;
+                                            padding: 1px 5px;
+                                            margin-right: 4px;
+                                        "
+                                    >
+                                        Save
+                                    </span>
+                                    Redacted
+                                </td>
+                                <td
+                                    align="right"
+                                    class="text-bold nowrap"
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                        color: #2d2a26;
+                                    "
+                                >
+                                    $7.01
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                    "
+                                >
+                                    <span
+                                        class="badge badge-saving"
+                                        style="
+                                            font-size: 10px;
+                                            padding: 1px 5px;
+                                            margin-right: 4px;
+                                        "
+                                    >
+                                        Save
+                                    </span>
+                                    Redacted
+                                </td>
+                                <td
+                                    align="right"
+                                    class="text-bold nowrap"
+                                    style="
+                                        padding: 4px 0;
+                                        border-bottom: 1px solid #f2efeb;
+                                        color: #2d2a26;
+                                    "
+                                >
+                                    $5.87
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider" />
+
+        <div
+            class="alert alert-warning"
+            style="
+                font-size: 13px;
+                color: #744210;
+                line-height: 1.6;
+                padding: 14px 16px;
+            "
+        >
+            <strong>Account Balances Need Attention</strong>
+            <div class="text-sm" style="color: #92600e; margin-bottom: 10px">
+                Your balances don't match the spreadsheet. Please review the
+                Google Sheet.
+            </div>
+
+            <table
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                style="font-size: 13px"
+            >
+                <tr style="border-bottom: 1px solid #e2c87d">
+                    <th align="left" class="attn-th">Account</th>
+                    <th align="right" class="attn-th">
+                        <a
+                            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                            style="color: #92600e; text-decoration: underline"
+                            >Sheet</a
+                        >
+                    </th>
+                    <th align="right" class="attn-th">Expected</th>
+                    <th align="right" class="attn-th">Diff</th>
+                </tr>
+
+                <tr>
+                    <td
+                        class="attn-td"
+                        style="font-weight: 600; color: #744210"
+                    >
+                        BankA Checking
+                    </td>
+                    <td
+                        align="right"
+                        class="attn-td"
+                        style="color: #c53030; font-weight: 600"
+                    >
+                        $191.48
+                    </td>
+                    <td align="right" class="attn-td" style="color: #744210">
+                        $192.48
+                    </td>
+                    <td
+                        align="right"
+                        class="attn-td"
+                        style="font-weight: 600; color: #c53030"
+                    >
+                        $1.00 under
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr class="divider" />
+
+        <div class="footer">
+            * Remember to update the spreadsheet daily!<br />
+            * Email sent automatically at 7:00AM.<br />
+            <div style="margin-top: 8px">
+                <strong style="color: #2d2a26">Full spreadsheet:</strong><br />
+                <a
+                    href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    style="color: #2b6cb0; word-break: break-all"
+                    >https://docs.google.com/spreadsheets/d/1L03n9TBqG2-A--2TtUbewWdlEIgYwror9UpiLzQhM2o</a
+                >
+            </div>
+        </div>
+    </body>
+</html>
