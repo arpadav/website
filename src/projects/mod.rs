@@ -6,7 +6,7 @@ mod page;
 // --------------------------------------------------
 // local
 // --------------------------------------------------
-use crate::prelude::*;
+use crate::{deployutil::DEPLOYMENT_MAP, prelude::*};
 use page::{ProjectHeader, ProjectTemplate};
 
 // --------------------------------------------------
@@ -91,10 +91,19 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             }
             let json_path = json_path.display().to_string();
             // --------------------------------------------------
-            // parse json, if archived, then return early
+            // parse json: if archived, remove from deployment
+            // map and return None
             // --------------------------------------------------
             let mut project_header: ProjectHeader = crate::json_template!(json_path);
             if project_header.is_archived {
+                // --------------------------------------------------
+                // the reason both are removed, is because we dont know
+                // which one exists yet. thats done in the match statement
+                // below, but file contents are read (expensive operation)
+                // so id rather just remove both here for redundancy
+                // --------------------------------------------------
+                DEPLOYMENT_MAP.w().remove(md_path);
+                DEPLOYMENT_MAP.w().remove(html_path);
                 return None;
             }
             // --------------------------------------------------
@@ -104,6 +113,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
             project_header.title = format!("{project_start_year} - {}", project_header.title);
             // --------------------------------------------------
             // if doesnt exist, print warning
+            // --------------------------------------------------
             // however, if both exist, panic! dont know which
             // one to use
             // --------------------------------------------------

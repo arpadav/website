@@ -189,6 +189,7 @@ pub struct DeploymentMapInner {
 }
 /// [`DeploymentMapInner`] implementation
 impl DeploymentMapInner {
+    #[inline(always)]
     /// Creates a new [`DeploymentMapInner`]
     fn new(files: Vec<DeploymentFile>) -> Self {
         Self { files }
@@ -237,6 +238,7 @@ impl DeploymentMapInner {
         Ok(include_map - exclude_map)
     }
 
+    #[inline(always)]
     /// Gets a copy of the source/destination, depending on the input [`DeploymentFileType`]
     pub fn pop(&self, f: DeploymentFileType) -> Option<&PathBuf> {
         match f {
@@ -246,6 +248,7 @@ impl DeploymentMapInner {
         }
     }
 
+    #[inline(always)]
     /// Checks if a file exists or not
     pub fn exists(&self, f: DeploymentFileType) -> bool {
         match f {
@@ -264,9 +267,16 @@ impl DeploymentMapInner {
         }
     }
 
+    #[inline(always)]
     /// Iterates over files that have not been deployed
     pub fn not_deployed(&mut self) -> impl Iterator<Item = &mut DeploymentFile> {
         self.files.iter_mut().filter(|x| !x.deployed)
+    }
+
+    #[inline(always)]
+    /// Remove from deployment map, matching source file path
+    pub fn remove(&mut self, src: PathBuf) {
+        self.files.retain(|x| x.src != src);
     }
 }
 /// [`DeploymentMapInner`] implementation of [`From`] for [`Vec<(String, String)>`]

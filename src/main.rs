@@ -41,8 +41,9 @@ fn main() {
     parse_cli();
 
     // --------------------------------------------------
-    // print deployment map
+    // print deployment map, after everything has edited it
     // --------------------------------------------------
+    LazyLock::force(&projects::ALL_PROJECTS); // <-- this is the only thing so far that modifies the deployment map
     for mapping in deployutil::DEPLOYMENT_MAP.r().iter() {
         println!("{} -> {}", mapping.src.display(), mapping.dst.display());
     }
