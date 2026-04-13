@@ -220,8 +220,11 @@ function resize_name() {
                 `${h2_scale * fs_new * name_scale_in[0]}px`;
             recursive_resize_font(headers[i]);
         }
-        for (let i = 0; i < bodies.length; i++)
+        for (let i = 0; i < bodies.length; i++) {
+            bodies[i].style.fontSize =
+                `${p_scale * fs_new * name_scale_in[0]}px`;
             recursive_resize_font(bodies[i]);
+        }
         if (window.location.hash && first_load) {
             first_load = false;
             name_click();
@@ -246,8 +249,12 @@ function recursive_resize_font(elements) {
                 break;
             case "P":
             case "LI":
-            case "A":
                 el.style.fontSize = `${size}px`;
+                break;
+            case "A":
+                if (!el.querySelector("h1, h2, h3, h4, h5, h6")) {
+                    el.style.fontSize = `${size}px`;
+                }
                 break;
         }
     }

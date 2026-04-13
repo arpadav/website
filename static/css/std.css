@@ -1,4 +1,4 @@
-/* 
+/*
 color for text / socials images
 rgb(0, 0, 144)
 aka #000090
@@ -8,6 +8,9 @@ rgb(119, 92, 171)
 aka #775cab
 */
 
+/* -------------------------------------------------- */
+/* typography */
+/* -------------------------------------------------- */
 h1,
 h2,
 h3,
@@ -19,6 +22,15 @@ li {
     color: #000090;
 }
 
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.17em; }
+h4 { font-size: 1em; }
+p, li { font-size: 1em; }
+
+/* -------------------------------------------------- */
+/* base layout */
+/* -------------------------------------------------- */
 body {
     background-color: #ffe2db;
     overflow-x: hidden;
@@ -39,6 +51,9 @@ li>h3 {
     white-space: pre;
 }
 
+/* -------------------------------------------------- */
+/* sidebar + content layout */
+/* -------------------------------------------------- */
 .sidebar {
     list-style-type: none;
     float: left;
@@ -60,6 +75,9 @@ li>h3 {
     padding-left: 8px;
 }
 
+/* -------------------------------------------------- */
+/* navbar */
+/* -------------------------------------------------- */
 .navbar ul {
     list-style-type: none;
     overflow: hidden;
@@ -85,19 +103,18 @@ li>h3 {
     text-decoration: underline;
 }
 
+/* -------------------------------------------------- */
+/* shared components */
+/* -------------------------------------------------- */
 .card {
     position: relative;
-    display: inline-block;
-
     display: flex;
     align-items: center;
 }
 
 .center {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin: auto;
+    margin: 0 auto;
 }
 
 .center_desc {
@@ -107,16 +124,19 @@ li>h3 {
     text-align: center;
 }
 
+/* -------------------------------------------------- */
+/* collapsible body */
+/* -------------------------------------------------- */
 .body {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
-
-    /* // mobile safari try fix */
-    overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 }
 
+/* -------------------------------------------------- */
+/* main content area */
+/* -------------------------------------------------- */
 .main {
     float: left;
     clear: left;

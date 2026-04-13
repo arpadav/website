@@ -1,3 +1,6 @@
+/* -------------------------------------------------- */
+/* base layout */
+/* -------------------------------------------------- */
 html,
 body {
     overflow: hidden;
@@ -10,6 +13,9 @@ body {
     background-color: #ffe2db;
 }
 
+/* -------------------------------------------------- */
+/* typography */
+/* -------------------------------------------------- */
 h1,
 h2 {
     font-family: "Courier New";
@@ -19,9 +25,37 @@ h2 {
 }
 
 h1 {
+    font-size: 2em;
     text-align: center;
 }
 
+h2 {
+    font-size: 1.5em;
+}
+
+p,
+ol,
+ul {
+    font-family: "Courier New";
+}
+
+p,
+li {
+    font-size: 1em;
+}
+
+a {
+    font-family: "Courier New";
+    font-size: 1em;
+    text-decoration: none;
+    color: #000090;
+    display: flex;
+    align-items: center;
+}
+
+/* -------------------------------------------------- */
+/* hover states */
+/* -------------------------------------------------- */
 h1:hover,
 h2:hover,
 a:hover {
@@ -29,21 +63,9 @@ a:hover {
     /* r:117, g:92, b:171 */
 }
 
-a,
-p,
-ol,
-ul {
-    font-family: "Courier New";
-    text-decoration: none;
-    /* font-weight: normal; */
-}
-
-a {
-    color: #000090;
-    display: flex;
-    align-items: center;
-}
-
+/* -------------------------------------------------- */
+/* elements */
+/* -------------------------------------------------- */
 li {
     display: flex;
     align-items: center;
@@ -54,6 +76,9 @@ img {
     height: 100%;
 }
 
+/* -------------------------------------------------- */
+/* homepage layout */
+/* -------------------------------------------------- */
 .main {
     margin: 0 auto;
     position: absolute;
@@ -79,8 +104,6 @@ img {
 
 .card {
     position: relative;
-    display: inline-block;
-
     display: flex;
     align-items: center;
 }
@@ -94,6 +117,9 @@ img {
     display: inline;
 }
 
+/* -------------------------------------------------- */
+/* animations */
+/* -------------------------------------------------- */
 @keyframes fade_in {
     0% {
         opacity: 0;
