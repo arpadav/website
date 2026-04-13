@@ -38,12 +38,12 @@ use page::{ProjectHeader, ProjectTemplate};
 /// * Each project is expected to have both a `.json` and `.html`
 ///   file. If either file is missing, a warning is printed and the
 ///   project is then skipped.
-pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = LazyLock::new(
-    || {
+pub static ALL_PROJECTS: LazyLock<Vec<(ProjectCategory, Vec<Page<ProjectTemplate>>)>> =
+    LazyLock::new(|| {
         // --------------------------------------------------
         // loop through project categories
         // --------------------------------------------------
-        let mut pages: Vec<(String, Vec<Page<ProjectTemplate>>)> = std::fs::read_dir(crate::PROJECT_CATEGORIES_DIR)
+        let mut pages: Vec<(ProjectCategory, Vec<Page<ProjectTemplate>>)> = std::fs::read_dir(crate::PROJECT_CATEGORIES_DIR)
         .expect("Failed to read project categories directory")
         .filter_map(Result::ok)
         // --------------------------------------------------
@@ -162,7 +162,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
         // --------------------------------------------------
         .into_iter()
         .fold(Vec::new(), |mut v, (category, projects)| {
-            v.push((category.clone(), projects));
+            v.push((ProjectCategory::new(category.clone()), projects));
             v
         });
         // --------------------------------------------------
@@ -173,13 +173,7 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
         // --------------------------------------------------
         // <<STYLE+TAG>>
         // --------------------------------------------------
-        pages.sort_by(|a, b| a.0.cmp(&b.0));
-        pages.iter_mut().for_each(|(category_name, _)| {
-            if let Some(idx) = category_name.find(' ') {
-                let (_, name) = category_name.split_at(idx);
-                *category_name = name.to_string();
-            }
-        });
+        pages.sort_by(|a, b| a.0.raw_name.cmp(&b.0.raw_name));
         pages.iter_mut().for_each(|(_, categorized_projects)| {
             categorized_projects.sort_by(|a, b| b.page.name.cmp(&a.page.name))
         });
@@ -187,8 +181,35 @@ pub static ALL_PROJECTS: LazyLock<Vec<(String, Vec<Page<ProjectTemplate>>)>> = L
         // return
         // --------------------------------------------------
         pages
-    },
-);
+    });
+
+#[derive(Debug, Clone)]
+/// A project category with a name and a generated id
+pub struct ProjectCategory {
+    /// The raw name of the project category, used for generating the id
+    ///
+    /// E.g. 1. rust crates, 3. personal, etc. This is used to sort
+    pub raw_name: String,
+    /// The name / display name of the project category
+    ///
+    /// E.g. rust crates, personal, academic, professional
+    pub name: String,
+    /// The id of the project category, used for generating URLs
+    pub id: String,
+}
+/// [`Category`] implementation
+impl ProjectCategory {
+    /// Creates a new [`Category`] with the given name and a generated id
+    pub fn new(raw_name: String) -> Self {
+        let name = raw_name
+            .split_once(' ')
+            .map(|(_, r)| r)
+            .unwrap_or(raw_name.as_str())
+            .to_owned();
+        let id = name.to_lowercase().replace(' ', "-");
+        Self { raw_name, name, id }
+    }
+}
 
 #[derive(Debug, Clone, Template)]
 #[template(path = "projects/projects-homepage.html")]
