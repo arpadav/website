@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 REQUIREMENTS_DIR="$(dirname "$(realpath "$0")")"
+# --------------------------------------------------
+# get requirements, install any that are missing
+# --------------------------------------------------
+mapfile -t apt_requirements <"$REQUIREMENTS_DIR/apt-requirements.txt"
+mapfile -t cargo_requirements <"$REQUIREMENTS_DIR/cargo-requirements.txt"
 
-# --------------------------------------------------
-# get requirements from `requirements.txt`
-# install any that are missing
-# --------------------------------------------------
-mapfile -t requirements <"$REQUIREMENTS_DIR/requirements.txt"
 missing=()
-for pkg in "${requirements[@]}"; do
+for pkg in "${apt_requirements[@]}"; do
     # --------------------------------------------------
     # check if package exists
     # --------------------------------------------------
@@ -39,7 +39,7 @@ for pkg in "${requirements[@]}"; do
     fi
 done
 if [ "${#missing[@]}" -gt 0 ]; then
-    echo "Installing missing packages: ${missing[*]}"
+    echo "Installing missing apt packages: ${missing[*]}"
     sudo apt install -y "${missing[@]}"
 fi
 
@@ -58,10 +58,20 @@ if ! type cargo >/dev/null 2>&1; then
     exit
 fi
 
-# --------------------------------------------------
-# get `minhtml`, if doesnt exist
-# --------------------------------------------------
-if ! type minhtml >/dev/null 2>&1; then
-    echo "\`minhtml\` not found, attempting to install..."
-    cargo install minhtml
+missing=()
+for pkg in "${cargo_requirements[@]}"; do
+    # --------------------------------------------------
+    # check if package exists
+    # --------------------------------------------------
+    # first, strip the package by taking everything before
+    # the version indicator (i.e. the `@` symbol)
+    # --------------------------------------------------
+    stripped_pkg="${pkg%%@*}"
+    if ! type "$stripped_pkg" &>/dev/null; then
+        missing+=("$pkg")
+    fi
+done
+if [ "${#missing[@]}" -gt 0 ]; then
+    echo "Installing missing cargo packages: ${missing[*]}"
+    cargo install "${missing[@]}"
 fi

@@ -1,0 +1,4 @@
+mdbook
+minhtml
+lightningcss@1.0.0-alpha.71 --features cli
+mni@0.2.0

@@ -9,9 +9,11 @@ ROOT_DIR="$(dirname "$(realpath "$0")")"
 STATIC_DIR="$ROOT_DIR/static/"
 if [ -z "$1" ]; then
     echo "Building dev version"
+    RELEASE=false
     FOLDER="$ROOT_DIR/deploy/dev"
 elif [ "$1" == "prod" ]; then
     echo "Building prod version"
+    RELEASE=true
     FOLDER="$ROOT_DIR/deploy/prod"
 else
     echo "Usage: ./build.sh [prod]"
@@ -76,29 +78,71 @@ fi
 unset RUSTFLAGS
 
 # --------------------------------------------------
-# minify all .html files
+# build all external documentation
 # --------------------------------------------------
-HTML_FILES=()
-while IFS= read -r -d '' file; do
-    HTML_FILES+=("$file")
-done < <(find "$FOLDER" -name "*.html" -print0)
-# --------------------------------------------------
-# need to loop, since `minhtml` can't handle the
-# combination of:
-# 1. multiple files
-# 2. file names/paths with spaces
-# if i try to do that using quotes, the paths with spaces do
-# not get properly minified
-# --------------------------------------------------
-# no time to debug this, this will be fine
-# --------------------------------------------------
-for html_file in "${HTML_FILES[@]}"; do
-    minhtml "$html_file" \
-        --minify-js \
-        --minify-css \
-        -o "$html_file" \
-        >/dev/null || exit
+export DEPLOY_FOLDER=$FOLDER
+echo "Building external documentation..."
+for script in external-repos/.scripts/*.sh; do
+    bash "$script"
 done
+
+# --------------------------------------------------
+# if release, then minify
+# --------------------------------------------------
+if [ "$RELEASE" = true ]; then
+    echo "Minifying..."
+    # --------------------------------------------------
+    # collect all .html, .css, and .js files
+    # --------------------------------------------------
+    FILES=()
+    while IFS= read -r -d '' file; do
+        FILES+=("$file")
+    done < <(
+        find "$FOLDER" -type f \
+            \( \
+            -name "*.html" \
+            -o -name "*.css" \
+            -o -name "*.js" \
+            -o -name "*.mjs" \
+            -o -name "*.min.js" \
+            -o -name "*.json" \
+            -o -name "*.svg" \
+            \) \
+            -print0
+    )
+    # --------------------------------------------------
+    # minify each file with the appropriate tool
+    # --------------------------------------------------
+    for file in "${FILES[@]}"; do
+        case "$file" in
+            *.html)
+                minhtml "$file" \
+                    --minify-js \
+                    --minify-css \
+                    -o "$file" \
+                    >/dev/null || exit
+                ;;
+            *.css)
+                lightningcss \
+                    --minify \
+                    "$file" \
+                    -o "$file" \
+                    >/dev/null || exit
+                ;;
+            # --------------------------------------------------
+            # this is some shit third-party vibe coded tool,
+            # but it does exactly what i needed: cli to swc
+            # and other minification, so props to author thank you
+            # --------------------------------------------------
+            *.js | *.mjs | *.min.js)
+                mni "$file" --preset aggressive -o "$file" >/dev/null || exit
+                ;;
+            *.json | *.svg)
+                mni "$file" -o "$file" >/dev/null || exit
+                ;;
+        esac
+    done
+fi
 
 # --------------------------------------------------
 # python server
