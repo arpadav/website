@@ -24,8 +24,8 @@
         "link": "/projects"
     },
     {
-        "disp": "blog",
-        "link": "/blog"
+        "disp": "posts",
+        "link": "/posts"
     },
     {
         "disp": "notes",

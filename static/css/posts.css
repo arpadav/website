@@ -1,60 +1,60 @@
 /* -------------------------------------------------- */
-/* blog listing page */
+/* posts listing page */
 /* -------------------------------------------------- */
-.blog-listing {
+.posts-listing {
     max-width: 700px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-.blog-listing h1 {
+.posts-listing h1 {
     text-align: center;
 }
 
-.blog-listing > p {
+.posts-listing > p {
     text-align: center;
 }
 
-.blog-entry {
+.posts-entry {
     display: block;
     padding: 15px 0;
 }
 
-.blog-entry:hover h2 {
+.posts-entry:hover h2 {
     text-decoration: underline;
 }
 
-.blog-entry-inner h2 {
+.posts-entry-inner h2 {
     margin-bottom: 4px;
     font-weight: normal;
 }
 
-.blog-date {
+.posts-date {
     font-style: italic;
     color: rgba(0, 0, 144, 0.6); /* lighter than default #000090 */
     font-size: 0.9em;
 }
 
 /* -------------------------------------------------- */
-/* blog post page */
+/* post page */
 /* -------------------------------------------------- */
-.blog-post {
+.posts-post {
     max-width: 680px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-.blog-post-header {
+.posts-post-header {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.blog-post-date {
+.posts-post-date {
     font-style: italic;
     color: rgba(0, 0, 144, 0.6);
 }
 
-.blog-post-body img {
+.posts-post-body img {
     max-width: 100%;
     max-height: 70vh;
     display: block;
@@ -62,7 +62,7 @@
     object-fit: contain;
 }
 
-.blog-post-body blockquote {
+.posts-post-body blockquote {
     border-left: 3px solid #000090;
     padding-left: 20px;
     font-style: italic;
@@ -101,7 +101,7 @@ h6:hover .anchor-icon {
 /* -------------------------------------------------- */
 /* table of contents sidebar */
 /* -------------------------------------------------- */
-.blog-toc {
+.posts-toc {
     position: fixed;
     top: 120px;
     right: 20px;
@@ -110,23 +110,23 @@ h6:hover .anchor-icon {
     overflow-y: auto;
 }
 
-.blog-toc ul {
+.posts-toc ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.blog-toc li {
+.posts-toc li {
     padding: 3px 0;
 }
 
-.blog-toc a {
+.posts-toc a {
     text-decoration: none;
     color: #000090;
     opacity: 0.7;
 }
 
-.blog-toc a:hover {
+.posts-toc a:hover {
     opacity: 1;
     text-decoration: underline;
 }
@@ -140,7 +140,7 @@ h6:hover .anchor-icon {
 
 /* hide toc on narrow screens */
 @media (max-width: 1200px) {
-    .blog-toc {
+    .posts-toc {
         display: none;
     }
 }

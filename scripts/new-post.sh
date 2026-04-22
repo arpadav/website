@@ -2,17 +2,17 @@
 set -euo pipefail
 
 # --------------------------------------------------
-# Creates a new blog post with today's date
-# Usage: ./new-blog-post.sh
+# Creates a new post with today's date
+# Usage: ./new-post.sh
 # --------------------------------------------------
 SCRIPTS_DIR="$(dirname $(realpath "${BASH_SOURCE[0]}"))"
 ROOT_DIR="$(realpath "$SCRIPTS_DIR/..")"
-BLOG_DIR="$ROOT_DIR/content/blog"
+POSTS_DIR="$ROOT_DIR/content/posts"
 
 # --------------------------------------------------
 # prompt for title
 # --------------------------------------------------
-read -p "Blog post title: " TITLE
+read -p "Post title: " TITLE
 
 if [ -z "$TITLE" ]; then
     echo "Error: title cannot be empty"
@@ -38,7 +38,7 @@ SLUG=$(echo "$TITLE" |
 # --------------------------------------------------
 # create folder + index.md
 # --------------------------------------------------
-POST_DIR="$(realpath -m "$BLOG_DIR/${DATE_PREFIX}-${SLUG}")"
+POST_DIR="$(realpath -m "$POSTS_DIR/${DATE_PREFIX}-${SLUG}")"
 mkdir -p "$POST_DIR"
 POST_FILE="$POST_DIR/index.md"
 if [ -f "$POST_FILE" ]; then

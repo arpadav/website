@@ -8,10 +8,10 @@
         "content/notes/<cat>/<typ>/<title>/<file>": "notes/<cat>/<typ>/<title>/<file>",
         "content/notes/<cat>/<typ>/<title>/index.md": "notes/<cat>/<typ>/<title>/index.html",
 
-        "templates/blog/blog.html": "blog/index.html",
-        "content/blog/<slug>.md": "blog/<slug>.md/index.html",
-        "content/blog/<slug>/<file>": "blog/<slug>/<file>",
-        "content/blog/<slug>/index.md": "blog/<slug>/index.html",
+        "templates/posts/posts.html": "posts/index.html",
+        "content/posts/<slug>.md": "posts/<slug>.md/index.html",
+        "content/posts/<slug>/<file>": "posts/<slug>/<file>",
+        "content/posts/<slug>/index.md": "posts/<slug>/index.html",
 
         "templates/projects/projects-homepage.html": "projects/index.html",
         "content/projects/*/<folder>/<folder>.md": "projects/<folder>/index.html",
@@ -23,6 +23,6 @@
         "content/projects/*/<folder>/<folder>.html": "projects/<folder>/<folder>.html",
         "content/projects/*/<folder>/<folder>.json": "projects/<folder>/<folder>.json",
         "content/notes/<cat>/<typ>/<title>/index.md": "notes/<cat>/<typ>/<title>/index.md",
-        "content/blog/<slug>/index.md": "blog/<slug>/index.md"
+        "content/posts/<slug>/index.md": "posts/<slug>/index.md"
     }
 }

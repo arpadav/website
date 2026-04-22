@@ -1,7 +1,7 @@
 // --------------------------------------------------
 // mods
 // --------------------------------------------------
-mod blog;
+mod posts;
 mod deployutil;
 mod homepage;
 mod macros;
@@ -22,7 +22,7 @@ pub const DEPLOYMENT_MAP_JSON: &str =
     concat!(env!("CARGO_MANIFEST_DIR"), "/templates/deployment-map.json");
 pub const PROJECT_CATEGORIES_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/projects/");
 pub const NOTES_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/notes");
-pub const BLOG_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/blog");
+pub const POSTS_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/posts");
 
 // --------------------------------------------------
 // prelude
@@ -56,7 +56,7 @@ fn main() {
     deploy!(landing_page, homepage::LandingPage);
     deploy!(projects, projects::ProjectsHomepage);
     deploy!(notes, notes::NotesHomepage);
-    deploy!(blog, blog::BlogHomepage);
+    deploy!(posts, posts::PostsHomepage);
     deploy!(gator, miscpages::Alligator);
     deploy!(language, miscpages::Language);
 
@@ -117,24 +117,24 @@ fn main() {
     });
 
     // --------------------------------------------------
-    // * get blog pages. verify existance in deployment map
+    // * get posts pages. verify existance in deployment map
     // --------------------------------------------------
-    blog::BLOG_PAGES.iter().for_each(|post| {
+    posts::POSTS_PAGES.iter().for_each(|post| {
         match deployutil::DEPLOYMENT_MAP
             .r()
             .exists(deployutil::DeploymentFileType::Source(&post.src))
         {
             true => (),
             false => panic!(
-                "`{}` found in `blog`, but not found in deployment map",
+                "`{}` found in `posts`, but not found in deployment map",
                 post.src.display()
             ),
         }
     });
     // --------------------------------------------------
-    // * render + deploy blog pages
+    // * render + deploy posts pages
     // --------------------------------------------------
-    blog::BLOG_PAGES.iter().for_each(|post| {
+    posts::POSTS_PAGES.iter().for_each(|post| {
         let name = post.src.display().to_string();
         page_deploy!(post, &name);
     });

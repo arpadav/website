@@ -1,7 +1,7 @@
 // --------------------------------------------------
 // local
 // --------------------------------------------------
-use super::BlogDateFormat;
+use super::PostDateFormat;
 use crate::prelude::*;
 
 // --------------------------------------------------
@@ -12,23 +12,23 @@ use std::path::PathBuf;
 // --------------------------------------------------
 // statics
 // --------------------------------------------------
-/// Locally scoped blog pages, used commonly between [`BLOG_POSTS_META`] and [`BLOG_POSTS`]
+/// Locally scoped post pages, used commonly between [`POSTS_META`] and [`POSTS_PAGES`]
 ///
-/// Scans `content/blog/` for blog posts, extracts metadata,
+/// Scans `content/posts/` for posts, extracts metadata,
 /// sorts newest-first. Handles both flat `.md` files and
 /// folders with `index.md`
-pub(crate) static _INNER_BLOG_PAGES: LazyLock<Vec<ParsedBlogPost>> = LazyLock::new(|| {
-    std::fs::read_dir(crate::BLOG_DIR)
-        .expect("Failed to read blog directory")
+pub(crate) static _INNER_POSTS_PAGES: LazyLock<Vec<ParsedPost>> = LazyLock::new(|| {
+    std::fs::read_dir(crate::POSTS_DIR)
+        .expect("Failed to read posts directory")
         .filter_map(Result::ok)
-        .filter_map(ParsedBlogPost::new)
+        .filter_map(ParsedPost::new)
         .collect()
 });
 
-/// A common struct for parsing blog posts from the filesystem
+/// A common struct for parsing posts from the filesystem
 ///
-/// Used by both [`BlogPost`] and [`BlogPostTemplate`]
-pub(crate) struct ParsedBlogPost {
+/// Used by both [`Post`] and [`PostTemplate`]
+pub(crate) struct ParsedPost {
     /// Page title
     pub(crate) title: String,
     /// File name, including extension
@@ -38,11 +38,11 @@ pub(crate) struct ParsedBlogPost {
     /// Source file - will always be markdown
     pub(crate) src: PathBuf,
     /// parsed date from the filename
-    pub(crate) date: BlogDateFormat,
+    pub(crate) date: PostDateFormat,
 }
-/// [`ParsedBlogPost`] implementation
-impl ParsedBlogPost {
-    fn new(entry: std::fs::DirEntry) -> Option<ParsedBlogPost> {
+/// [`ParsedPost`] implementation
+impl ParsedPost {
+    fn new(entry: std::fs::DirEntry) -> Option<ParsedPost> {
         // --------------------------------------------------
         // get the filename and its path
         // --------------------------------------------------
@@ -54,7 +54,7 @@ impl ParsedBlogPost {
         let (src, filestem) = if path.is_dir() {
             let index_md = path.join("index.md");
             if !index_md.exists() {
-                eprintln!("Blog folder `{filename}` missing index.md");
+                eprintln!("Post folder `{filename}` missing index.md");
                 return None;
             }
             (index_md, filename.clone())
@@ -62,13 +62,13 @@ impl ParsedBlogPost {
             let stem = filename.trim_end_matches(".md").to_string();
             (path.clone(), stem)
         } else {
-            eprintln!("Found {} in the blog dir, not markdown, skipping", filename);
+            eprintln!("Found {} in the posts dir, not markdown, skipping", filename);
             return None;
         };
         // --------------------------------------------------
         // parse date
         // --------------------------------------------------
-        let date: BlogDateFormat = filestem.parse().ok()?;
+        let date: PostDateFormat = filestem.parse().ok()?;
         // --------------------------------------------------
         // read markdown content once
         // --------------------------------------------------
@@ -78,7 +78,7 @@ impl ParsedBlogPost {
         // stem, replace - with space, and capitalize
         // --------------------------------------------------
         let title = MarkdownDocument::extract_h1(&md_content).unwrap_or_else(|| {
-            filestem[BlogDateFormat::PREFIX_LEN + 1..]
+            filestem[PostDateFormat::PREFIX_LEN + 1..]
                 .replace('-', " ")
                 .split_whitespace()
                 .map(|w| {
@@ -94,7 +94,7 @@ impl ParsedBlogPost {
         // --------------------------------------------------
         // return
         // --------------------------------------------------
-        Some(ParsedBlogPost {
+        Some(ParsedPost {
             title,
             filename,
             filestem,

@@ -1,29 +1,29 @@
 // --------------------------------------------------
 // mods
 // --------------------------------------------------
-mod blog_date;
+mod posts_date;
 mod parse_fs;
 
 // --------------------------------------------------
 // local
 // --------------------------------------------------
 use crate::prelude::*;
-use blog_date::BlogDateFormat;
-use parse_fs::_INNER_BLOG_PAGES;
+use posts_date::PostDateFormat;
+use parse_fs::_INNER_POSTS_PAGES;
 
 // --------------------------------------------------
 // statics
 // --------------------------------------------------
-/// Metadata for blog posts, used for indexing and display
-pub static BLOG_POSTS_META: LazyLock<Vec<BlogPost>> = LazyLock::new(|| {
-    LazyLock::force(&_INNER_BLOG_PAGES);
-    let mut posts: Vec<BlogPost> = _INNER_BLOG_PAGES
+/// Metadata for posts, used for indexing and display
+pub static POSTS_META: LazyLock<Vec<Post>> = LazyLock::new(|| {
+    LazyLock::force(&_INNER_POSTS_PAGES);
+    let mut posts: Vec<Post> = _INNER_POSTS_PAGES
         .iter()
-        .map(|p| BlogPost {
+        .map(|p| Post {
             title: p.title.clone(),
             date_raw: p.date.as_key(),
             date: p.date.to_string(),
-            url: format!("/blog/{}", p.filestem),
+            url: format!("/posts/{}", p.filestem),
         })
         .collect();
     // --------------------------------------------------
@@ -33,10 +33,10 @@ pub static BLOG_POSTS_META: LazyLock<Vec<BlogPost>> = LazyLock::new(|| {
     posts
 });
 
-/// Blog post pages: markdown -> HTML for each post
-pub static BLOG_PAGES: LazyLock<Vec<Page<BlogPostTemplate>>> = LazyLock::new(|| {
-    LazyLock::force(&_INNER_BLOG_PAGES);
-    _INNER_BLOG_PAGES
+/// Post pages: markdown -> HTML for each post
+pub static POSTS_PAGES: LazyLock<Vec<Page<PostTemplate>>> = LazyLock::new(|| {
+    LazyLock::force(&_INNER_POSTS_PAGES);
+    _INNER_POSTS_PAGES
         .iter()
         .map(|p| {
             // --------------------------------------------------
@@ -48,10 +48,10 @@ pub static BLOG_PAGES: LazyLock<Vec<Page<BlogPostTemplate>>> = LazyLock::new(|| 
             let content = MarkdownDocument::inject_anchor_links(&content); // overwrite content with anchor links
             Page {
                 src: p.src.clone(),
-                page: BlogPostTemplate {
+                page: PostTemplate {
                     title: crate::title!(p.title),
                     post_title: p.title.clone(),
-                    sidebar: SidebarType::Blog,
+                    sidebar: SidebarType::Posts,
                     date: p.date.to_string(),
                     content,
                     toc,
@@ -62,43 +62,43 @@ pub static BLOG_PAGES: LazyLock<Vec<Page<BlogPostTemplate>>> = LazyLock::new(|| 
 });
 
 #[derive(Template, Default)]
-#[template(path = "blog/blog.html")]
-/// Template for blog homepage / listing page
-pub struct BlogHomepage {
+#[template(path = "posts/posts.html")]
+/// Template for posts homepage / listing page
+pub struct PostsHomepage {
     title: String,
     pub sidebar: SidebarType,
-    pub posts: Vec<BlogPost>,
+    pub posts: Vec<Post>,
 }
-/// [`BlogHomepage`] implementation of [`Create`]
-impl Create for BlogHomepage {
+/// [`PostsHomepage`] implementation of [`Create`]
+impl Create for PostsHomepage {
     fn create() -> Self {
         Self {
-            title: crate::title!("Blog"),
+            title: crate::title!("Posts"),
             sidebar: SidebarType::GatorOnly,
-            posts: (*BLOG_POSTS_META).clone(),
+            posts: (*POSTS_META).clone(),
         }
     }
 }
-/// [`BlogHomepage`] implementation of [`SourcePath`]
-impl SourcePath<BlogHomepage> for BlogHomepage {
+/// [`PostsHomepage`] implementation of [`SourcePath`]
+impl SourcePath<PostsHomepage> for PostsHomepage {
     fn src_path() -> std::path::PathBuf {
-        [crate::TEMPLATES_DIR, "/blog/blog.html"].concat().into()
+        [crate::TEMPLATES_DIR, "/posts/posts.html"].concat().into()
     }
 }
 
 #[derive(Template, Default)]
-#[template(path = "blog/post.html")]
-/// Template for individual blog post pages
+#[template(path = "posts/post.html")]
+/// Template for individual post pages
 ///
 /// This renders the markdown as HTML
-pub struct BlogPostTemplate {
+pub struct PostTemplate {
     /// Page title, e.g. "Hello World"
     title: String,
-    /// Post title, see [`BlogPost::title`]
+    /// Post title, see [`Post::title`]
     pub post_title: String,
-    /// Sidebar type, e.g. [`SidebarType::Blog`]
+    /// Sidebar type, e.g. [`SidebarType::Posts`]
     pub sidebar: SidebarType,
-    /// Formatted display date, see [`BlogPost::date`]
+    /// Formatted display date, see [`Post::date`]
     pub date: String,
     /// The rendered HTML content of the post
     pub content: String,
@@ -107,16 +107,16 @@ pub struct BlogPostTemplate {
 }
 
 #[derive(Clone, Debug)]
-/// Metadata for a single blog post
+/// Metadata for a single post
 ///
 /// This is lightweight and mainly used for indexing
-pub struct BlogPost {
+pub struct Post {
     /// Display title (from first H1 in markdown)
     pub title: String,
     /// Formatted display date, e.g. "March 29, 2026"
     pub date: String,
     /// Raw YYYYMMDDHHMM string for sorting
     pub date_raw: String,
-    /// Deployment URL, e.g. "/blog/20260329-hello-world"
+    /// Deployment URL, e.g. "/posts/20260329-hello-world"
     pub url: String,
 }

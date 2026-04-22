@@ -2,7 +2,7 @@
 /// The type of sidebar, and the contents to display
 pub enum SidebarType {
     Projects,
-    Blog,
+    Posts,
     GatorOnly,
 }
 /// [`SidebarType`] implmentation of [`Default`]
