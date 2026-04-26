@@ -1,4 +1,12 @@
-_Overview_
+_Overview (April 2026)_
+
+A lot has changed since I was trying to publish this package. I developed this package on my own personal time, on my own personal resources, but I got into a bit of a disclosure disagreement with my previous employer (JHU/APL). They argued that it was relevant to the work I was performing at my job, which was not true. This was a completely independent project for generic bytestream parsing. Long story short, JHU/APL did end up granting me the rights and my ability to keep and publish this repo under a MIT license! However, the [MISB crate](/projects/2024t_misb/) (crate built using `tinyklv`) has been completely handed over to JHU/APL and I will have to start-over. The namespace, however, is completely open, so expect to see it up soon :)
+
+I did have to compromise and branch off at a point in time in September 2024 and re-do a lot of the work I had done. I was set to release this (as you can see in my previous overview below) in July 2025, but I got caught up with start-up work, selling my condo, and haven't had time to sit down and work through it.
+
+Note that this repo was made 100% without the use of AI, BUT now that I use coding agents more frequently, I am running audits on the code and helping expand the documentation - which has been admittedly great. However, this is one the largest projects I worked on without AI which brings huge satisfaction. 
+
+_Overview (May 2025)_
 
 This is by-far the most comprehensive personal project I have ever worked on. **It is currently under active development, and due to be released in the near future.** I have had limited time to work on it, and can work on it when I can in my spare time.
 

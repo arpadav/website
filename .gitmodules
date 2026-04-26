@@ -1,6 +1,12 @@
+# --------------------------------------------------
+# production code - static website
+# --------------------------------------------------
 [submodule "prod"]
 	path = deploy/prod
 	url = git@github.com:arpadav/arpadav.github.io.git
+# --------------------------------------------------
+# external repos - for docs
+# --------------------------------------------------
 [submodule "external-repos/tinyklv"]
 	path = external-repos/tinyklv
 	url = git@github.com:arpadav/tinyklv.git
