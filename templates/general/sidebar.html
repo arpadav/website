@@ -4,7 +4,7 @@
     <!-- -------------------------------------------------- -->
     <li>
         <a href="/gator/" target="_parent">
-            <img style="width: 268px" src="/images/alligator.png" />
+            <img src="/images/alligator.png" />
         </a>
     </li>
     <!-- -------------------------------------------------- -->
@@ -32,3 +32,25 @@
     <!-- -------------------------------------------------- -->
     {% endmatch %}
 </div>
+<!-- -------------------------------------------------- -->
+<!-- on mobile, alligator toggles the navbar instead of  -->
+<!-- navigating to /gator/                               -->
+<!-- -------------------------------------------------- -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var gator = document.querySelector("#sidebar > li:first-child a");
+        var nav = document.getElementById("navbar");
+        if (!gator || !nav) return;
+        gator.setAttribute("aria-controls", "navbar");
+        gator.setAttribute("aria-expanded", "true");
+        gator.addEventListener("click", function (e) {
+            if (!window.matchMedia("(max-width: 768px)").matches) return;
+            e.preventDefault();
+            nav.classList.toggle("collapsed");
+            gator.setAttribute(
+                "aria-expanded",
+                String(!nav.classList.contains("collapsed")),
+            );
+        });
+    });
+</script>
