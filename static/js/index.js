@@ -57,6 +57,19 @@ var tabs_pivot = ["left center"];
 init();
 
 function init() {
+    // tabs head clicking listener
+    let tabs_title = document.getElementsByClassName("head");
+    for (let i = 0; i < tabs_title.length; i++) {
+        tabs_title[i].style.cursor = "pointer";
+        tabs_title[i].addEventListener("click", toggle_collapse);
+    }
+
+    // on mobile call_anchors immediately without resize divs
+    if (is_mobile()) {
+        if (window.location.hash) setTimeout(call_anchors, 50);
+        return;
+    }
+
     // resize on load
     resize_divs();
 
@@ -64,13 +77,6 @@ function init() {
     let name_div = document.getElementById("name");
     name_div.style.cursor = "pointer";
     name_div.addEventListener("click", name_click);
-
-    // tabs head clicking listener
-    let tabs_title = document.getElementsByClassName("head");
-    for (let i = 0; i < tabs_title.length; i++) {
-        tabs_title[i].style.cursor = "pointer";
-        tabs_title[i].addEventListener("click", toggle_collapse);
-    }
 
     // add listener for resizing the window
     window.addEventListener("resize", function () {
@@ -185,6 +191,8 @@ function toggle_scrollbar() {
 // finds the current fontsize and new fontsize, then
 // calls resize name and reset tabs height to resize
 function resize_divs() {
+    // early return on mobile - removing this animation :(
+    if (is_mobile()) return;
     let main_div = document.getElementsByClassName("main");
     // fs_cur = fs_cur ? Number(main_div[0].style.fontSize.match(/(.+?)(?=px)/g)) : 32;
     fs_cur = Number(main_div[0].style.fontSize.match(/(.+?)(?=px)/g));
@@ -263,6 +271,11 @@ function recursive_resize_font(elements) {
 // =======================================================================
 // =                    PARTIAL TECHNICAL/ANIMATION                      =
 // =======================================================================
+// detect mobile viewport
+const is_mobile = () => {
+    return window.matchMedia("(max-width: 768px)").matches;
+};
+
 // do a lil animation thang when anchors are called from other pages
 function call_anchors() {
     // REGEX LOOKBEHIND BREAKS MOBILE
@@ -276,6 +289,8 @@ function call_anchors() {
 // rotate name on click, disable clicking for animation length
 // change visibility of other elements depending on status
 function name_click() {
+    // early return on mobile - removing this animation :(
+    if (is_mobile()) return;
     let name_div = document.getElementById("name");
     let tabs = document.getElementsByClassName("tab");
     // check if clicking on 'name' is enabled

@@ -22,11 +22,22 @@ li {
     color: #000090;
 }
 
-h1 { font-size: 2em; }
-h2 { font-size: 1.5em; }
-h3 { font-size: 1.17em; }
-h4 { font-size: 1em; }
-p, li { font-size: 1em; }
+h1 {
+    font-size: 2em;
+}
+h2 {
+    font-size: 1.5em;
+}
+h3 {
+    font-size: 1.17em;
+}
+h4 {
+    font-size: 1em;
+}
+p,
+li {
+    font-size: 1em;
+}
 
 /* -------------------------------------------------- */
 /* base layout */
@@ -46,7 +57,7 @@ img {
     height: auto;
 }
 
-li>h3 {
+li > h3 {
     font-weight: normal;
     white-space: pre;
 }
@@ -60,6 +71,11 @@ li>h3 {
     text-align: center;
 
     width: 290px;
+}
+
+#sidebar > li:first-child img {
+    width: 268px;
+    height: auto;
 }
 
 .sidebar li {
@@ -158,4 +174,134 @@ li>h3 {
 
 .no-underline {
     text-decoration: none;
+}
+
+/* -------------------------------------------------- */
+/* mobile: stack sidebar + bump typography            */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+    .sidebar {
+        float: none;
+        width: 100%;
+        text-align: left;
+        padding: 0 16px;
+        box-sizing: border-box;
+    }
+
+    .beside-sidebar {
+        float: none;
+        width: 100%;
+    }
+
+    .main {
+        float: none;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 1.7em;
+    }
+    h2 {
+        font-size: 1.35em;
+    }
+    h3 {
+        font-size: 1.15em;
+    }
+    p,
+    li,
+    a {
+        font-size: 1.05em;
+        line-height: 1.55;
+    }
+
+    /* listing pages (notes, projects homepage): tighter typography     */
+    /* `.main` is only used by listings; individual projects use         */
+    /* `.project-body` and individual posts use `.posts-post`            */
+    .main > h1 {
+        font-size: 1.3em;
+        margin: 0.4em 0;
+    }
+    .main h2 {
+        font-size: 1.05em;
+        margin: 0.5em 0 0.25em;
+    }
+    .main hr {
+        margin: 6px 0;
+    }
+    /* projects homepage: card titles smaller + tighter rows */
+    .main .card h3 {
+        font-size: 0.95em;
+        margin: 2px 0 2px 7px;
+    }
+    .main > a.no-underline {
+        padding: 1px 0;
+    }
+    /* notes listing: tighten nested lists */
+    .main ul {
+        margin: 0.25em 0;
+        padding-left: 1.2em;
+    }
+    .main ul ul {
+        margin: 0.15em 0;
+    }
+    .main li {
+        padding: 1px 0;
+    }
+    .main > p {
+        margin: 0.3em 0;
+    }
+
+    .center_desc {
+        width: auto;
+        padding: 0 16px;
+    }
+
+    /* alligator: centered, half-size, becomes nav toggle */
+    #sidebar > li:first-child {
+        text-align: center;
+        list-style: none;
+        padding: 12px 0;
+        width: 100%;
+    }
+    #sidebar > li:first-child img {
+        width: 134px;
+    }
+    #sidebar > li:first-child a {
+        cursor: pointer;
+        display: inline-block;
+        touch-action: manipulation;
+    }
+    #sidebar > li:first-child a:active img {
+        opacity: 0.6;
+    }
+    #sidebar > li:first-child a:focus-visible {
+        outline: 2px solid #000090;
+        outline-offset: 2px;
+    }
+
+    /* hide other-posts / other-projects list under the alligator */
+    #sidebar > li:not(:first-child) {
+        display: none;
+    }
+
+    /* navbar: centered, collapsible via .collapsed */
+    .navbar ul {
+        margin-left: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .navbar li {
+        float: none;
+    }
+
+    .navbar.collapsed ul {
+        display: none;
+    }
+
+    .navbar li a {
+        padding: 10px 12px;
+    }
 }

@@ -118,6 +118,34 @@ img {
 }
 
 /* -------------------------------------------------- */
+/* normalize tab head sizing for linked vs unlinked   */
+/* fixes size mismatch between cv/projects/posts/     */
+/* notes (wrapped in <a>) vs about/contact/socials    */
+/* -------------------------------------------------- */
+.head {
+    font-family: "Courier New";
+    color: #000090;
+    line-height: 1.2;
+}
+
+.head h2,
+.head a,
+.head a h2 {
+    font-size: 1em;
+    font-weight: normal;
+    font-family: inherit;
+    color: inherit;
+    margin: 0;
+    display: inline;
+    line-height: inherit;
+}
+
+.head a:hover,
+.head a:hover h2 {
+    color: #755cab;
+}
+
+/* -------------------------------------------------- */
 /* animations */
 /* -------------------------------------------------- */
 @keyframes fade_in {
@@ -158,4 +186,92 @@ img {
 }
 
 @keyframes tabs_rotate_horz {
+}
+
+/* -------------------------------------------------- */
+/* mobile overrides                                   */
+/* hide name animation, stack tabs, override JS px    */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+    html,
+    body {
+        overflow: auto;
+        height: auto;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 24px 0 80px;
+        box-sizing: border-box;
+    }
+
+    #name {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        margin: 0;
+        padding: 12px 0;
+        background-color: rgba(255, 226, 219, 0.55);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    #name h1 {
+        font-size: 1.1em;
+        margin: 0;
+    }
+
+    .main {
+        position: static;
+        transform: none;
+        -webkit-transform: none;
+        -moz-transform: none;
+        -ms-transform: none;
+        width: 100% !important;
+        font-size: 16px !important;
+        padding: 0;
+        margin: 0;
+        height: 0;
+        overflow: visible;
+        box-sizing: border-box;
+    }
+
+    .tab {
+        visibility: visible !important;
+        animation: none !important;
+        -webkit-animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        -webkit-transform: none !important;
+        pointer-events: auto !important;
+        width: 100%;
+        max-width: 480px;
+        padding: 0 20px;
+        margin-bottom: 12px;
+        box-sizing: border-box;
+    }
+
+    .head {
+        font-size: 1.5em !important;
+        cursor: pointer;
+    }
+
+    .body {
+        font-size: 1em !important;
+        max-width: 100%;
+    }
+
+    .body p,
+    .body li,
+    .body a {
+        font-size: 1em !important;
+    }
 }

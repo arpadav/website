@@ -132,15 +132,77 @@ h6:hover .anchor-icon {
 }
 
 /* indentation and sizing by heading level */
-.toc-h2 { padding-left: 0; font-size: 0.95em; }
-.toc-h3 { padding-left: 14px; font-size: 0.85em; }
-.toc-h4 { padding-left: 28px; font-size: 0.78em; }
-.toc-h5 { padding-left: 42px; font-size: 0.72em; }
-.toc-h6 { padding-left: 56px; font-size: 0.68em; }
+.toc-h2 {
+    padding-left: 0;
+    font-size: 0.95em;
+}
+.toc-h3 {
+    padding-left: 14px;
+    font-size: 0.85em;
+}
+.toc-h4 {
+    padding-left: 28px;
+    font-size: 0.78em;
+}
+.toc-h5 {
+    padding-left: 42px;
+    font-size: 0.72em;
+}
+.toc-h6 {
+    padding-left: 56px;
+    font-size: 0.68em;
+}
 
 /* hide toc on narrow screens */
 @media (max-width: 1200px) {
     .posts-toc {
         display: none;
+    }
+}
+
+/* -------------------------------------------------- */
+/* mobile: full-width content + readable body         */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+    .posts-listing,
+    .posts-post {
+        padding: 0 16px;
+        max-width: 100%;
+    }
+
+    /* listing: smaller page title + entry titles, tighter spacing */
+    .posts-listing h1 {
+        font-size: 1.3em;
+        margin: 0.4em 0;
+    }
+    .posts-listing > p {
+        margin: 0.3em 0;
+    }
+    .posts-listing hr {
+        margin: 6px 0;
+    }
+    .posts-entry {
+        padding: 6px 0;
+    }
+    .posts-entry-inner h2 {
+        font-size: 1.05em;
+        margin: 0 0 2px;
+    }
+    .posts-date {
+        font-size: 0.85em;
+    }
+
+    /* individual post body (unchanged sizing - readable) */
+    .posts-post-body {
+        font-size: 1.05em;
+        line-height: 1.6;
+    }
+
+    .posts-post-body img {
+        max-height: 50vh;
+    }
+
+    .posts-post-header {
+        margin-bottom: 24px;
     }
 }
