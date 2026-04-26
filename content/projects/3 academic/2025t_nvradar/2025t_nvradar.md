@@ -2,7 +2,7 @@
 "repos": ["https://gitlab.com/nvidia/nvradar/nvradar"]
 -->
 
-**_Disclamer: I will keep from disclosing anything proprietary and confidential, since I’m sure this effort is still on-going and certain technologies have yet to be made public._**
+**_Disclamer: I will keep from disclosing anything proprietary and confidential, since I'm sure this effort is still on-going and certain technologies have yet to be made public._**
 
 ![](https://cdnsecakmi.kaltura.com/p/2935771/thumbnail/entry_id/1_2gxb7ve0/width/1200 "JHU/APL SAR GTC Presentation Title Frame")
 

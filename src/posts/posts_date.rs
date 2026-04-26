@@ -69,7 +69,7 @@ impl std::str::FromStr for PostDateFormat {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         if s.len() < Self::PREFIX_LEN {
             return Err(format!(
-                "Post filename `{}` too short — expected YYYYMMDD-HHMM prefix",
+                "Post filename `{}` too short - expected YYYYMMDD-HHMM prefix",
                 s
             ));
         }
