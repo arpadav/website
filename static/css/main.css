@@ -118,31 +118,23 @@ img {
 }
 
 /* -------------------------------------------------- */
-/* normalize tab head sizing for linked vs unlinked   */
-/* fixes size mismatch between cv/projects/posts/     */
-/* notes (wrapped in <a>) vs about/contact/socials    */
+/* normalize tab head sizing AND spacing              */
+/* size: the global `a { display: flex }` made <a>    */
+/*   wrapping <h2> render differently than bare <h2>  */
+/* spacing: <h2>'s default margins collapse out of    */
+/*   bare-<h2> heads but get partially trapped by the */
+/*   inline-<a> wrapper; move spacing onto `.head`    */
+/*   as padding (padding never collapses) so linked   */
+/*   and unlinked tabs are vertically uniform         */
 /* -------------------------------------------------- */
 .head {
-    font-family: "Courier New";
-    color: #000090;
-    line-height: 1.2;
+    padding: 0.83em 0;
 }
-
-.head h2,
-.head a,
-.head a h2 {
-    font-size: 1em;
-    font-weight: normal;
-    font-family: inherit;
-    color: inherit;
+.head h2 {
     margin: 0;
-    display: inline;
-    line-height: inherit;
 }
-
-.head a:hover,
-.head a:hover h2 {
-    color: #755cab;
+.head a {
+    display: inline;
 }
 
 /* -------------------------------------------------- */
@@ -262,6 +254,7 @@ img {
     .head {
         font-size: 1.5em !important;
         cursor: pointer;
+        padding: 0;
     }
 
     .body {

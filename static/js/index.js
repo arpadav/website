@@ -1,11 +1,11 @@
 // static & technicals
 // --------------------------------------------
 // bools
+// --------------------------------------------
 var rotated = false;
 var click_enable = true;
 var tabs_first_invisible = true;
 var first_load = true;
-
 // transforms, do not edit
 var transforms = [
     "-moz-transform",
@@ -14,15 +14,13 @@ var transforms = [
     "-ms-transform",
     "transform",
 ];
-
 // resize timeout
 var resize_timeout;
-
 // current and new font-sizes for main name
 var fs_cur;
 var fs_new;
-// --------------------------------------------
 
+// --------------------------------------------
 // adjustables
 // --------------------------------------------
 // animation length
@@ -52,10 +50,16 @@ var tabs_anim_end_rot = ["0deg"];
 var tabs_anim_begin_pos = ["85%", "0%"];
 var tabs_anim_end_pos = ["10%", "0%"];
 var tabs_pivot = ["left center"];
+
+// detect mobile viewport
+const is_mobile = () => {
+    return window.matchMedia("(max-width: 768px)").matches;
+};
+
 // --------------------------------------------
-
+// entry
+// --------------------------------------------
 init();
-
 function init() {
     // tabs head clicking listener
     let tabs_title = document.getElementsByClassName("head");
@@ -271,11 +275,6 @@ function recursive_resize_font(elements) {
 // =======================================================================
 // =                    PARTIAL TECHNICAL/ANIMATION                      =
 // =======================================================================
-// detect mobile viewport
-const is_mobile = () => {
-    return window.matchMedia("(max-width: 768px)").matches;
-};
-
 // do a lil animation thang when anchors are called from other pages
 function call_anchors() {
     // REGEX LOOKBEHIND BREAKS MOBILE
