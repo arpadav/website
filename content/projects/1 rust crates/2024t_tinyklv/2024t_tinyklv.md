@@ -1,5 +1,10 @@
 _Overview (April 2026)_
 
+* crates.io: [http://crates.io/crates/tinyklv](http://crates.io/crates/tinyklv)
+* repo: [http://github.com/arpadav/tinyklv](http://github.com/arpadav/tinyklv)
+* book: [http://arpadvoros.com/tinyklv](http://arpadvoros.com/tinyklv)
+* more info: [https://arpadvoros.com/posts/20260416-1015-introducing-tinyklv-a-klv-parsing-crate](https://arpadvoros.com/posts/20260416-1015-introducing-tinyklv-a-klv-parsing-crate)
+
 A lot has changed since I was trying to publish this package. I developed this package on my own personal time, on my own personal resources, but I got into a bit of a disclosure disagreement with my previous employer (JHU/APL). They argued that it was relevant to the work I was performing at my job, which was not true. This was a completely independent project for generic bytestream parsing. Long story short, JHU/APL did end up granting me the rights and my ability to keep and publish this repo under a MIT license! However, the [MISB crate](/projects/2024t_misb/) (crate built using `tinyklv`) has been completely handed over to JHU/APL and I will have to start-over. The namespace, however, is completely open, so expect to see it up soon :)
 
 I did have to compromise and branch off at a point in time in September 2024 and re-do a lot of the work I had done. I was set to release this (as you can see in my previous overview below) in July 2025, but I got caught up with start-up work, selling my condo, and haven't had time to sit down and work through it.
@@ -29,7 +34,7 @@ use tinyklv::prelude::*;
     len(dec = tinyklv::dec::binary::u8_as_usize),
 )]
 struct Foo {
-    #[klv(key = 0x01, var = true, dec = tinyklv::dec::binary::to_string_utf8)]
+    #[klv(key = 0x01, varlen = true, dec = tinyklv::dec::binary::to_string_utf8)]
     // value length is dynamically determined, always as input from stream
     // 
     // therefore, it is used as an input arg in decoder: `tinyklv::dec::binary::to_string_utf8`
@@ -54,7 +59,7 @@ let mut stream1: &[u8] = &[
 ];
 let stream1_ = stream1.clone();
 // decode by seeking sentinel, then decoding data
-match Foo::extract(&mut stream1) {
+match Foo::decode_frames(&mut stream1) {
     Ok(foo) => {
         assert_eq!(foo.name, "KLV");
         assert_eq!(foo.number, 258);
@@ -62,7 +67,7 @@ match Foo::extract(&mut stream1) {
     Err(e) => panic!("{}", e),
 }
 // decode data directly (without seeking sentinel)
-match Foo::decode(&mut &stream1_[4..]) {
+match Foo::decode_value(&mut &stream1_[4..]) {
     Ok(foo) => {
         assert_eq!(foo.name, "KLV");
         assert_eq!(foo.number, 258);
@@ -79,7 +84,7 @@ let mut stream2: &[u8] = &[
     0x02, 0x02,             // key: 0x02, len: 2 bytes
     0x00, 0x2A,             // value: 42
 ];
-match Foo::extract(&mut stream2) {
+match Foo::decode_frames(&mut stream2) {
     Ok(foo) => {
         assert_eq!(foo.name, "Hello World!");
         assert_eq!(foo.number, 42);
