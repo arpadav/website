@@ -3,7 +3,7 @@ _Overview (April 2026)_
 * crates.io: [http://crates.io/crates/tinyklv](http://crates.io/crates/tinyklv)
 * repo: [http://github.com/arpadav/tinyklv](http://github.com/arpadav/tinyklv)
 * book: [http://arpadvoros.com/tinyklv](http://arpadvoros.com/tinyklv)
-* more info: [https://arpadvoros.com/posts/20260416-1015-introducing-tinyklv-a-klv-parsing-crate](https://arpadvoros.com/posts/20260416-1015-introducing-tinyklv-a-klv-parsing-crate)
+* more info: [https://arpadvoros.com/posts/20260425-2213-introducing-tinyklv-a-klv-parsing-crate](/posts/20260425-2213-introducing-tinyklv-a-klv-parsing-crate)
 
 A lot has changed since I was trying to publish this package. I developed this package on my own personal time, on my own personal resources, but I got into a bit of a disclosure disagreement with my previous employer (JHU/APL). They argued that it was relevant to the work I was performing at my job, which was not true. This was a completely independent project for generic bytestream parsing. Long story short, JHU/APL did end up granting me the rights and my ability to keep and publish this repo under a MIT license! However, the [MISB crate](/projects/2024t_misb/) (crate built using `tinyklv`) has been completely handed over to JHU/APL and I will have to start-over. The namespace, however, is completely open, so expect to see it up soon :)
 
