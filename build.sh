@@ -92,24 +92,48 @@ done
 if [ "$RELEASE" = true ]; then
     echo "Minifying..."
     # --------------------------------------------------
-    # collect all .html, .css, and .js files
+    # patterns to exclude from minification
+    # --------------------------------------------------
+    EXCLUDE_PATTERNS=(
+        "*highlight-*.js"
+        "*book-*.js"
+    )
+    # --------------------------------------------------
+    # file extensions to include
+    # --------------------------------------------------
+    FILE_EXTENSIONS=(
+        "*.html"
+        "*.css"
+        "*.js"
+        "*.mjs"
+        "*.min.js"
+        "*.json"
+        "*.svg"
+    )
+    # --------------------------------------------------
+    # build include command
+    # --------------------------------------------------
+    FIND_CMD=(find "$FOLDER" -type f \()
+    for ext in "${FILE_EXTENSIONS[@]}"; do
+        FIND_CMD+=(-name "$ext" -o)
+    done
+    unset 'FIND_CMD[-1]' # drop the trailing -o
+    FIND_CMD+=(\))
+    # --------------------------------------------------
+    # build exclude command
+    # --------------------------------------------------
+    for pat in "${EXCLUDE_PATTERNS[@]}"; do
+        FIND_CMD+=(! -path "$pat")
+    done
+    # --------------------------------------------------
+    # collect all minifiable files
     # --------------------------------------------------
     FILES=()
+    FIND_CMD+=(-print0)
+    echo "  > ${FIND_CMD[@]}"
     while IFS= read -r -d '' file; do
         FILES+=("$file")
-    done < <(
-        find "$FOLDER" -type f \
-            \( \
-            -name "*.html" \
-            -o -name "*.css" \
-            -o -name "*.js" \
-            -o -name "*.mjs" \
-            -o -name "*.min.js" \
-            -o -name "*.json" \
-            -o -name "*.svg" \
-            \) \
-            -print0
-    )
+    done < <("${FIND_CMD[@]}")
     # --------------------------------------------------
     # minify each file with the appropriate tool
     # --------------------------------------------------
