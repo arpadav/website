@@ -1,0 +1,9 @@
+{
+    "title": "One-time downloads",
+    "collab-type": "Individual Project",
+    "status": "Maintainer",
+    "desc": "NAS / local download link generation and management",
+    "date": "Mar 2026",
+    "location": null,
+    "repos": ["https://github.com/arpadav/otd"]
+}

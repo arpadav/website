@@ -5,6 +5,11 @@
     max-width: 700px;
     margin: 0 auto;
     padding: 0 20px;
+    /* `.main` (used by /notes /projects listings) clears the sidebar +
+       navbar floats; `.posts-listing` is a plain block, so without
+       `clear` the first-child <h1>'s margin-top collapses through and
+       shifts the floats above it downward. */
+    clear: left;
 }
 
 .posts-listing h1 {
@@ -42,6 +47,7 @@
     max-width: 680px;
     margin: 0 auto;
     padding: 0 20px;
+    clear: left;
 }
 
 .posts-post-header {

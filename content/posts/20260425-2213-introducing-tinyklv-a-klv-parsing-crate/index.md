@@ -5,7 +5,7 @@ I wanted to announce the official launch of `tinyklv`
 * crates.io: [http://crates.io/crates/tinyklv](http://crates.io/crates/tinyklv)
 * repo: [http://github.com/arpadav/tinyklv](http://github.com/arpadav/tinyklv)
 * book: [http://arpadvoros.com/tinyklv](/tinyklv)
-* more info: [http://arpadvoros.com/projects/2024t_tinyklv](/projects/2024t_tinyklv)
+* more info: [http://arpadvoros.com/projects/2026f_tinyklv](/projects/2026f_tinyklv)
 
 i've started this project about 2 years ago, when i was at my previous job. i worked on it in sprints and took a better part of a whole year break from it to focus on other priorities. originally, i built the core and was able to learn the fundamentals of rust's proc-macros.
 
