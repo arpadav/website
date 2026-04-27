@@ -1,7 +1,7 @@
 _Overview (April 2026)_
 
 * crates.io: [http://crates.io/crates/tinyklv](http://crates.io/crates/tinyklv)
-* repo: [http://github.com/arpadav/tinyklv](http://github.com/arpadav/tinyklv)
+<!-- * repo: [http://github.com/arpadav/tinyklv](http://github.com/arpadav/tinyklv) -->
 * book: [http://arpadvoros.com/tinyklv](http://arpadvoros.com/tinyklv)
 * more info: [https://arpadvoros.com/posts/20260425-2213-introducing-tinyklv-a-klv-parsing-crate](/posts/20260425-2213-introducing-tinyklv-a-klv-parsing-crate)
 
@@ -9,7 +9,7 @@ A lot has changed since I was trying to publish this package. I developed this p
 
 I did have to compromise and branch off at a point in time in September 2024 and re-do a lot of the work I had done. I was set to release this (as you can see in my previous overview below) in July 2025, but I got caught up with start-up work, selling my condo, and haven't had time to sit down and work through it.
 
-Note that this repo was made 100% without the use of AI, BUT now that I use coding agents more frequently, I am running audits on the code and helping expand the documentation - which has been admittedly great. However, this is one the largest projects I worked on without AI which brings huge satisfaction. 
+Note that the core of this project was **made 100% by hand and without the use of AI**. However, now that I use coding agents more frequently, I am running audits on the code and helping expand the documentation and testing - which has been admittedly great. However, this is one the largest projects I worked on without AI which brings huge satisfaction. 
 
 _Overview (May 2025)_
 
