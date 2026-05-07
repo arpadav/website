@@ -20,9 +20,9 @@ if [ -z "$TITLE" ]; then
 fi
 
 # --------------------------------------------------
-# generate date prefix (YYYYMMDD)
+# generate nested date path (YYYY/MM/DD)
 # --------------------------------------------------
-DATE_PREFIX=$(date +%Y%m%d-%H%M)
+DATE_PATH=$(date +%Y/%m/%d)
 
 # --------------------------------------------------
 # slugify title: lowercase, replace spaces/special
@@ -38,7 +38,7 @@ SLUG=$(echo "$TITLE" |
 # --------------------------------------------------
 # create folder + index.md
 # --------------------------------------------------
-POST_DIR="$(realpath -m "$POSTS_DIR/${DATE_PREFIX}-${SLUG}")"
+POST_DIR="$(realpath -m "$POSTS_DIR/${DATE_PATH}/${SLUG}")"
 mkdir -p "$POST_DIR"
 POST_FILE="$POST_DIR/index.md"
 if [ -f "$POST_FILE" ]; then

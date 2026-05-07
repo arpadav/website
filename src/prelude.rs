@@ -62,4 +62,3 @@ where
     }
 }
 impl<T> ToPage<T> for T where T: Create + SourcePath<T> + askama::Template {}
-

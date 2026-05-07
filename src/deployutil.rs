@@ -202,27 +202,26 @@ impl DeploymentMapInner {
         // --------------------------------------------------
         // open deployment map json
         // --------------------------------------------------
-        let contents: HashMap<String, Vec<(String, String)>> =
-            match std::fs::read_to_string(std::path::PathBuf::from(crate::DEPLOYMENT_MAP_JSON)) {
-                Ok(contents) => {
-                    match serde_json::from_str::<HashMap<String, serde_json::Value>>(&contents) {
-                        Ok(mappings) => mappings
-                            .iter()
-                            .map(|(k, v)| {
-                                let ordered: Vec<(&String, &serde_json::Value)> =
-                                    v.as_object().unwrap().into_iter().collect();
-                                let ordered: Vec<(String, String)> = ordered
-                                    .into_iter()
-                                    .map(|(k, v)| (k.clone(), v.as_str().unwrap().to_string()))
-                                    .collect();
-                                (k.clone(), ordered)
-                            })
-                            .collect(),
-                        Err(e) => return Err(e.into()),
-                    }
-                }
-                Err(e) => return Err(e),
-            };
+        let contents: HashMap<String, Vec<(String, String)>> = {
+            let contents =
+                std::fs::read_to_string(std::path::PathBuf::from(crate::DEPLOYMENT_MAP_JSON))?;
+            {
+                let mappings =
+                    serde_json::from_str::<HashMap<String, serde_json::Value>>(&contents)?;
+                mappings
+                    .iter()
+                    .map(|(k, v)| {
+                        let ordered: Vec<(&String, &serde_json::Value)> =
+                            v.as_object().unwrap().into_iter().collect();
+                        let ordered: Vec<(String, String)> = ordered
+                            .into_iter()
+                            .map(|(k, v)| (k.clone(), v.as_str().unwrap().to_string()))
+                            .collect();
+                        (k.clone(), ordered)
+                    })
+                    .collect()
+            }
+        };
         // --------------------------------------------------
         // get include and exclude files
         // --------------------------------------------------

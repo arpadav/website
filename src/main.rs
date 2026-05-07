@@ -1,7 +1,6 @@
 // --------------------------------------------------
 // mods
 // --------------------------------------------------
-mod posts;
 mod deployutil;
 mod homepage;
 mod macros;
@@ -9,6 +8,7 @@ mod markdown;
 mod miscpages;
 mod navbar;
 mod notes;
+mod posts;
 pub(crate) mod prelude;
 mod primitives;
 mod projects;

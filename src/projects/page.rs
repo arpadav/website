@@ -14,16 +14,22 @@ use crate::prelude::*;
 pub struct ProjectTemplate {
     /// The title of the page
     pub title: String,
+
     /// The name of the project
     pub name: String,
+
     /// The URL of the project
     pub url: String,
+
     /// The content of the project
     pub content: String,
+
     /// The "header/title" of the project
     pub header: ProjectHeader,
+
     /// The sidebar of the project page
     pub sidebar: SidebarType,
+
     /// The source type
     pub srctype: SourceType,
 }

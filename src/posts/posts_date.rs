@@ -17,7 +17,7 @@ const MONTHS: [&str; 12] = [
 ];
 
 #[derive(Clone, Debug)]
-/// A parsed post date from a `YYYYMMDD-HHMM` filename prefix.
+/// A parsed post date from `YYYY/MM/DD` directory components.
 pub struct PostDateFormat {
     /// Year, e.g. `2026`
     pub year: u16,
@@ -27,24 +27,39 @@ pub struct PostDateFormat {
 
     /// Day, 1-31
     pub day: u8,
-
-    /// Hour, 0-23
-    pub hour: u8,
-
-    /// Minute, 0-59
-    pub minute: u8,
 }
 /// [`PostDateFormat`] implementation
 impl PostDateFormat {
-    /// Minimum filename length required: `YYYYMMDD-HHMM` = 13 characters.
-    pub const PREFIX_LEN: usize = 13;
+    /// Build from the `YYYY`, `MM`, `DD` parent-directory strings.
+    pub fn from_path_parts(year: &str, month: &str, day: &str) -> Result<Self, String> {
+        if year.len() != 4 {
+            return Err(format!("Year dir `{}` must be 4 digits", year));
+        }
+        if month.len() != 2 {
+            return Err(format!("Month dir `{}` must be 2 digits", month));
+        }
+        if day.len() != 2 {
+            return Err(format!("Day dir `{}` must be 2 digits", day));
+        }
+        let year: u16 = year
+            .parse()
+            .map_err(|_| format!("Invalid year `{}`", year))?;
+        let month: u8 = month
+            .parse()
+            .map_err(|_| format!("Invalid month `{}`", month))?;
+        let day: u8 = day.parse().map_err(|_| format!("Invalid day `{}`", day))?;
+        if !(1..=12).contains(&month) {
+            return Err(format!("Month {} out of range 1-12", month));
+        }
+        if !(1..=31).contains(&day) {
+            return Err(format!("Day {} out of range 1-31", day));
+        }
+        Ok(Self { year, month, day })
+    }
 
-    /// Returns a sortable string `"YYYYMMDDHHMM"` for ordering posts.
+    /// Returns a sortable string `"YYYYMMDD"` for ordering posts.
     pub fn as_key(&self) -> String {
-        format!(
-            "{:04}{:02}{:02}{:02}{:02}",
-            self.year, self.month, self.day, self.hour, self.minute
-        )
+        format!("{:04}{:02}{:02}", self.year, self.month, self.day)
     }
 }
 /// [`PostDateFormat`] implementation of [`std::fmt::Display`]
@@ -58,54 +73,5 @@ impl std::fmt::Display for PostDateFormat {
             self.day,
             self.year
         )
-    }
-}
-/// [`PostDateFormat`] implementation of [`std::str::FromStr`]
-impl std::str::FromStr for PostDateFormat {
-    type Err = String;
-
-    /// Parse from a filename starting with `YYYYMMDD-HHMM`.
-    /// Extra characters after the prefix are ignored (e.g. `-my-post-title`).
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s.len() < Self::PREFIX_LEN {
-            return Err(format!(
-                "Post filename `{}` too short - expected YYYYMMDD-HHMM prefix",
-                s
-            ));
-        }
-        if s.as_bytes()[8] != b'-' {
-            return Err(format!(
-                "Post filename `{}` missing hyphen after YYYYMMDD",
-                s
-            ));
-        }
-        let year: u16 = s[..4]
-            .parse()
-            .map_err(|_| format!("Invalid year in post filename `{}`", s))?;
-        let month: u8 = s[4..6]
-            .parse()
-            .map_err(|_| format!("Invalid month in post filename `{}`", s))?;
-        let day: u8 = s[6..8]
-            .parse()
-            .map_err(|_| format!("Invalid day in post filename `{}`", s))?;
-        let hour: u8 = s[9..11]
-            .parse()
-            .map_err(|_| format!("Invalid hour in post filename `{}`", s))?;
-        let minute: u8 = s[11..13]
-            .parse()
-            .map_err(|_| format!("Invalid minute in post filename `{}`", s))?;
-        if !(1..=12).contains(&month) {
-            return Err(format!("Month out of range in post filename `{}`", s));
-        }
-        if !(1..=31).contains(&day) {
-            return Err(format!("Day out of range in post filename `{}`", s));
-        }
-        Ok(Self {
-            year,
-            month,
-            day,
-            hour,
-            minute,
-        })
     }
 }
