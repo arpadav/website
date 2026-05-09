@@ -1,6 +1,6 @@
 # it's time to talk about agentic "remote control"
 
->tl;dr: skip the vendor remote-control features. roll your own with wireguard, `tmux`, and ssh. cheaper, more flexible, and you stop handing third parties a live shell into your dev box.
+>tldr: skip the vendor remote-control features. roll your own with wireguard, `tmux`, and ssh. cheaper, more flexible, and you stop handing third parties a live shell into your dev box.
 
 i've been seeing posts floating around for the past couple months, particularly on the Anthropic side, advertising their ability to remotely control your Claude Code session from your phone! i even saw on linkedin a couple days back that [amp added their own remote control](https://ampcode.com/news/neo)
 
@@ -10,7 +10,7 @@ as someone who has been doing "manual" remote control for about two years, i can
 
 to cut to the chase: use your own VPN / Wireguard, terminal sessions, and terminal access control point, and stop graciously providing third parties yet another attack surface.
 
-## diy remote control
+## DIY remote control
 
 boils down to three fundamentals:
 
@@ -92,7 +92,7 @@ this is the biggest one of all.
 
 *trust boundary*: vendor remote control extends the trust boundary of YOUR machine to include the vendor's auth system, their relay infrastructure, mobile app supply chain, employees with production access, and their incident response when (not if) they get breached. wireguard tunnels between your own devices use keys generated and held on each endpoint, where even a self-hosted control server can't decrypt the traffic.
 
-*blast radius of an account compromise*: SIM swap, OAuth phish, session hijack on your vendor account -> attacker gets the same remote shell capability you do. your repos, your `.env`, push access as you. with device-keyed wireguard + SSH keys in the phone's secure enclave, owning a vendor account does not put an attacker on the mesh.
+*blast radius of an account compromise*: SIM swap, OAuth phish, session hijack on your vendor account -> attacker gets the same remote shell capability you do. with device-keyed wireguard + SSH keys in the phone's secure enclave, owning a vendor account does not put an attacker on the mesh.
 
 *credentials never leave your devices*: anything that scrolls past in the terminal. `env`, `cat .env`, accidental `aws sts get-caller-identity` will always transit vendor infrastructure. TLS-to-the-relay is not the same as never-having-existed-there.
 
@@ -104,3 +104,44 @@ for reassurance, the past couple days we've had:
 * [https://github.com/advisories/GHSA-vp62-r36r-9xqp](https://github.com/advisories/GHSA-vp62-r36r-9xqp)
 
 and im sure there is much more i am missing, since i am no security expert.
+
+## \* *addendum*: investigation of claude code's rc
+
+>tldr: regardless of remote-control use, a compromised provider still has active connections to your machine and could *potentially* execute malicious code
+
+i wanted to actually see what claude code does on the wire when remote control is on, so i had claude itself write me a tracing harness, consisting of a single bash script with the following:
+
+1. `strace -f -tt -T -y` for every top-level pid in the tree (one log per pid, `-f` follows children)
+2. `tcpdump -i any -s 0 'tcp or udp'` for the full pcap
+3. `execsnoop-bpfcc -T` system-wide for every `exec()`
+4. `opensnoop-bpfcc -T` system-wide for every `open()`
+5. `tcpconnect-bpfcc -t` for outbound TCP `connect()`
+6. `tcpaccept-bpfcc -t` for inbound TCP `accept()`
+7. `fatrace -t` for filesystem access
+8. `ss -tnpeO` snapshotted every 1s
+9. `pstree` + `lsof` snapshotted every 5s
+10. an initial `/proc` + `ss` + `lsof` snapshot at start, and a matching one at end
+
+attached to a long-running claude code session (cwd: a normal project repo), let it idle for 10 seconds or so, turned on remote control, sent it one prompt mid-trace, turned off remote control, then stopped tracing after ~50 seconds. then handed the whole log directory back to claude and asked it to build the timeline
+
+### what the trace shows
+
+well.. no new TCP SYN or DNS. the prompt arrived, and the message rode in over a socket that had been open the entire time
+
+specifically, before i ever touched my phone, claude already had **8 keep-alive TLS sockets to `160.79.104.10:443`** (anthropic edge, no PTR record) plus one to `35.190.46.17:443` (statsig on google cloud). the MCP children had their own sockets to cloudflare. when the remote prompt landed, it just appeared as bytes on one of the existing 8 sockets. local hooks fired (`userpromptsubmit.mjs`), `git ls-files` ran, `~/.claude.json` got rewritten (all the normal prompt-arrival machinery and nothing out of the ordinary). nothing on the network looked like "a remote control connection just opened"
+
+### why this matters
+
+those 8 sockets are open whenever claude code is running. they exist regardless of whether you have remote control toggled on. the client is, by construction, sitting on a persistent bidirectional channel to anthropic with the *capability* to receive instructions at any moment
+
+the remote control toggle is presumably gating *something*.
+
+*best case*: the client refuses to dispatch inbound prompt messages unless the local flag is set, AND anthropic refuses to forward them server-side unless your account opted in. defense in depth on both ends.
+
+*worst case*: the toggle is purely a server-side ACL, where anthropic decides whether to push, the client always accepts. in this case a compromised anthropic (or anyone with the right internal access) could inject a user prompt into any open claude code session anywhere, with no client-side gate
+
+from a packet trace alone, i couldnt tell which, since they both look identical :)
+
+and remember the existing trust model already lets the model emit tool calls. remote control doesn't expand the *blast radius* of a compromise. it expands *who can pull the trigger*. without it, an attacker needs you to actually be typing. with it, an idle session at 3am is reachable.
+
+so: same conclusion as the rest of this post - just roll your own rc for flexibility and reduced risk
