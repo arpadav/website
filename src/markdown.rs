@@ -153,6 +153,7 @@ impl MarkdownDocument {
                 .arg(md_src_path)
                 .arg("--to")
                 .arg("html")
+                .arg("--wrap=none")
                 .arg("--mathjax")
                 .arg("-s")
                 .arg("--strip-comments")
