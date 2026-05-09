@@ -1,0 +1,85 @@
+/* first heading should not push content down */
+.md > h1:first-child {
+    margin-top: 0;
+}
+
+/* images: cap to viewport height; width default 50vw fits wide surfaces
+   (notes, projects). Posts override to 100% in posts.css since their
+   container is already narrow (680px). */
+.md img {
+    max-width: 50vw;
+    max-height: 70vh;
+    margin: 0 auto;
+    display: block;
+    object-fit: contain;
+}
+
+/* blockquote */
+.md blockquote {
+    border-left: 3px solid #000090;
+    padding-left: 20px;
+    font-style: italic;
+    opacity: 0.85;
+}
+
+/* code blocks: scrollable on desktop, wrap on mobile */
+.md pre {
+    max-width: 100%;
+    overflow-x: auto;
+}
+.md :not(pre) > code {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* tables: borderless, zebra stripes, bold underlined header */
+.md table {
+    border-collapse: collapse;
+    margin: 1.2em auto;
+    color: #000;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+.md th,
+.md td {
+    padding: 6px 14px;
+    text-align: left;
+    vertical-align: top;
+    border: none;
+}
+.md thead th {
+    font-weight: 600;
+    border-bottom: 1px solid rgba(0, 0, 144, 0.35);
+}
+.md tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 144, 0.04);
+}
+.md tbody tr:hover {
+    background-color: rgba(0, 0, 144, 0.08);
+}
+
+/* -------------------------------------------------- */
+/* mobile                                             */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+    /* wrap code blocks so long lines do not force horizontal page scroll */
+    .md pre,
+    .md pre code {
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    /* wide tables: scroll horizontally inside the table instead of pushing the page */
+    .md table {
+        display: block;
+        overflow-x: auto;
+        max-width: 100%;
+        font-size: 0.9em;
+    }
+    .md th,
+    .md td {
+        padding: 5px 10px;
+        white-space: nowrap;
+    }
+}

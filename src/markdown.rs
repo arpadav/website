@@ -162,7 +162,9 @@ impl MarkdownDocument {
                 // This is included here and not in `templates/markdown.html`
                 // ----------------------------------------------------
                 .arg("--css")
-                .arg("/css/std.css")
+                .arg("/css/base.css")
+                .arg("--css")
+                .arg("/css/md.css")
                 .arg("--highlight-style=zenburn")
                 .output()
                 .unwrap_or_else(|_| panic!("Failed to run `pandoc` for `{}`", filename))

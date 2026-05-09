@@ -11,40 +11,38 @@
     <!-- -------------------------------------------------- -->
     {% include "general/sidebar.html" %}
     <!-- -------------------------------------------------- -->
-    <!-- include navbar -->
+    <!-- navbar + toc + post content (inside .beside-sidebar -->
+    <!-- so the article sits beside the sidebar instead of   -->
+    <!-- being pushed below its full height by `clear: left`) -->
     <!-- -------------------------------------------------- -->
-    <div class="beside-sidebar">{% include "general/navbar.html" %}</div>
-    <!-- -------------------------------------------------- -->
-    <!-- table of contents -->
-    <!-- -------------------------------------------------- -->
-    {% if !toc.is_empty() %}
-    <nav class="posts-toc">
-        <p>table of contents</p>
-        <ul>
-            {% for entry in toc %}
-            <li class="toc-h{{ entry.level }}">
-                <a href="#{{ entry.id }}">{{ entry.text }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-    </nav>
-    {% endif %}
-    <!-- -------------------------------------------------- -->
-    <!-- post content -->
-    <!-- -------------------------------------------------- -->
-    <article class="posts-post">
-        <header class="posts-post-header">
-            <h1>{{ post_title }}</h1>
-            <time class="posts-post-date">{{ date }}</time>
-        </header>
-        <hr />
-        <div class="posts-post-body">{{ content|safe }}</div>
-    </article>
-    <br />
+    <div class="beside-sidebar">
+        {% include "general/navbar.html" %}
+        {% if !toc.is_empty() %}
+        <nav class="posts-toc">
+            <p>table of contents</p>
+            <ul>
+                {% for entry in toc %}
+                <li class="toc-h{{ entry.level }}">
+                    <a href="#{{ entry.id }}">{{ entry.text }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+        <article class="posts-post">
+            <header class="posts-post-header">
+                <h1>{{ post_title }}</h1>
+                <time class="posts-post-date">{{ date }}</time>
+            </header>
+            <hr />
+            <div class="posts-post-body md">{{ content|safe }}</div>
+        </article>
+        <br />
+    </div>
     <!-- -------------------------------------------------- -->
     <!-- stylesheets -->
     <!-- -------------------------------------------------- -->
-    <link rel="stylesheet" href="/css/std.css" />
+    <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/posts.css" />
     <!-- -------------------------------------------------- -->
     <!-- anchor link copy-to-clipboard -->
