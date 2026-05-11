@@ -20,6 +20,7 @@ a,
 li {
     font-family: "Times New Roman";
     color: #000090;
+    /*color: #ffe2db;*/
 }
 
 h1 {
@@ -44,6 +45,7 @@ li {
 /* -------------------------------------------------- */
 body {
     background-color: #ffe2db;
+    /*background-color: #000090;*/
     overflow-x: hidden;
 }
 
@@ -162,6 +164,7 @@ li > h3 {
 
 .active {
     background-color: #f2d7d0;
+    /*background-color: #000060;*/
 }
 
 .active .rotateimg90 {
@@ -276,6 +279,7 @@ li > h3 {
     }
     #sidebar > li:first-child a:focus-visible {
         outline: 2px solid #000090;
+        /*outline: 2px solid #ffe2db;*/
         outline-offset: 2px;
     }
 
