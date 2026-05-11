@@ -300,7 +300,7 @@ cold release is slightly worse than baseline since `sccache` has overhead popula
 
 interestingly, **debug warm is _slower_ than release warm** - `sccache` caches release artifacts more aggressively in this configuration. didnt expect that.
 
-so the punchline: **the fastest configuration is actually T6 (`sccache` only, no `mold`, no `ccache`)**, with T5 (`sccache` + `ccache` + `mold`) statistically tied. dropping `ccache` and `mold` costs nothing and removes two moving parts.
+**the fastest configuration is actually T6 (`sccache` only, no `mold`, no `ccache`)**, with T5 (`sccache` + `ccache` + `mold`) statistically tied. dropping `ccache` and `mold` costs nothing and removes two moving parts.
 
 ## what's left - candle-kernels
 
@@ -310,9 +310,9 @@ even with `sccache` carrying the rust crates, the warm `--timings` table shows `
 * then compiles 3 MoE kernels (`moe_gguf.cu`, `moe_wmma.cu`, `moe_wmma_gguf.cu`) into a static `libmoe.a` that gets linked into the rust crate
 * compiler flags: `--expt-relaxed-constexpr -std=c++17 -O3`, plus `-Xcompiler -fPIC` on linux
 
-the kicker: `cudaforge` spawns `nvcc` directly via `Command::new`. there's no CMake in the loop, so the `CMAKE_CUDA_COMPILER_LAUNCHER = ccache` hook from T3-T5 never fires for these compiles. and `sccache` is a `rustc` wrapper - build-scripts (and the `nvcc` they spawn) are out of scope. so every `cargo clean` re-runs `nvcc` on 17 `.cu` translation units with no cache layer in front of it. that fits the observed ~17.9s pretty well.
+the main issue is `cudaforge` spawns `nvcc` directly via `Command::new`. there's no CMake in the loop, so the `CMAKE_CUDA_COMPILER_LAUNCHER = ccache` hook from T3-T5 never fires for these compiles. and `sccache` is a `rustc` wrapper - build-scripts (and the `nvcc` they spawn) are out of scope. so every `cargo clean` re-runs `nvcc` on 17 `.cu` translation units with no cache layer in front of it. that fits the observed ~17.9s pretty well
 
-cracking this one open is future work - probably either teaching `cudaforge` to honor a launcher env var, wrapping `nvcc` with `sccache` directly, or persisting the `OUT_DIR` across cleans somehow.
+this one is open for future work - probably either teaching `cudaforge` to honor a launcher env var, wrapping `nvcc` with `sccache` directly, or persisting the `OUT_DIR` across cleans somehow.
 
 ## summary
 
@@ -327,4 +327,4 @@ cracking this one open is future work - probably either teaching `cudaforge` to 
 | T6 env flags + `sccache` | **25.05s** | **5.56x** |
 | T7 env flags + `sccache` + `mold` | 25.35s | 5.50x |
 
-you might be asking why im not running T5 in practice, reason being keeping `ccache` on top of `sccache` doubles the cache footprint on disk for a statistically-tied result - not worth a whole second build system around for zero gain. and `mold` turning out to be a no-op tracks - linking just isnt the bottleneck on this graph, so dropping it is negligible.
+you might be asking why im not running T5 in practice (some of the runs were faster than T6 by a couple seconds), reason being keeping `ccache` on top of `sccache` doubles the cache footprint on disk for a statistically-tied result - not worth a whole second build system around for zero gain. and `mold` turning out to be a no-op tracks - linking just isnt the bottleneck on this graph, so dropping it is negligible.
