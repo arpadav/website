@@ -304,7 +304,7 @@ interestingly, **debug warm is _slower_ than release warm** - `sccache` caches r
 
 ## what's left - candle-kernels
 
-even with `sccache` carrying the rust crates, the warm `--timings` table shows `candle-kernels v0.10.2` build-script still costs **17.9s** every clean build. cracking open the registry source at `~/.cargo/registry/src/index.crates.io-*/candle-kernels-0.10.2/build.rs` explains why:
+even with `sccache` carrying the rust crates, the warm `--timings` table shows `candle-kernels v0.10.2` build-script still costs **17.9s** every clean build. reading `~/.cargo/registry/src/index.crates.io-*/candle-kernels-0.10.2/build.rs` explains why:
 
 * it uses [`cudaforge::KernelBuilder`](https://crates.io/crates/cudaforge) to compile **14 `.cu` files** under `src/` into PTX (everything except `moe_*.cu`)
 * then compiles 3 MoE kernels (`moe_gguf.cu`, `moe_wmma.cu`, `moe_wmma_gguf.cu`) into a static `libmoe.a` that gets linked into the rust crate
