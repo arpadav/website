@@ -16,7 +16,7 @@
 
 /* blockquote */
 .md blockquote {
-    border-left: 3px solid #000090;
+    border-left: 3px solid var(--color-fg);
     padding-left: 20px;
     font-style: italic;
     opacity: 0.85;
@@ -49,13 +49,13 @@
 }
 .md thead th {
     font-weight: 600;
-    border-bottom: 1px solid rgba(0, 0, 144, 0.35);
+    border-bottom: 1px solid rgba(var(--color-fg-rgb), 0.35);
 }
 .md tbody tr:nth-child(even) {
-    background-color: rgba(0, 0, 144, 0.04);
+    background-color: rgba(var(--color-fg-rgb), 0.04);
 }
 .md tbody tr:hover {
-    background-color: rgba(0, 0, 144, 0.08);
+    background-color: rgba(var(--color-fg-rgb), 0.08);
 }
 
 /* -------------------------------------------------- */

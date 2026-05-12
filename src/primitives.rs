@@ -1,3 +1,33 @@
+/// Trait for truncating titles to a fixed visible width
+/// suitable for the gator sidebar.
+///
+/// Implemented for `str` so that any title (project, post, etc.)
+/// can call `.sidebar_title()` directly.
+pub trait SidebarTitle {
+    /// Maximum visible length (in chars) of a sidebar title.
+    /// Longer titles get truncated with a trailing `...`
+    /// (e.g. `2024 - some long project ti...`).
+    const SIDEBAR_TITLE_MAXLEN: usize = 48;
+
+    /// Returns the title truncated to fit [`SIDEBAR_TITLE_MAXLEN`]
+    /// visible characters. Truncation counts by `char`s (not bytes)
+    /// so multi-byte UTF-8 is preserved.
+    fn sidebar_title(&self) -> String;
+}
+/// [`SidebarTitle`] implementation for [`str`]
+impl SidebarTitle for str {
+    fn sidebar_title(&self) -> String {
+        let n = self.chars().count();
+        if n <= Self::SIDEBAR_TITLE_MAXLEN {
+            return self.to_string();
+        }
+        let keep = Self::SIDEBAR_TITLE_MAXLEN.saturating_sub(3);
+        let mut out: String = self.chars().take(keep).collect();
+        out.push_str("...");
+        out
+    }
+}
+
 #[derive(Clone, Debug)]
 /// The type of sidebar, and the contents to display
 pub enum SidebarType {

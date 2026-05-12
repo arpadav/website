@@ -5,9 +5,9 @@
 {% for post in crate::posts::POSTS_META.iter() %}
 <li>
     <a href="{{ post.url }}" target="_parent">
-        <i>{{ post.title }}</i>
+        <i>{{ post.title.sidebar_title() }}</i>
     </a>
 </li>
 {% if !loop.last %}
-<li>§</li>
+<li class="sep">§</li>
 {% endif %} {% endfor %}

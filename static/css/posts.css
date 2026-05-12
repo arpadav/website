@@ -31,7 +31,7 @@
 
 .posts-date {
     font-style: italic;
-    color: rgba(0, 0, 144, 0.6); /* lighter than default #000090 */
+    color: rgba(var(--color-fg-rgb), 0.6); /* lighter than default fg */
     font-size: 0.9em;
 }
 
@@ -51,7 +51,7 @@
 
 .posts-post-date {
     font-style: italic;
-    color: rgba(0, 0, 144, 0.6);
+    color: rgba(var(--color-fg-rgb), 0.6);
 }
 
 /* posts use a narrow 680px container, so md images can fill it.
@@ -101,7 +101,7 @@ h6:hover .anchor-icon {
     position: fixed;
     top: 80px;
     right: 0;
-    width: 290px;
+    width: var(--sidebar-width);
     max-height: calc(100vh - 100px);
     overflow-y: auto;
     box-sizing: border-box;
@@ -115,7 +115,7 @@ h6:hover .anchor-icon {
 }
 
 .beside-sidebar.has-toc {
-    width: calc(100% - 290px - 290px - 2px);
+    width: calc(100% - var(--sidebar-width) - var(--sidebar-width) - 2px);
 }
 
 .posts-toc ul {
@@ -130,7 +130,7 @@ h6:hover .anchor-icon {
 
 .posts-toc a {
     text-decoration: none;
-    color: #000090;
+    color: var(--color-fg);
     opacity: 0.7;
 }
 
@@ -168,7 +168,7 @@ h6:hover .anchor-icon {
         display: none;
     }
     .beside-sidebar.has-toc {
-        width: calc(100% - 290px - 2px);
+        width: calc(100% - var(--sidebar-width) - 2px);
     }
 }
 

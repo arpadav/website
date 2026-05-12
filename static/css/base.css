@@ -9,6 +9,32 @@ aka #775cab
 */
 
 /* -------------------------------------------------- */
+/* design tokens — :root custom properties inherit    */
+/* globally and are visible from every stylesheet     */
+/* loaded on the page (e.g. posts.css uses these too).*/
+/* change a value here and the whole site follows.    */
+/* -------------------------------------------------- */
+:root {
+    /* layout */
+    --sidebar-width: 218px;
+    --gator-width: 201px;
+    --gator-width-mobile: 134px;
+
+    /* colors. `*-rgb` variants are space-separated rgb triplets so
+       they can be used inside `rgba(var(--color-fg-rgb), 0.6)` etc. */
+    --color-fg: #000090;
+    --color-fg-rgb: 0, 0, 144;
+    --color-bg: #ffe2db;
+    --color-bg-rgb: 255, 226, 219;
+    --color-hover: #755cab;
+    --color-active-bg: #f2d7d0;
+
+    /* typography */
+    --font-serif: "Times New Roman";
+    --font-mono: "Courier New";
+}
+
+/* -------------------------------------------------- */
 /* typography */
 /* -------------------------------------------------- */
 h1,
@@ -18,9 +44,9 @@ h4,
 p,
 a,
 li {
-    font-family: "Times New Roman";
-    color: #000090;
-    /*color: #ffe2db;*/
+    font-family: var(--font-serif);
+    color: var(--color-fg);
+    /*color: var(--color-bg);*/
 }
 
 h1 {
@@ -44,8 +70,8 @@ li {
 /* base layout */
 /* -------------------------------------------------- */
 body {
-    background-color: #ffe2db;
-    /*background-color: #000090;*/
+    background-color: var(--color-bg);
+    /*background-color: var(--color-fg);*/
     overflow-x: hidden;
 }
 
@@ -72,11 +98,11 @@ li > h3 {
     float: left;
     text-align: center;
 
-    width: 290px;
+    width: var(--sidebar-width);
 }
 
 #sidebar > li:first-child img {
-    width: 268px;
+    width: var(--gator-width);
     height: auto;
 }
 
@@ -84,9 +110,17 @@ li > h3 {
     padding: 5px 0px;
 }
 
+.sidebar > li > h3 {
+    font-size: 1.05em;
+}
+.sidebar a,
+.sidebar .sep {
+    font-size: 0.95em;
+}
+
 .beside-sidebar {
     float: left;
-    width: calc(100% - 290px - 2px);
+    width: calc(100% - var(--sidebar-width) - 2px);
 }
 
 .project-body {
@@ -163,7 +197,7 @@ li > h3 {
 }
 
 .active {
-    background-color: #f2d7d0;
+    background-color: var(--color-active-bg);
     /*background-color: #000060;*/
 }
 
@@ -267,7 +301,7 @@ li > h3 {
         width: 100%;
     }
     #sidebar > li:first-child img {
-        width: 134px;
+        width: var(--gator-width-mobile);
     }
     #sidebar > li:first-child a {
         cursor: pointer;
@@ -278,8 +312,8 @@ li > h3 {
         opacity: 0.6;
     }
     #sidebar > li:first-child a:focus-visible {
-        outline: 2px solid #000090;
-        /*outline: 2px solid #ffe2db;*/
+        outline: 2px solid var(--color-fg);
+        /*outline: 2px solid var(--color-bg);*/
         outline-offset: 2px;
     }
 

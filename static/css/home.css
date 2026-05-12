@@ -10,7 +10,7 @@ body {
 }
 
 body {
-    background-color: #ffe2db;
+    background-color: var(--color-bg);
 }
 
 /* -------------------------------------------------- */
@@ -18,9 +18,8 @@ body {
 /* -------------------------------------------------- */
 h1,
 h2 {
-    font-family: "Courier New";
-    color: #000090;
-    /* r:0, g:0, b:144 */
+    font-family: var(--font-mono);
+    color: var(--color-fg);
     font-weight: normal;
 }
 
@@ -36,7 +35,7 @@ h2 {
 p,
 ol,
 ul {
-    font-family: "Courier New";
+    font-family: var(--font-mono);
 }
 
 p,
@@ -45,10 +44,10 @@ li {
 }
 
 a {
-    font-family: "Courier New";
+    font-family: var(--font-mono);
     font-size: 1em;
     text-decoration: none;
-    color: #000090;
+    color: var(--color-fg);
     display: flex;
     align-items: center;
 }
@@ -59,8 +58,7 @@ a {
 h1:hover,
 h2:hover,
 a:hover {
-    color: #755cab;
-    /* r:117, g:92, b:171 */
+    color: var(--color-hover);
 }
 
 /* -------------------------------------------------- */
@@ -211,7 +209,7 @@ img {
         text-align: center;
         margin: 0;
         padding: 12px 0;
-        background-color: rgba(255, 226, 219, 0.55);
+        background-color: rgba(var(--color-bg-rgb), 0.55);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
     }

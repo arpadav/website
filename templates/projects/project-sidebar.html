@@ -18,13 +18,13 @@
     <!-- -------------------------------------------------- -->
     <li>
         <a href="{{ project.page.url }}" target="_parent">
-            <i>{{ project.page.header.title }}</i>
+            <i>{{ project.page.header.title.sidebar_title() }}</i>
         </a>
     </li>
     <!-- -------------------------------------------------- -->
     <!-- delimiter after every link, except the last -->
     <!-- -------------------------------------------------- -->
-    {% if !loop.last %} <li>§</li> {% endif %}
+    {% if !loop.last %} <li class="sep">§</li> {% endif %}
     {% endfor %}
 </li>
 {% endfor %}
