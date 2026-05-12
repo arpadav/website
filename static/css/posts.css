@@ -90,15 +90,32 @@ h6:hover .anchor-icon {
 }
 
 /* -------------------------------------------------- */
-/* table of contents sidebar */
+/* table of contents sidebar - third column, mirrors  */
+/* the gator sidebar (.sidebar) width so layout is    */
+/* gator | content | toc. fixed so it stays visible   */
+/* while scrolling long posts; .beside-sidebar.has-toc */
+/* reserves the right gutter so content cannot run    */
+/* under the toc.                                     */
 /* -------------------------------------------------- */
 .posts-toc {
     position: fixed;
-    top: 120px;
-    right: 20px;
-    width: 200px;
-    max-height: calc(100vh - 160px);
+    top: 80px;
+    right: 0;
+    width: 290px;
+    max-height: calc(100vh - 100px);
     overflow-y: auto;
+    box-sizing: border-box;
+    padding: 0 16px;
+    text-align: left;
+}
+
+.posts-toc > p {
+    margin: 0 0 6px;
+    font-weight: bold;
+}
+
+.beside-sidebar.has-toc {
+    width: calc(100% - 290px - 290px - 2px);
 }
 
 .posts-toc ul {
@@ -144,10 +161,22 @@ h6:hover .anchor-icon {
     font-size: 0.68em;
 }
 
-/* hide toc on narrow screens */
+/* hide toc on narrow screens and give beside-sidebar    */
+/* its normal width back so content fills the gutter     */
 @media (max-width: 1200px) {
     .posts-toc {
         display: none;
+    }
+    .beside-sidebar.has-toc {
+        width: calc(100% - 290px - 2px);
+    }
+}
+
+/* on mobile the layout collapses (stacked); ensure the  */
+/* toc takes full width when shown, not the fixed col    */
+@media (max-width: 768px) {
+    .beside-sidebar.has-toc {
+        width: 100%;
     }
 }
 
