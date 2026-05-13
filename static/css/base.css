@@ -8,31 +8,7 @@ rgb(119, 92, 171)
 aka #775cab
 */
 
-/* -------------------------------------------------- */
-/* design tokens — :root custom properties inherit    */
-/* globally and are visible from every stylesheet     */
-/* loaded on the page (e.g. posts.css uses these too).*/
-/* change a value here and the whole site follows.    */
-/* -------------------------------------------------- */
-:root {
-    /* layout */
-    --sidebar-width: 218px;
-    --gator-width: 201px;
-    --gator-width-mobile: 134px;
-
-    /* colors. `*-rgb` variants are space-separated rgb triplets so
-       they can be used inside `rgba(var(--color-fg-rgb), 0.6)` etc. */
-    --color-fg: #000090;
-    --color-fg-rgb: 0, 0, 144;
-    --color-bg: #ffe2db;
-    --color-bg-rgb: 255, 226, 219;
-    --color-hover: #755cab;
-    --color-active-bg: #f2d7d0;
-
-    /* typography */
-    --font-serif: "Times New Roman";
-    --font-mono: "Courier New";
-}
+@import url("/css/tokens.css");
 
 /* -------------------------------------------------- */
 /* typography */
