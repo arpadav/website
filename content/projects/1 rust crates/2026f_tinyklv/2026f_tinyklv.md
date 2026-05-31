@@ -1,3 +1,25 @@
+_Overview (May 30 2026)_
+
+Since release, I have been taken a step back to focus more on startup work amongst other personal projects. But the past couple days I've taken the liberty to look at some optimizations. A couple I noticed quick when comparing this crate to existing protobuf crates (despite the fact that this isnt protobuf, protobuf is still technically a flavor of TLV), how the encoding path of things was using a bit too much heap allocations. This was because I was using the `EncodeValue` trait to return a `Vec<u8>` everytime and then every single field which implements this had to copy its contents from a slice of the owned value. That was the biggest win, but then i went even further and changed some of the early API (its pre 1.0 release with barely any downloads so im okay with it) and noticed how reserving select bytes for both decoding and encoding was a huge win. As per the 0.1 release, yes I mentioned it was 100% made without AI, which was for the core of the architecture. In fact, `tinyklv` ***still*** beat existing klv crates like `serde-klv` and `tlv_parser` in terms of speed, although speed was _never_ its intention.
+
+now i have significantly closed the gap on protobuf crates, i am considering even making a `tinypb` crate which just emits `tinyklv` code... its lilke code-gen on code-gen. ironic if it works
+
+but after catching these optimization improvements, i did use AI to meticulously implement them, heavily scrutinizing each merge manually. a lot of code is still manually reviewered, and im more and more becoming a code reviewer for AI and manager than literal writing code/programmer, but it is what it is i guess.
+
+see some of the gains here (as of may 30 2026, unpublished):
+
+<img
+  src="/images/tklv_bench_klv.jpg"
+  alt="tinyklv vs other klv crates"
+  style="float:left; width:48%; margin-right:2%;">
+
+<img
+  src="/images/tklv_bench_proto.jpg"
+  alt="tinyklv vs protobuf crates"
+  style="width:48%;">
+
+<div style="clear:both;"></div>
+
 _Overview (April 2026)_
 
 * crates.io: [http://crates.io/crates/tinyklv](http://crates.io/crates/tinyklv)
