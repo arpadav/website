@@ -1,3 +1,6 @@
+* crates.io: [http://crates.io/crates/tinyklv](http://crates.io/crates/tinyklv)
+* book: [http://arpadvoros.com/tinyklv](http://arpadvoros.com/tinyklv)
+
 _Overview (May 30 2026)_
 
 Since release, I have been taken a step back to focus more on startup work amongst other personal projects. But the past couple days I've taken the liberty to look at some optimizations. A couple I noticed quick when comparing this crate to existing protobuf crates (despite the fact that this isnt protobuf, protobuf is still technically a flavor of TLV), how the encoding path of things was using a bit too much heap allocations. This was because I was using the `EncodeValue` trait to return a `Vec<u8>` everytime and then every single field which implements this had to copy its contents from a slice of the owned value. That was the biggest win, but then i went even further and changed some of the early API (its pre 1.0 release with barely any downloads so im okay with it) and noticed how reserving select bytes for both decoding and encoding was a huge win. As per the 0.1 release, yes I mentioned it was 100% made without AI, which was for the core of the architecture. In fact, `tinyklv` ***still*** beat existing klv crates like `serde-klv` and `tlv_parser` in terms of speed, although speed was _never_ its intention.
@@ -22,9 +25,6 @@ see some of the gains here (as of may 30 2026, unpublished):
 
 _Overview (April 2026)_
 
-* crates.io: [http://crates.io/crates/tinyklv](http://crates.io/crates/tinyklv)
-<!-- * repo: [http://github.com/arpadav/tinyklv](http://github.com/arpadav/tinyklv) -->
-* book: [http://arpadvoros.com/tinyklv](http://arpadvoros.com/tinyklv)
 * more info: [https://arpadvoros.com/posts/20260425-2213-introducing-tinyklv-a-klv-parsing-crate](/posts/20260425-2213-introducing-tinyklv-a-klv-parsing-crate)
 
 A lot has changed since I was trying to publish this package. I developed this package on my own personal time, on my own personal resources, but I got into a bit of a disclosure disagreement with my previous employer (JHU/APL). They argued that it was relevant to the work I was performing at my job, which was not true. This was a completely independent project for generic bytestream parsing. Long story short, JHU/APL did end up granting me the rights and my ability to keep and publish this repo under a MIT license! However, the [MISB crate](/projects/2024t_misb/) (crate built using `tinyklv`) has been completely handed over to JHU/APL and I will have to start-over. The namespace, however, is completely open, so expect to see it up soon :)
