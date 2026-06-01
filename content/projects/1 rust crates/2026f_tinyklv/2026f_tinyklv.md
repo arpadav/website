@@ -3,11 +3,9 @@
 
 _Overview (May 30 2026)_
 
-Since release, I have been taken a step back to focus more on startup work amongst other personal projects. But the past couple days I've taken the liberty to look at some optimizations. A couple I noticed quick when comparing this crate to existing protobuf crates (despite the fact that this isnt protobuf, protobuf is still technically a flavor of TLV), how the encoding path of things was using a bit too much heap allocations. This was because I was using the `EncodeValue` trait to return a `Vec<u8>` everytime and then every single field which implements this had to copy its contents from a slice of the owned value. That was the biggest win, but then i went even further and changed some of the early API (its pre 1.0 release with barely any downloads so im okay with it) and noticed how reserving select bytes for both decoding and encoding was a huge win. As per the 0.1 release, yes I mentioned it was 100% made without AI, which was for the core of the architecture. In fact, `tinyklv` ***still*** beat existing klv crates like `serde-klv` and `tlv_parser` in terms of speed, although speed was _never_ its intention.
+Since release, I have been taken a step back to focus more on startup work amongst other personal projects. But the past couple days I've taken the liberty to look at some optimizations. A couple I noticed quick when comparing this crate to existing protobuf crates (despite the fact that this isnt protobuf, protobuf is still technically a flavor of TLV), how the encoding path of things was using a bit too much heap allocations. This was because I was using the `EncodeValue` trait to return a `Vec<u8>` everytime and then every single field which implements this had to copy its contents from a slice of the owned value. That was the biggest win, but then i went even further and changed some of the early API (its pre 1.0 release with barely any downloads so im okay with it) and noticed how reserving select bytes for both decoding and encoding was a huge win. In fact, `tinyklv` ***still*** beat existing klv crates like `serde-klv` and `tlv_parser` in terms of speed, although speed was _never_ its intention.
 
 now i have significantly closed the gap on protobuf crates, i am considering even making a `tinypb` crate which just emits `tinyklv` code... its lilke code-gen on code-gen. ironic if it works
-
-but after catching these optimization improvements, i did use AI to meticulously implement them, heavily scrutinizing each merge manually. a lot of code is still manually reviewered, and im more and more becoming a code reviewer for AI and manager than literal writing code/programmer, but it is what it is i guess.
 
 see some of the gains here (as of may 30 2026, unpublished):
 
@@ -31,7 +29,7 @@ A lot has changed since I was trying to publish this package. I developed this p
 
 I did have to compromise and branch off at a point in time in September 2024 and re-do a lot of the work I had done. I was set to release this (as you can see in my previous overview below) in July 2025, but I got caught up with start-up work, selling my condo, and haven't had time to sit down and work through it.
 
-Note that the core of this project was **made 100% by hand and without the use of AI**. However, now that I use coding agents more frequently, I am running audits on the code and helping expand the documentation and testing - which has been admittedly great. However, this is one the largest projects I worked on without AI which brings huge satisfaction. 
+Note that the core of this project was **made 100% by hand and without the use of AI** (as of this update and version `^0.1`, however, im sure this will change). However, now that I use coding agents more frequently, I am running audits on the code and helping expand the documentation and testing - which has been admittedly great. However, this is one the largest projects I worked on without AI which brings huge satisfaction. 
 
 _Overview (May 2025)_
 
