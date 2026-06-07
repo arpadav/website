@@ -78,11 +78,12 @@ fi
 unset RUSTFLAGS
 
 # --------------------------------------------------
-# build all external documentation
+# build all external docs/projects
 # --------------------------------------------------
 export DEPLOY_FOLDER=$FOLDER
-echo "Building external documentation..."
+echo "Building external docs/projects..."
 for script in external-repos/.scripts/*.sh; do
+    echo " * $script"
     bash "$script"
 done
 

@@ -10,3 +10,6 @@
 [submodule "external-repos/tinyklv"]
 	path = external-repos/tinyklv
 	url = git@github.com:arpadav/tinyklv.git
+[submodule "external-repos/font-designer"]
+	path = external-repos/font-designer
+	url = git@github.com:arpadav/font-designer.git
