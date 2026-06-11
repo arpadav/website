@@ -12,8 +12,12 @@ pub static LOL_ENTRIES: LazyLock<Vec<LolEntry>> = LazyLock::new(|| {
         std::path::Path::new(crate::OTHER_DIR).join("lol.csv"),
         ["date", "url", "title"],
     )
+    .expect("Failed to read lol.csv")
     .read_rows()
-    .and_then(|rows| rows.into_iter().map(LolEntry::try_from).collect());
+    .expect("Malformed lol.csv")
+    .into_iter()
+    .map(LolEntry::try_from)
+    .collect::<Result<Vec<LolEntry>, _>>();
     // --------------------------------------------------
     // failed parse - either csv or code is malformed
     // --------------------------------------------------

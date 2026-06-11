@@ -12,8 +12,12 @@ pub static IDEAS_ENTRIES: LazyLock<Vec<IdeaEntry>> = LazyLock::new(|| {
         std::path::Path::new(crate::OTHER_DIR).join("ideas.csv"),
         ["date", "name", "description"],
     )
+    .expect("Failed to read ideas.csv")
     .read_rows()
-    .and_then(|rows| rows.into_iter().map(IdeaEntry::try_from).collect());
+    .expect("Malformed ideas.csv")
+    .into_iter()
+    .map(IdeaEntry::try_from)
+    .collect::<Result<Vec<IdeaEntry>, _>>();
     // --------------------------------------------------
     // failed parse - either csv or code is malformed
     // --------------------------------------------------
