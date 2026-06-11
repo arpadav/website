@@ -1,3 +1,17 @@
+// --------------------------------------------------
+// mods
+// --------------------------------------------------
+mod csv;
+mod datetime;
+mod markdown;
+
+// --------------------------------------------------
+// re-export
+// --------------------------------------------------
+pub use csv::*;
+pub use datetime::*;
+pub use markdown::MarkdownDocument;
+
 /// Trait for truncating titles to a fixed visible width
 /// suitable for the gator sidebar.
 ///
@@ -28,18 +42,14 @@ impl SidebarTitle for str {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 /// The type of sidebar, and the contents to display
 pub enum SidebarType {
     Projects,
     Posts,
+    Other,
+    #[default]
     GatorOnly,
-}
-/// [`SidebarType`] implmentation of [`Default`]
-impl Default for SidebarType {
-    fn default() -> Self {
-        Self::GatorOnly
-    }
 }
 
 #[derive(Clone, Debug)]

@@ -6,7 +6,9 @@ use crate::primitives::{SourceType, TocEntry};
 // --------------------------------------------------
 // external
 // --------------------------------------------------
+use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::process::Stdio;
 use std::sync::LazyLock;
 
 // --------------------------------------------------
@@ -31,6 +33,14 @@ impl MarkdownDocument {
     /// Convert a markdown file to HTML via pandoc, then normalize smart quotes.
     pub fn from_file(path: &Path, name: &str) -> Self {
         let html = Self::md2html(path, name);
+        Self {
+            html: Self::normalize_quotes(&html),
+        }
+    }
+
+    /// Convert an inline markdown string to an HTML fragment via pandoc.
+    pub fn from_inline(input: &str, name: &str) -> Self {
+        let html = Self::inline_md2html(input, name);
         Self {
             html: Self::normalize_quotes(&html),
         }
@@ -186,5 +196,33 @@ impl MarkdownDocument {
             "<head>{}",
             output[output.find("<style>").unwrap_or(0)..].trim_end_matches("</html>")
         )
+    }
+
+    /// Convert inline markdown to an HTML fragment via `pandoc`.
+    fn inline_md2html(markdown: &str, name: &str) -> String {
+        let mut child = std::process::Command::new("pandoc")
+            .arg("--from")
+            .arg("markdown")
+            .arg("--to")
+            .arg("html")
+            .arg("--wrap=none")
+            .arg("--mathjax")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .spawn()
+            .unwrap_or_else(|_| panic!("Failed to run `pandoc` for `{}`", name));
+        child
+            .stdin
+            .as_mut()
+            .expect("Failed to open pandoc stdin")
+            .write_all(markdown.as_bytes())
+            .unwrap_or_else(|_| panic!("Failed to write markdown to `pandoc` for `{}`", name));
+        String::from_utf8_lossy(
+            &child
+                .wait_with_output()
+                .unwrap_or_else(|_| panic!("Failed to read `pandoc` output for `{}`", name))
+                .stdout,
+        )
+        .to_string()
     }
 }
