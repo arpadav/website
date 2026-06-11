@@ -26,7 +26,7 @@ impl<'a> Csv<'a> {
         Ok(Self {
             path,
             contents,
-            headers: headers.into_iter().collect()
+            headers: headers.into_iter().collect(),
         })
     }
 
@@ -35,7 +35,8 @@ impl<'a> Csv<'a> {
         // --------------------------------------------------
         // parse lines
         // --------------------------------------------------
-        let mut rows = self.contents
+        let mut rows = self
+            .contents
             .lines()
             .filter(|line| !line.trim().is_empty())
             .map(Self::parse_line)
