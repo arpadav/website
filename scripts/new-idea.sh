@@ -7,7 +7,7 @@ set -euo pipefail
 # --------------------------------------------------
 SCRIPTS_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 ROOT_DIR="$(realpath "$SCRIPTS_DIR/..")"
-IDEAS_FILE="$ROOT_DIR/content/other/ideas.csv"
+IDEAS_FILE="$ROOT_DIR/content/ideas.csv"
 
 csv_escape() {
     local value="$1"

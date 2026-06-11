@@ -22,8 +22,9 @@ pub const DEPLOYMENT_MAP_JSON: &str =
     concat!(env!("CARGO_MANIFEST_DIR"), "/templates/deployment-map.json");
 pub const PROJECT_CATEGORIES_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/projects/");
 pub const NOTES_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/notes");
-pub const OTHER_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/other");
 pub const POSTS_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/posts");
+pub const IDEAS_CSV: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/ideas.csv");
+pub const LOL_CSV: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/lol.csv");
 
 // --------------------------------------------------
 // prelude

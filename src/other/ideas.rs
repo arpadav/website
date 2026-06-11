@@ -9,7 +9,7 @@ use crate::primitives::{Csv, CsvRow};
 // --------------------------------------------------
 pub static IDEAS_ENTRIES: LazyLock<Vec<IdeaEntry>> = LazyLock::new(|| {
     let result = Csv::new(
-        std::path::Path::new(crate::OTHER_DIR).join("ideas.csv"),
+        std::path::Path::new(crate::IDEAS_CSV),
         ["date", "name", "description"],
     )
     .expect("Failed to read ideas.csv")
