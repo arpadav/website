@@ -71,7 +71,7 @@ where
     pub page: T,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Deserialize)]
 /// A link
 pub struct Link {
     /// The name of the link
