@@ -2,14 +2,12 @@
 // mods
 // --------------------------------------------------
 mod parse_fs;
-mod posts_date;
 
 // --------------------------------------------------
 // local
 // --------------------------------------------------
 use crate::prelude::*;
 use parse_fs::_INNER_POSTS_PAGES;
-use posts_date::PostDateFormat;
 
 // --------------------------------------------------
 // statics
@@ -25,7 +23,10 @@ pub static POSTS_META: LazyLock<Vec<Post>> = LazyLock::new(|| {
         |mut seen: std::collections::HashMap<String, std::path::PathBuf>, p| {
             let key = format!(
                 "{:04}/{:02}/{:02}/{}",
-                p.date.year, p.date.month, p.date.day, p.slug
+                p.date.year(),
+                p.date.month(),
+                p.date.day(),
+                p.slug
             );
             if let Some(prev) = seen.insert(key.clone(), p.src.clone()) {
                 panic!(
@@ -49,7 +50,10 @@ pub static POSTS_META: LazyLock<Vec<Post>> = LazyLock::new(|| {
             date: p.date.to_string(),
             url: format!(
                 "/posts/{:04}/{:02}/{:02}/{}",
-                p.date.year, p.date.month, p.date.day, p.slug
+                p.date.year(),
+                p.date.month(),
+                p.date.day(),
+                p.slug
             ),
             slug: p.slug.clone(),
         })
@@ -94,7 +98,7 @@ pub static POSTS_PAGES: LazyLock<Vec<Page<PostTemplate>>> = LazyLock::new(|| {
 });
 
 #[derive(Template, Default)]
-#[template(path = "posts/posts.html")]
+#[template(path = "posts/posts-homepage.html")]
 /// Template for posts homepage / listing page
 pub struct PostsHomepage {
     title: String,
@@ -114,7 +118,7 @@ impl Create for PostsHomepage {
 /// [`PostsHomepage`] implementation of [`SourcePath`]
 impl SourcePath<PostsHomepage> for PostsHomepage {
     fn src_path() -> std::path::PathBuf {
-        [crate::TEMPLATES_DIR, "/posts/posts.html"].concat().into()
+        [crate::TEMPLATES_DIR, "/posts/posts-homepage.html"].concat().into()
     }
 }
 

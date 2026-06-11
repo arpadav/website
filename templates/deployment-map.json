@@ -3,12 +3,16 @@
         "templates/homepage/index.html": "index.html",
         "templates/<page>.html": "<page>/index.html",
 
+        "templates/other/other-homepage.html": "other/index.html",
+        "templates/other/lol.html": "lol/index.html",
+        "templates/other/ideas.html": "ideas/index.html",
+
         "content/notes/<cat>/<typ>/<title>.<ext>": "notes/<cat>/<typ>/<title>.<ext>",
         "content/notes/<cat>/<typ>/<title>.md": "notes/<cat>/<typ>/<title>.md/index.html",
         "content/notes/<cat>/<typ>/<title>/<file>": "notes/<cat>/<typ>/<title>/<file>",
         "content/notes/<cat>/<typ>/<title>/index.md": "notes/<cat>/<typ>/<title>/index.html",
 
-        "templates/posts/posts.html": "posts/index.html",
+        "templates/posts/posts-homepage.html": "posts/index.html",
         "content/posts/<year>/<month>/<day>/<slug>/index.md": "posts/<year>/<month>/<day>/<slug>/index.html",
         "content/posts/<year>/<month>/<day>/<slug>/<file>": "posts/<year>/<month>/<day>/<slug>/<file>",
 

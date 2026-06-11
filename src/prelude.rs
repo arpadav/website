@@ -31,7 +31,6 @@ pub use std::{collections::HashMap, sync::LazyLock};
 // to enable enum short-syntax in templates
 // --------------------------------------------------
 pub use crate::homepage::tabs::TabBodyType;
-pub use crate::markdown::MarkdownDocument;
 pub use crate::primitives::*;
 
 /// [`Render`] trait, for rendering custom HTML (safe) from elements
