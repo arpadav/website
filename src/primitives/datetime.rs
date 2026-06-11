@@ -27,18 +27,7 @@ pub struct DateFormat {
 /// [`DateFormat`] implementation
 impl DateFormat {
     /// Build from the `YYYY`, `MM`, `DD` parent-directory strings.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// let date = DateFormat::from_path_parts("2026", "03", "29").unwrap();
-    ///
-    /// assert_eq!(date.as_key(), "20260329");
-    /// assert_eq!(date.to_string(), "March 29, 2026");
-    /// ```
-    pub fn from_path_parts(year: &str, month: &str, day: &str) -> Result<Self, String> {
+    pub(crate) fn from_path_parts(year: &str, month: &str, day: &str) -> Result<Self, String> {
         // --------------------------------------------------
         // parse calendar date
         // --------------------------------------------------
@@ -49,57 +38,11 @@ impl DateFormat {
         Ok(Self { date, time: None })
     }
 
-    /// Build from `YYYY-MM-DD`, optionally followed by hierarchical time.
-    ///
-    /// Accepted examples:
-    ///
-    /// * `2026-06-11`
-    /// * `2026-06-11 13`
-    /// * `2026-06-11 13:45`
-    /// * `2026-06-11 13:45:30`
-    /// * `2026-06-11 13:45:30 -0400`
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// let date = DateFormat::from_csv("2026-06-11 13:45:30 -0400");
-    ///
-    /// assert_eq!(date.as_key(), "20260611134530");
-    /// assert_eq!(date.to_string(), "June 11, 2026 13:45:30 -0400");
-    /// ```
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// let date = DateFormat::from_csv("2026-06-11 13:45");
-    ///
-    /// assert_eq!(date.as_key(), "202606111345");
-    /// assert_eq!(date.to_string(), "June 11, 2026 13:45");
-    /// ```
-    ///
-    /// ```should_panic
-    /// use website::DateFormat;
-    ///
-    /// let _ = DateFormat::from_csv("2026-06-11 13:45 -0400");
-    /// ```
-    pub fn from_csv(input: &str) -> Self {
-        Self::parse_csv(input).unwrap_or_else(|e| panic!("Invalid CSV date `{}`: {}", input, e))
-    }
-
     /// Parse a CSV date string into a [`DateFormat`].
     ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// let date = DateFormat::parse_csv("2026-06-11").unwrap();
-    ///
-    /// assert_eq!(date.as_key(), "20260611");
-    /// ```
-    pub fn parse_csv(input: &str) -> Result<Self, String> {
+    /// Accepts `YYYY-MM-DD`, optionally followed by hierarchical time:
+    /// `HH`, `HH:MM`, `HH:MM:SS`, or `HH:MM:SS +/-ZZZZ`.
+    pub(crate) fn parse_csv(input: &str) -> Result<Self, String> {
         // --------------------------------------------------
         // split date from optional time
         // --------------------------------------------------
@@ -118,121 +61,23 @@ impl DateFormat {
         Ok(Self { date, time })
     }
 
-    /// Parse a four-digit year.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// assert_eq!(DateFormat::parse_year("2026").unwrap(), 2026);
-    /// assert!(DateFormat::parse_year("26").is_err());
-    /// ```
-    pub fn parse_year(input: &str) -> Result<u16, String> {
-        Year::parse(input).map(|year| year.value())
-    }
-
-    /// Parse a two-digit month.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// assert_eq!(DateFormat::parse_month("06").unwrap(), 6);
-    /// assert!(DateFormat::parse_month("13").is_err());
-    /// ```
-    pub fn parse_month(input: &str) -> Result<u8, String> {
-        Month::parse(input).map(|month| month.value())
-    }
-
-    /// Parse a two-digit day.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// assert_eq!(DateFormat::parse_day("11").unwrap(), 11);
-    /// assert!(DateFormat::parse_day("32").is_err());
-    /// ```
-    pub fn parse_day(input: &str) -> Result<u8, String> {
-        Day::parse(input).map(|day| day.value())
-    }
-
-    /// Parse a two-digit hour.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// assert_eq!(DateFormat::parse_hour("13").unwrap(), 13);
-    /// assert!(DateFormat::parse_hour("24").is_err());
-    /// ```
-    pub fn parse_hour(input: &str) -> Result<u8, String> {
-        Hour::parse(input).map(|hour| hour.value())
-    }
-
-    /// Parse a two-digit minute.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// assert_eq!(DateFormat::parse_minute("45").unwrap(), 45);
-    /// assert!(DateFormat::parse_minute("60").is_err());
-    /// ```
-    pub fn parse_minute(input: &str) -> Result<u8, String> {
-        Minute::parse(input).map(|minute| minute.value())
-    }
-
-    /// Parse a two-digit second.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// assert_eq!(DateFormat::parse_second("30").unwrap(), 30);
-    /// assert!(DateFormat::parse_second("60").is_err());
-    /// ```
-    pub fn parse_second(input: &str) -> Result<u8, String> {
-        Second::parse(input).map(|second| second.value())
-    }
-
-    /// Parse a `+/-ZZZZ` time zone offset.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// use website::DateFormat;
-    ///
-    /// assert_eq!(DateFormat::parse_zone("-0400").unwrap(), "-0400");
-    /// assert!(DateFormat::parse_zone("-2460").is_err());
-    /// ```
-    pub fn parse_zone(input: &str) -> Result<String, String> {
-        Zone::parse(input).map(Zone::into_string)
-    }
-
     /// Returns the year.
-    pub fn year(&self) -> u16 {
+    pub(crate) fn year(&self) -> u16 {
         self.date.year()
     }
 
     /// Returns the month.
-    pub fn month(&self) -> u8 {
+    pub(crate) fn month(&self) -> u8 {
         self.date.month()
     }
 
     /// Returns the day.
-    pub fn day(&self) -> u8 {
+    pub(crate) fn day(&self) -> u8 {
         self.date.day()
     }
 
     /// Returns a sortable date/time key.
-    pub fn as_key(&self) -> String {
+    pub(crate) fn as_key(&self) -> String {
         // --------------------------------------------------
         // start with calendar key
         // --------------------------------------------------
@@ -250,16 +95,8 @@ impl DateFormat {
     }
 
     /// Returns the calendar date label.
-    pub fn date_label(&self) -> String {
+    pub(crate) fn date_label(&self) -> String {
         self.date.to_string()
-    }
-
-    /// Returns the clock time label.
-    pub fn time_label(&self) -> String {
-        self.time
-            .as_ref()
-            .map(ToString::to_string)
-            .unwrap_or_default()
     }
 
     /// Splits a CSV date from optional time details.
@@ -707,11 +544,6 @@ impl Zone {
         // --------------------------------------------------
         NumericComponent::validate_u8_range(minute, "Time zone minute", 0, 59)?;
         Ok(Self(input.to_string()))
-    }
-
-    /// Converts the zone into its string representation.
-    fn into_string(self) -> String {
-        self.0
     }
 }
 /// [`Zone`] implementation of [`std::fmt::Display`]

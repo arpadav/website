@@ -44,10 +44,6 @@ a.other-entry:hover h2 {
     cursor: help;
 }
 
-.other-link-title {
-    font-weight: normal;
-}
-
 .other-link-url {
     overflow-wrap: anywhere;
 }
