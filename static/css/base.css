@@ -83,7 +83,7 @@ li > h3 {
 }
 
 .sidebar li {
-    padding: 5px 0px;
+    padding: 0;
 }
 
 .sidebar > li > h3 {
@@ -92,6 +92,17 @@ li > h3 {
 .sidebar a,
 .sidebar .sep {
     font-size: 0.95em;
+}
+
+.sidebar a {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    padding: 5px 10px;
+}
+
+.sidebar .sep {
+    padding: 5px 0;
 }
 
 .beside-sidebar {
