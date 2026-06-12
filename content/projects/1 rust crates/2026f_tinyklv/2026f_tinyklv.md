@@ -23,7 +23,7 @@ see some of the gains here (as of may 30 2026, unpublished):
 
 _Overview (April 2026)_
 
-* more info: [https://arpadvoros.com/posts/20260425-2213-introducing-tinyklv-a-klv-parsing-crate](/posts/20260425-2213-introducing-tinyklv-a-klv-parsing-crate)
+* more info: [https://arpadvoros.com/posts/2026/04/25/introducing-tinyklv-a-klv-parsing-crate/](/posts/2026/04/25/introducing-tinyklv-a-klv-parsing-crate/)
 
 I started this package back in 2024 and got it nearly finished, building it alongside the [MISB crate](/projects/2024t_misb/) which sits on top of it. Things stalled for a while, but I'm happy to say I'm back to working on it now :)
 
