@@ -1,6 +1,6 @@
 _Overview_
 
-**_This crate is currently privated due to being under-review by my current employer for intellectual property disclosure. It should be released in the near future._**
+**_This crate is private for now, until further notice. im excited to share it soon!_**
 
 ![](/public/misb-crate-banner.png)
 
