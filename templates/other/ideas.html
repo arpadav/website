@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+    <!-- -------------------------------------------------- -->
+    <!-- include header -->
+    <!-- -------------------------------------------------- -->
+    <head>
+        {% include "general/header.html" %}
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+        ></script>
+    </head>
+    <!-- -------------------------------------------------- -->
+    <!-- include sidebar -->
+    <!-- -------------------------------------------------- -->
+    {% include "general/sidebar.html" %}
+    <!-- -------------------------------------------------- -->
+    <!-- navbar + listing -->
+    <!-- -------------------------------------------------- -->
+    <div class="beside-sidebar">
+        {% include "general/navbar.html" %}
+        <div class="other-listing">
+            <h1>ideas</h1>
+            <hr />
+            <!-- -------------------------------------------------- -->
+            <!-- iter through ideas -->
+            <!-- -------------------------------------------------- -->
+            {% for entry in entries %}
+            <div class="other-entry">
+                <div class="other-entry-inner">
+                    <h2>{{ entry.name }}</h2>
+                    <p class="other-date">{{ entry.date }}</p>
+                    <div class="other-description md">
+                        {{ entry.description|safe }}
+                    </div>
+                </div>
+            </div>
+            {% if !loop.last %}
+            <hr />
+            {% endif %} {% endfor %}
+        </div>
+    </div>
+    <base target="_top" />
+    <!-- -------------------------------------------------- -->
+    <!-- stylesheets -->
+    <!-- -------------------------------------------------- -->
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/md.css" />
+    <link rel="stylesheet" href="/css/other.css" />
+</html>

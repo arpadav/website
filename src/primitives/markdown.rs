@@ -6,7 +6,9 @@ use crate::primitives::{SourceType, TocEntry};
 // --------------------------------------------------
 // external
 // --------------------------------------------------
+use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::process::Stdio;
 use std::sync::LazyLock;
 
 // --------------------------------------------------
@@ -34,6 +36,14 @@ impl MarkdownDocument {
         Self {
             html: Self::normalize_quotes(&html),
         }
+    }
+
+    /// Convert an inline markdown string to an HTML fragment via pandoc.
+    pub fn from_inline(input: &str, name: &str) -> Result<Self, String> {
+        let html = Self::inline_md2html(input, name)?;
+        Ok(Self {
+            html: Self::normalize_quotes(&html),
+        })
     }
 
     /// Read an HTML file and normalize its smart quotes.
@@ -186,5 +196,36 @@ impl MarkdownDocument {
             "<head>{}",
             output[output.find("<style>").unwrap_or(0)..].trim_end_matches("</html>")
         )
+    }
+
+    /// Convert inline markdown to an HTML fragment via `pandoc`.
+    fn inline_md2html(markdown: &str, name: &str) -> Result<String, String> {
+        let mut child = std::process::Command::new("pandoc")
+            .arg("--from")
+            .arg("markdown")
+            .arg("--to")
+            .arg("html")
+            .arg("--wrap=none")
+            .arg("--mathjax")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .spawn()
+            .map_err(|e| format!("Failed to run `pandoc` for `{}`: {}", name, e))?;
+        child
+            .stdin
+            .as_mut()
+            .ok_or_else(|| format!("Failed to open `pandoc` stdin for `{}`", name))?
+            .write_all(markdown.as_bytes())
+            .map_err(|e| format!("Failed to write markdown to `pandoc` for `{}`: {}", name, e))?;
+        let output = child
+            .wait_with_output()
+            .map_err(|e| format!("Failed to read `pandoc` output for `{}`: {}", name, e))?;
+        if !output.status.success() {
+            return Err(format!(
+                "`pandoc` failed for `{}` with status {}",
+                name, output.status
+            ));
+        }
+        Ok(String::from_utf8_lossy(&output.stdout).to_string())
     }
 }

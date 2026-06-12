@@ -4,10 +4,10 @@
 mod deployutil;
 mod homepage;
 mod macros;
-mod markdown;
 mod miscpages;
 mod navbar;
 mod notes;
+mod other;
 mod posts;
 pub(crate) mod prelude;
 mod primitives;
@@ -23,6 +23,8 @@ pub const DEPLOYMENT_MAP_JSON: &str =
 pub const PROJECT_CATEGORIES_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/projects/");
 pub const NOTES_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/notes");
 pub const POSTS_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/posts");
+pub const IDEAS_CSV: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/ideas.csv");
+pub const LOL_CSV: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/content/lol.csv");
 
 // --------------------------------------------------
 // prelude
@@ -56,6 +58,9 @@ fn main() {
     deploy!(landing_page, homepage::LandingPage);
     deploy!(projects, projects::ProjectsHomepage);
     deploy!(notes, notes::NotesHomepage);
+    deploy!(other, other::OtherHomepage);
+    deploy!(lol, other::LolPage);
+    deploy!(ideas, other::IdeasPage);
     deploy!(posts, posts::PostsHomepage);
     deploy!(gator, miscpages::Alligator);
     deploy!(language, miscpages::Language);

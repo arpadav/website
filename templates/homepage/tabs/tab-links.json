@@ -18,9 +18,9 @@
         "title": "posts"
     },
     {
-        "id": "notes",
-        "link": "/notes",
+        "id": "other",
+        "link": "/other",
         "tag": "h2",
-        "title": "notes"
+        "title": "other"
     }
 ]

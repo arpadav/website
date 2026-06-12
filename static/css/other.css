@@ -1,0 +1,85 @@
+/* -------------------------------------------------- */
+/* other listing pages */
+/* -------------------------------------------------- */
+.other-listing {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 32px;
+}
+
+.other-listing h1 {
+    text-align: left;
+}
+
+.other-entry {
+    display: block;
+    padding: 12px 0;
+}
+
+a.other-entry:hover h2 {
+    text-decoration: underline;
+}
+
+.other-entry-inner h2 {
+    margin-bottom: 4px;
+    font-weight: normal;
+    overflow-wrap: anywhere;
+}
+
+.other-date {
+    font-style: italic;
+    color: rgba(var(--color-fg-rgb), 0.6);
+    font-size: 0.9em;
+    margin: 0;
+}
+
+.other-link-line {
+    margin: 12px 0;
+    overflow-wrap: anywhere;
+}
+
+.other-link-line .other-date {
+    cursor: help;
+}
+
+.other-link-url {
+    overflow-wrap: anywhere;
+}
+
+.other-description {
+    margin-top: 6px;
+    overflow-wrap: anywhere;
+}
+
+/* -------------------------------------------------- */
+/* mobile */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+    .other-listing {
+        padding: 0 16px;
+    }
+
+    .other-listing h1 {
+        font-size: 1.3em;
+        margin: 0.4em 0;
+    }
+
+    .other-listing hr {
+        margin: 6px 0;
+    }
+
+    .other-entry {
+        padding: 6px 0;
+    }
+
+    .other-entry-inner h2 {
+        font-size: 1.05em;
+        margin: 0 0 2px;
+    }
+
+    .other-date {
+        font-size: 0.85em;
+    }
+}

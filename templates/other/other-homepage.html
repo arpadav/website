@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+    <!-- -------------------------------------------------- -->
+    <!-- include header -->
+    <!-- -------------------------------------------------- -->
+    <head>
+        {% include "general/header.html" %}
+    </head>
+    <!-- -------------------------------------------------- -->
+    <!-- include sidebar -->
+    <!-- -------------------------------------------------- -->
+    {% include "general/sidebar.html" %}
+    <!-- -------------------------------------------------- -->
+    <!-- navbar + listing -->
+    <!-- -------------------------------------------------- -->
+    <div class="beside-sidebar">
+        {% include "general/navbar.html" %}
+        <div class="other-listing">
+            <h1>other</h1>
+            <hr />
+            {% for link in links %}
+            <a href="{{ link.url }}" class="other-entry no-underline">
+                <div class="other-entry-inner">
+                    <h2>{{ link.name }}</h2>
+                </div>
+            </a>
+            {% if !loop.last %}
+            <hr />
+            {% endif %} {% endfor %}
+        </div>
+    </div>
+    <base target="_top" />
+    <!-- -------------------------------------------------- -->
+    <!-- stylesheets -->
+    <!-- -------------------------------------------------- -->
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/other.css" />
+</html>

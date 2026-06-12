@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+    <!-- -------------------------------------------------- -->
+    <!-- include header -->
+    <!-- -------------------------------------------------- -->
+    <head>
+        {% include "general/header.html" %}
+    </head>
+    <!-- -------------------------------------------------- -->
+    <!-- include sidebar -->
+    <!-- -------------------------------------------------- -->
+    {% include "general/sidebar.html" %}
+    <!-- -------------------------------------------------- -->
+    <!-- navbar + listing -->
+    <!-- -------------------------------------------------- -->
+    <div class="beside-sidebar">
+        {% include "general/navbar.html" %}
+        <div class="other-listing">
+            <h1>lol (list-of-links)</h1>
+            <p>
+                <i
+                    >inspired by:
+                    <a href="https://robertveres.com/lol"
+                        >https://robertveres.com/lol</a
+                    ></i
+                >
+            </p>
+            <hr />
+            <!-- -------------------------------------------------- -->
+            <!-- iter through links -->
+            <!-- -------------------------------------------------- -->
+            {% for entry in entries %}
+            <p class="other-link-line">
+                <span class="other-date" title="{{ entry.date.to_string() }}"
+                    >{{ entry.date.date_label() }}</span
+                >:
+                <a
+                    href="{{ entry.url }}"
+                    class="other-link-url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <!-- -------------------------------------------------- -->
+                    <!-- title if exists, else link -->
+                    <!-- -------------------------------------------------- -->
+                    {% if !entry.title.is_empty() %}
+                    <span>{{ entry.title }}</span>
+                    {% else %} {{ entry.url }} {% endif %}
+                </a>
+            </p>
+            {% if !loop.last %}
+            <hr />
+            {% endif %} {% endfor %}
+        </div>
+    </div>
+    <base target="_top" />
+    <!-- -------------------------------------------------- -->
+    <!-- stylesheets -->
+    <!-- -------------------------------------------------- -->
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/other.css" />
+</html>

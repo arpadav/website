@@ -1,0 +1,13 @@
+<!-- -------------------------------------------------- -->
+<!-- child of: `general/sidebar.html` -->
+<!-- other category links -->
+<!-- -------------------------------------------------- -->
+{% for link in crate::other::OTHER_LINKS.iter() %}
+<li>
+    <a href="{{ link.url }}" target="_parent">
+        <i>{{ link.name }}</i>
+    </a>
+</li>
+{% if !loop.last %}
+<li class="sep">§</li>
+{% endif %} {% endfor %}

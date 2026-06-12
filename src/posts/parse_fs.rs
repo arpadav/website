@@ -1,7 +1,6 @@
 // --------------------------------------------------
 // local
 // --------------------------------------------------
-use super::PostDateFormat;
 use crate::prelude::*;
 
 // --------------------------------------------------
@@ -22,7 +21,7 @@ pub(crate) static _INNER_POSTS_PAGES: LazyLock<Vec<ParsedPost>> = LazyLock::new(
     for (year, year_path) in subdirs(posts_dir) {
         for (month, month_path) in subdirs(&year_path) {
             for (day, day_path) in subdirs(&month_path) {
-                let date = match PostDateFormat::from_path_parts(&year, &month, &day) {
+                let date = match DateFormat::from_path_parts(&year, &month, &day) {
                     Ok(d) => d,
                     Err(e) => {
                         eprintln!("Skipping {}: {}", day_path.display(), e);
@@ -53,11 +52,11 @@ pub(crate) struct ParsedPost {
     /// Source file, will always be `<slug>/index.md` (unlike projects)
     pub(crate) src: PathBuf,
     /// Parsed date from the parent directory components
-    pub(crate) date: PostDateFormat,
+    pub(crate) date: DateFormat,
 }
 /// [`ParsedPost`] implementation
 impl ParsedPost {
-    fn new(entry: std::fs::DirEntry, date: PostDateFormat) -> Option<ParsedPost> {
+    fn new(entry: std::fs::DirEntry, date: DateFormat) -> Option<ParsedPost> {
         // --------------------------------------------------
         // each post is a `<slug>/` dir containing `index.md`
         // --------------------------------------------------
