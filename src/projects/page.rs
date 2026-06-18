@@ -69,8 +69,12 @@ pub struct ProjectHeader {
     pub repos: Vec<String>,
 
     #[serde(default)]
-    /// Whether the project is archived. Default is false
-    pub is_archived: bool,
+    /// Whether the project is hidden. Default is false
+    ///
+    /// When true, the project is fully excluded from deployment: no
+    /// link on the projects index, no rendered page, and none of its
+    /// files (assets included) are deployed. It remains only in source
+    pub hidden: bool,
 }
 
 /// Deserializes an empty string into [`None`]

@@ -5,5 +5,5 @@
     "desc": "For personal reasons, want to create a crude page for language learning using Google Translate & Images API. No 'reference' language, so learning by purely visual and aural means",
     "date": "Jan 2022 - Present",
     "location": null,
-    "is_archived": true
+    "hidden": true
 }

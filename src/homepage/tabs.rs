@@ -34,10 +34,14 @@ pub static ALL_TABS: LazyLock<Vec<Tab>> = LazyLock::new(|| {
         ))),
     };
     // --------------------------------------------------
-    // remaining links
+    // remaining links, dropping the cv tab if it is hidden
     // --------------------------------------------------
     let REMAINING_TABS: Vec<TabHead> = crate::json_template!("homepage/tabs/tab-links.json");
-    let mut REMAINING_TABS = REMAINING_TABS.into_iter().map(Tab::from).collect();
+    let mut REMAINING_TABS: Vec<Tab> = REMAINING_TABS
+        .into_iter()
+        .filter(|tab| !crate::cv::CV.suppresses(&tab.id))
+        .map(Tab::from)
+        .collect();
     // --------------------------------------------------
     // order them and return
     // --------------------------------------------------

@@ -274,10 +274,14 @@ impl DeploymentMapInner {
         self.files.iter_mut().filter(|x| !x.deployed)
     }
 
-    #[inline(always)]
-    /// Remove from deployment map, matching source file path
-    pub fn remove(&mut self, src: PathBuf) {
-        self.files.retain(|x| x.src != src);
+    #[inline]
+    /// Remove every deployment entry whose source lives under `dir`
+    ///
+    /// Used to fully exclude a hidden project: this strips the entire
+    /// project folder subtree (its template file AND the catch-all
+    /// `<file>` asset entries), so none of its files are deployed
+    pub fn remove_under(&mut self, dir: &std::path::Path) {
+        self.files.retain(|x| !x.src.starts_with(dir));
     }
 }
 /// [`DeploymentMapInner`] implementation of [`From`] for [`Vec<(String, String)>`]

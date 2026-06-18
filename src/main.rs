@@ -1,6 +1,7 @@
 // --------------------------------------------------
 // mods
 // --------------------------------------------------
+mod cv;
 mod deployutil;
 mod homepage;
 mod macros;
@@ -41,6 +42,13 @@ fn main() {
     // parse cli
     // --------------------------------------------------
     parse_cli();
+
+    // --------------------------------------------------
+    // if the cv is hidden, delete it from the deploy folder
+    // (it was already rsynced from `static/` by build.sh; the
+    // source copy in `static/` is left untouched)
+    // --------------------------------------------------
+    cv::CV.delete_if_hidden();
 
     // --------------------------------------------------
     // print deployment map, after everything has edited it

@@ -13,9 +13,13 @@ use crate::prelude::*;
 // --------------------------------------------------
 pub static NAVBAR: LazyLock<Navbar> = LazyLock::new(|| {
     // --------------------------------------------------
-    // read in json
+    // read in json, dropping the cv link if it is hidden
     // --------------------------------------------------
     let navbar: Vec<NavbarLink> = crate::json_template!("general/navbar.json");
+    let navbar = navbar
+        .into_iter()
+        .filter(|link| !crate::cv::CV.suppresses(&link.disp))
+        .collect();
     Navbar::new(navbar)
 });
 

@@ -91,19 +91,18 @@ pub static ALL_PROJECTS: LazyLock<Vec<(ProjectCategory, Vec<Page<ProjectTemplate
             }
             let json_path = json_path.display().to_string();
             // --------------------------------------------------
-            // parse json: if archived, remove from deployment
-            // map and return None
+            // parse json: if hidden, remove the entire project
+            // folder subtree from deployment and return None
             // --------------------------------------------------
             let mut project_header: ProjectHeader = crate::json_template!(json_path);
-            if project_header.is_archived {
+            if project_header.hidden {
                 // --------------------------------------------------
-                // the reason both are removed, is because we dont know
-                // which one exists yet. thats done in the match statement
-                // below, but file contents are read (expensive operation)
-                // so id rather just remove both here for redundancy
+                // remove every entry under the project folder: the
+                // catch-all `<file>` rule would otherwise still deploy
+                // the project's assets (images, pdfs, gifs), leaving
+                // them reachable even with no link or page
                 // --------------------------------------------------
-                DEPLOYMENT_MAP.w().remove(md_path);
-                DEPLOYMENT_MAP.w().remove(html_path);
+                DEPLOYMENT_MAP.w().remove_under(&project_path);
                 return None;
             }
             // --------------------------------------------------
