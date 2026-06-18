@@ -118,7 +118,9 @@ impl Create for PostsHomepage {
 /// [`PostsHomepage`] implementation of [`SourcePath`]
 impl SourcePath<PostsHomepage> for PostsHomepage {
     fn src_path() -> std::path::PathBuf {
-        [crate::TEMPLATES_DIR, "/posts/posts-homepage.html"].concat().into()
+        [crate::TEMPLATES_DIR, "/posts/posts-homepage.html"]
+            .concat()
+            .into()
     }
 }
 

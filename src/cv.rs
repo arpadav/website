@@ -70,7 +70,10 @@ impl CvConfig {
         let path = dir.join(&self.deploy_path);
         if let Err(e) = std::fs::remove_file(&path) {
             if e.kind() != std::io::ErrorKind::NotFound {
-                eprintln!("Warning: failed to remove hidden CV `{}`: {e}", path.display());
+                eprintln!(
+                    "Warning: failed to remove hidden CV `{}`: {e}",
+                    path.display()
+                );
             }
         }
     }
