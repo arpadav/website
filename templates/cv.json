@@ -1,5 +1,6 @@
 {
-    "hidden": true,
+    "cv_findable": false,
+    "cv_url_servable": true,
     "id": "cv",
     "deploy_path": "cv.pdf"
 }

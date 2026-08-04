@@ -62,7 +62,7 @@
             <p>
                 out of privacy and respect of all my current & previous
                 employers, detailed descriptions of my professional work
-                experience is not included.{% if !crate::cv::CV.hidden %} what can be publicly disclosed is
+                experience is not included.{% if crate::cv::CV.cv_findable %} what can be publicly disclosed is
                 already done so in my
                 <a href="/cv.pdf">curriculum vitae</a> under 'work history'{% endif %}
             </p>

@@ -44,11 +44,12 @@ fn main() {
     parse_cli();
 
     // --------------------------------------------------
-    // if the cv is hidden, delete it from the deploy folder
-    // (it was already rsynced from `static/` by build.sh; the
-    // source copy in `static/` is left untouched)
+    // if the cv url should not serve, delete it from the
+    // deploy folder (it was already rsynced from `static/` by
+    // build.sh; the source copy in `static/` is left untouched)
     // --------------------------------------------------
-    cv::CV.delete_if_hidden();
+    cv::CV.validate();
+    cv::CV.delete_if_unservable();
 
     // --------------------------------------------------
     // print deployment map, after everything has edited it
